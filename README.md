@@ -61,7 +61,7 @@ files. (TODO: add an example input file in JSON)
 
 <a name="minizinc-ide"></a>
 ### Using the MiniZinc IDE 
-* Select Gecode as solver.<sup>[3](#RefGecode)</sup>
+* Select Gecode<sup>[3](#RefGecode)</sup> as solver.
 * Run!
 * You can change the random seed to obtain a different layout for the
 same input file.
