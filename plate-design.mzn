@@ -152,6 +152,7 @@ constraint forall(l in compound_ids+1..experiments where ((l-compound_ids) mod c
 
 
 
+
 %% Different compound replicas must appear on different plates (if possible!)
 int: min_plates = min(numplates,replicates);
 
@@ -219,8 +220,10 @@ constraint forall(i in Plates)(global_cardinality_low_up([plates[i,j,k] | j in R
 
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Distributing controls
+%% Controls of the same type are NOT located next to each other
+% TODO: relax in case there are too many controls per plate.
 
 constraint forall(c in 1..num_controls) (
 
