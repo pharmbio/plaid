@@ -5,7 +5,7 @@ constraint-programming model representing the Plate Layout Design
 problem. **LayoutCreator** was developed with the goal of helping
 researchers plan well-designed experiments by creating a robust
 microplate layout and thus reducing the rate of (partial) microplate
-rejection.[1]
+rejection.[^1]
 
 **LayoutCreator**  is easy and straightforward to use. The current
 model guarantees the following constraints:
@@ -36,7 +36,7 @@ meant to be used as input for automatic tools. (TODO: visualize the
 layout using latex)
 
 We believe **LayoutCreator** is the first attempt to use constraint
-programming to design microplate layouts. Due to the use of MiniZinc,[2]
+programming to design microplate layouts. Due to the use of MiniZinc,[^2]
 a high level constraint modelling language, **LayoutCreator** is
 highly customizable.
 
@@ -61,7 +61,7 @@ files. (TODO: add an example input file in JSON)
 
 <a name="minizinc-ide"></a>
 ### Using the MiniZinc IDE 
-* Select Gecode as solver.[3]
+* Select Gecode as solver.[^3]
 * Run!
 * You can change the random seed to obtain a different layout for the
 same input file.
@@ -75,7 +75,7 @@ same input file.
 <a name="references"></a>
 ## References
 
-[1]: M. A. Francisco Rodríguez, and O. Spjuth. *A Constraint
+[^1]: M. A. Francisco Rodríguez, and O. Spjuth. *A Constraint
 Programming Approach to Microplate Layout Design* In: J. Espasa and N.
 Dang (editors), Proceedings of ModRef 2020, the 19th International
 Workshop on Constraint Modelling and Reformulation, held at CP 2020,
@@ -85,12 +85,12 @@ September 2020.
 [Video](https://www.youtube.com/watch?v=naddH2TQIjE&ab_channel=CP2020)
 
 
-[2]: Nethercote, N., Stuckey, P.J., Becket, R., Brand, S., Duck, G.J.,
+[^2]: Nethercote, N., Stuckey, P.J., Becket, R., Brand, S., Duck, G.J.,
 Tack, G.: MiniZinc:Towards a Standard CP Modelling Language. In:
 Bessière, C. (ed.) Principles andPractice of Constraint Programming –
 CP 2007. pp. 529–543. Lecture Notes inComputer Science, Springer,
 Berlin, Heidelberg (2007)
 
 
-[3]: Gecode Team: Gecode: Generic constraint development environment
+[^3]: Gecode Team: Gecode: Generic constraint development environment
 (2019), avail-able fromhttp://www.gecode.org
