@@ -80,9 +80,9 @@ Programming Approach to Microplate Layout Design* In: J. Espasa and N.
 Dang (editors), Proceedings of ModRef 2020, the 19th International
 Workshop on Constraint Modelling and Reformulation, held at CP 2020,
 September 2020.
-[PDF](https://modref.github.io/papers/ModRef2020_A%20Constraint%20Programming%20Approach%20to%20Microplate%20Layout%20Design.pdf)
-[Slides](https://modref.github.io/slides/ModRef2020_Slides_A%20Constraint%20Programming%20Approach%20to%20Microplate%20Layout%20Design.pdf)
-[Video](https://www.youtube.com/watch?v=naddH2TQIjE&ab_channel=CP2020)
+[[PDF](https://modref.github.io/papers/ModRef2020_A%20Constraint%20Programming%20Approach%20to%20Microplate%20Layout%20Design.pdf)]
+[[Slides](https://modref.github.io/slides/ModRef2020_Slides_A%20Constraint%20Programming%20Approach%20to%20Microplate%20Layout%20Design.pdf)]
+[[Video](https://www.youtube.com/watch?v=naddH2TQIjE&ab_channel=CP2020)]
 
 
 <a name="RefMiniZinc">2</a>: Nethercote, N., Stuckey, P.J., Becket, R., Brand, S., Duck, G.J.,
@@ -93,4 +93,4 @@ Berlin, Heidelberg (2007)
 
 
 <a name="RefGecode">3</a>: Gecode Team: Gecode: Generic constraint development environment
-(2019), avail-able fromhttp://www.gecode.org
+(2019), available from (http://www.gecode.org)
