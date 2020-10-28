@@ -93,4 +93,4 @@ Berlin, Heidelberg (2007)
 
 
 <a name="RefGecode">3</a>: Gecode Team: Gecode: Generic constraint development environment
-(2019), available from (http://www.gecode.org)
+(2019), available from http://www.gecode.org
