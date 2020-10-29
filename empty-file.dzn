@@ -1,0 +1,65 @@
+%% This data produces an empty plate
+
+%% Plate dimentions: (any plate dimentions can be used)
+% A 384-well plate
+numrows = 16; %% height
+numcols = 24; %% width
+
+% A 96-well plate)
+%numrows = 8; %% height
+%numcols = 12; %% width
+
+%% number of drugs/compounds
+compounds = 0;
+
+%% number of combinations of compounds (unrelated to previous value)
+combinations = 0;
+
+% Number of replicates for the compounds and combinations in all concentrations.
+replicates	 = 0;
+
+% Number of concentrations for the compounds
+compound_concentrations	 = 0; 
+
+% Number of concentrations for the combinations
+combination_concentrations	 = 0; 
+
+% Number of concentrations for the controls
+control_concentrations = 0;
+
+num_controls = 0;
+
+%% The number of replicates of each control.
+%% control_replicates must have num_controls elements
+control_replicates = [];
+
+
+allow_empty_wells = true; % Switch to false if you want to make sure you have enough compounds, combinations and controls to fill in all plates.
+
+
+% Name of each compound. Used in the .csv output
+% Names should appear between quotation marks and separated by commas
+% For example compound_names = ["a", "b", "c", "d"];
+compound_names = [];
+
+% Name of each concentration for the compounds. Used in the .csv output
+% Names should appear between quotation marks and separated by commas
+% For example compound_concentration_names = ["0.1", "30", "H"];
+compound_concentration_names = [];
+
+% Latex syntax used for indicating the concentration of each compound. Can be left as in the example.
+compound_concentration_indicators = ["" | i in 1..compound_concentrations];
+
+% Name of each combination. Used in the .csv output
+combination_names = []; 
+
+% Name of each concentration used for combinations. Used in the .csv output
+combination_concentration_names = [];
+
+% Name of each control. Used in the .csv output
+control_names = [];
+
+% Name of each concentration used in the controls. Used in the .csv output
+control_concentration_names = [];
+
+ 

@@ -68,13 +68,22 @@ constraint assert(culture_media_compositions > 0,"Invalid datafile: culture_medi
 constraint assert(seeding_density > 0,"Invalid datafile: seeding_density should be larger than zero");
 
 
+%%%% Do not change %%%%%%%%%%%%
+cell_lines	 = 1;
+plates_type	 = 1;
+culture_media_compositions	= 1;
+seeding_density	 = 1;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 %% Number of wells needed. Note that plates might not be full
 
 int: total_wells = (compounds*compound_concentrations + combinations*combination_concentrations)*cell_lines*plates_type*culture_media_compositions*seeding_density*replicates + sum(control_replicates)*control_concentrations; 
 
 
 %% Number of plates needed
-int: numplates = ceil(total_wells/((numcols-2)*(numrows-2)));         
+% At least 1 plate so we can produce an empty plate. Another option would be a warning that the plate is empty
+int: numplates = max(ceil(total_wells/((numcols-2)*(numrows-2))),1);         
                                           
 set of int: Rows = 1..numrows;
 set of int: Columns = 1..numcols;

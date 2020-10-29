@@ -1,3 +1,5 @@
+%%% Taken from a Slack conversation
+
 %% Plate dimentions: (this is a 384-well plate)
 numrows = 16; %% height
 numcols = 24; %% width
@@ -7,16 +9,6 @@ numcols = 24; %% width
 compounds = 5;
 
 combinations = 0;
-
-
-%%%% Do not change %%%%%%%%%%%%
-cell_lines	 = 1;
-plates_type	 = 1;
-culture_media_compositions	= 1;
-seeding_density	 = 1;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 
 
 replicates	 = 6;
