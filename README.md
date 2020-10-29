@@ -60,11 +60,21 @@ files. (TODO: add an example input file in JSON)
 
 
 <a name="minizinc-ide"></a>
-### Using the MiniZinc IDE 
-* Select Gecode<sup>[3](#RefGecode)</sup> as solver.
-* Run!
-* You can change the random seed to obtain a different layout for the
-same input file.
+### Using the MiniZinc IDE
+* Open both plate-design.mzn and your .dzn file (if you have one) using the MiniZinc IDE
+* In the dropdown menu called "Solver configuration", located in the
+top middle area of the MiniZinc IDE, select
+Gecode<sup>[3](#RefGecode)</sup> as solver (Do not select Gecode Gist,
+which is used for debugging).
+* Click the "Run" button, located to the
+left of "Solver configuration".
+* In the popup window, you can either select a data file (you can only
+see those that are open in the IDE) or enter all parameters by hand.
+Note that you need to scroll down inside the popup to be able to type
+in all the values.
+* Optional: you can change the random seed to obtain a different layout for the
+same input data under "MiniZinc/Solver Configuration/Show
+configuration editor...". 
 
 
 <a name="command-line"></a>
