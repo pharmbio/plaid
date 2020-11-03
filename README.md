@@ -53,9 +53,9 @@ highly customizable.
 ## Installation and Usage
 
 * Download and install [MiniZinc](https://www.minizinc.org/).
-* Clone this repo or download our model plate-design.mzn located in this repository.
-* Fill in the specific details of your experiment in a a copy of
-empty-file.dzn. Alternatively, you can modify any of the example .dzn
+* Clone this repo OR download plate-design.mzn and empty-file.dzn.
+* Fill in the specific details of your experiment in a
+empty-file.dzn. Alternatively, you can download and modify any of the example .dzn
 files. (TODO: add an example input file in JSON)
 
 
