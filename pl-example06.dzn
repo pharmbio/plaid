@@ -1,0 +1,51 @@
+%%% Exp_DoseResponse conditions	%%%
+%% 2 plates
+%% 2020/Nov/17 It takes about 315 msec
+
+%% Plate dimentions: (this is a 96-well plate)
+num_rows = 8; %% height
+num_cols = 12; %% width
+
+vertical_cell_lines	 = 1;
+horizontal_cell_lines	 = 1;
+
+allow_empty_wells = true;
+
+size_empty_edge = 1; 
+
+replicates	 = 2;
+
+
+
+%%% Compounds %%%
+compounds = 1; %% number of drugs/compounds
+compound_concentrations	 = 1; 
+
+compound_concentration_names = ["comp-conc\(i)" | i in 1..compound_concentrations];
+compound_concentration_indicators = ["" | i in 1..compound_concentrations]; 
+compound_names = ["BPA"]; 
+
+%%% Combinations %%%
+combinations 	= 1;
+combination_concentrations = 1;
+
+combination_names = ["BPA+H"]; 
+  
+combination_concentration_names = ["comb-conc\(i)" | i in 1..combination_concentrations];
+
+
+%% Controls %%
+
+num_controls = 4;
+control_concentrations = 2;
+
+control_replicates = [10,10,10,10];
+%control_replicates = [32,16,16,16];
+
+control_names = ["pos","neg","blank","dmso"];
+control_concentration_names =  ["cont-conc\(i)" | i in 1..control_concentrations];
+  
+  
+%% Media (blank) controls %%  
+blanks = 0;
+blanks_name = "";  

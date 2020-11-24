@@ -1,0 +1,48 @@
+%%% Exp_DoseResponse conditions	%%%
+%% Description: Very small test.
+%% Produces 4 plates.
+%% 2020/Nov/17: it takes about 299msec
+
+%% Plate dimentions: (this is a 96-well plate)
+num_rows = 4; %% height
+num_cols = 6; %% width
+
+
+horizontal_cell_lines = 1;
+vertical_cell_lines = 1;
+
+allow_empty_wells = false;
+size_empty_edge = 1;
+
+replicates	 = 2;
+
+
+%%% Compounds %%%
+compounds = 5; %% number of drugs/compounds
+compound_concentrations	 = 2; 
+
+compound_names = ["comp\(i)" | i in 1..compounds];
+compound_concentration_names = ["comp_conc\(i)" | i in 1..compound_concentrations];
+
+compound_concentration_indicators = ["" | i in 1..compound_concentrations]; 
+
+
+%%% Combinations %%%
+combinations = 	0;
+combination_names = [];
+combination_concentration_names = [];
+combination_concentrations = 0;
+
+
+%%% Controls %%%
+num_controls = 4;
+control_replicates = [6,2,2,2];
+%control_replicates = [16,16,16,16,16];
+control_concentrations = 1;
+control_names = ["pos","neg","blank","dmso"];
+control_concentration_names =  ["cont-conc\(i)" | i in 1..control_concentrations];  
+  
+%% Media (blank) controls %%  
+blanks = 0;
+blanks_name = "";  
+  

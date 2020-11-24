@@ -1,13 +1,13 @@
 # multiplate-designer
 
-**LayoutCreator** (I'm still working on the name!) is a flexible
+**PLAID** (Plates created using Artificial Intelligence Design) is a flexible
 constraint-programming model representing the Plate Layout Design
-problem. **LayoutCreator** was developed with the goal of helping
+problem. **PLAID** was developed with the goal of helping
 researchers plan well-designed experiments by creating a robust
 microplate layout and thus reducing the rate of (partial) microplate
 rejection.<sup>[1](#RefModRef2020)</sup>
 
-**LayoutCreator**  is easy and straightforward to use. The current
+**PLAID**  is easy and straightforward to use. The current
 model guarantees the following constraints:
 
 * The outermost rows and columns can be left empty in order to reduce
@@ -25,7 +25,7 @@ direction.
 * If empty wells are allowed (other than those used to reduce the edge
 effect), they are placed as close to the border as possible.
 
-Using **LayoutCreator** does not require any programming knowledge.
+Using **PLAID** does not require any programming knowledge.
 Users just need to write down the necessary information such as number
 of compounds, combinations, controls, etc in a simple text file and
 click run!
@@ -35,9 +35,9 @@ The output is a list in .csv format containing plate ID, well, content
 meant to be used as input for automatic tools. (TODO: visualize the
 layout using latex)
 
-We believe **LayoutCreator** is the first attempt to use constraint
+We believe **PLAID** is the first attempt to use constraint
 programming to design microplate layouts. Due to the use of MiniZinc,<sup>[2](#RefMiniZinc)</sup>
-a high level constraint modelling language, **LayoutCreator** is
+a high level constraint modelling language, **PLAID** is
 highly customizable.
 
 
@@ -79,8 +79,9 @@ configuration editor...".
 
 <a name="command-line"></a>
 ### Using the command line
-* Type something and magic happens!
+TODO: add more info here
 
+$ minizinc --solver Gecode plate-design.mzn pl-example01.dzn
 
 <a name="references"></a>
 ## References

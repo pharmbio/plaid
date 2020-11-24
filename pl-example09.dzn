@@ -1,0 +1,47 @@
+%%% Exp_DoseResponse conditions	%%%
+%% Description: Half the number of concentrations in pl-example01
+%% Produces 2 plates.
+%% 2020/Nov/17: It takes about 2m 23sec
+
+%% Plate dimentions: (this is a 96-well plate)
+num_rows = 8; %% height
+num_cols = 12; %% width
+
+
+horizontal_cell_lines = 1;
+vertical_cell_lines = 1;
+
+allow_empty_wells = false;
+size_empty_edge = 1;
+
+replicates	 = 2;
+
+
+%%% Compounds %%%
+compounds = 10; %% number of drugs/compounds
+compound_concentrations	 = 4; 
+
+compound_names = ["comp\(i)" | i in 1..compounds];
+compound_concentration_names = ["0.3", "1", "3", "5"];%, "10", "15", "30", "100"];
+compound_concentration_indicators = ["" | i in 1..compound_concentrations]; 
+
+
+%%% Combinations %%%
+combinations = 	0;
+combination_names = [];
+combination_concentration_names = [];
+combination_concentrations = 0;
+
+
+%%% Controls %%%
+num_controls = 4;
+control_replicates = [16,8,8,8];
+%control_replicates = [16,16,16,16,16];
+control_concentrations = 1;
+control_names = ["pos","neg","blank","dmso"];
+control_concentration_names =  ["cont-conc\(i)" | i in 1..control_concentrations];  
+  
+  
+%% Media (blank) controls %%  
+blanks = 0;
+blanks_name = "";  

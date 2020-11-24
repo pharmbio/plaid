@@ -1,0 +1,79 @@
+%%% Taken from Slack
+%% Twice the cuantities of 2020-10-08-jonne-slack
+% It produces 2 plates
+%% 2020/Nov/17: Fixed issue with the model (missing constraint for multiplate & controls with concentrations). 
+%% 2020/Nov/20: It takes about 2min 33sec
+
+%% Plate dimentions: (this is a 384-well plate)
+num_rows = 16; %% height
+num_cols = 24; %% width
+
+vertical_cell_lines	 = 1;
+horizontal_cell_lines	 = 1;
+allow_empty_wells = false;
+size_empty_edge = 1;
+
+replicates	 = 4;
+
+
+%%% Compounds %%%
+compounds = 8; %% number of drugs/compounds
+compound_concentrations	 = 6; 
+
+compound_names = ["(\(i))(M)" | i in 1..compounds];
+
+compound_concentration_names = ["1", "3.16", "5.62", "10", "17.78", "56.23"];
+compound_concentration_indicators = ["" | i in 1..compound_concentrations]; %% Used for drawing plate in latex
+
+%%% Combinations %%%
+combinations = 28;
+combination_concentrations = 3;
+combination_names = ["(1)(2)","(1)(3)","(1)(4)","(1)(5)","(1)(6)","(1)(7)","(1)(8)","(2)(3)","(2)(4)","(2)(5)","(2)(6)","(2)(7)","(2)(8)","(3)(4)","(3)(5)","(3)(6)",
+"(3)(7)","(3)(8)","(4)(5)","(4)(6)","(4)(7)","(4)(8)","(5)(6)","(5)(7)","(5)(8)","(6)(7)","(6)(8)","(7)(8)"];
+
+combination_concentration_names = ["1","5.62","10"];%["comb-conc\(i)" | i in 1..combination_concentrations];
+
+%%% Controls %%%
+num_controls = 8+1;
+control_concentrations = 2;
+
+control_names = ["[dmso]","[sorbitol]","[I]","[II]","[III]","[IV]","[V]","[VI]","blank"];
+
+control_replicates = [4| i in 1..8]++[12];
+  
+control_concentration_names = ["1","5.62"];
+ 
+%% Media (blank) controls %%  
+blanks = 0;
+blanks_name = "";  
+
+
+%%%% EXAMPLES %%%% 
+%% Concentration Names %% 
+%% Examples:
+%concentration_names = ["L", "M", "H"];
+%concentration_names = ["\(i)" | i in 1..concentrations];
+
+%compound_concentration_names = ["0.1", "0.3", "1", "3", "5", "10", "30", "100"];
+
+%compound_concentration_names = ["comp-conc\(i)" | i in 1..compound_concentrations];
+
+
+
+%%% Concentration indicators (to be used for drawing plates in latex %%%
+%% Example:
+%concentration_indicators = ["" | i in 1..concentrations]; %% No indicators
+
+%compound_concentration_indicators = ["\\dotuline","\\uwave","\\uuline"]++["" | i in 1..compound_concentrations-3];
+
+
+
+%compound_names = ["BPA", "BADGE", "PFOA", "4-MBC", "DBP", "DEHP", "TCEP", "OMC"];
+
+
+
+%Controls
+%control_names = ["DMSO", "H2O", "Blank"];
+
+%control_names = ["cont\(i)" | i in 1..8]++["blank"];
+

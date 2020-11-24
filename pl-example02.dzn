@@ -1,0 +1,61 @@
+%%% Exp_DoseResponse conditions	%%%
+%% Same as pl-example01 but without a full plate.
+%% Currently it takes too long to finish -> because it is UNSAT
+%% 2020/Nov/17: implied constraints and assertions where added to check this case
+%% If controls are divided equally across plates, the 11th compound (and it's replica) do not fit.
+%% 
+
+%% Plate dimentions: (this is a 96-well plate)
+num_rows = 8; %% height
+num_cols = 12; %% width
+
+%% Plate dimentions: (this is a 384-well plate)
+%numrows = 16; %% height
+%numcols = 24; %% width
+
+%% number of drugs/compounds
+compounds = 11;  %% It used to be 10, which gives an exactly full plate. Now (with 11!) it takes forever! Surely an issue with trying to place the empty wells outside
+
+
+vertical_cell_lines	 = 1;
+horizontal_cell_lines	 = 1;
+size_empty_edge = 1;
+
+replicates	 = 2;
+compound_concentrations = 8; %% Might need the values in the future.
+%%concentrations = {0.3, 1, 3, 5, 10, 15, 30, 100};
+
+combination_concentrations = 1; % Can it be 0?
+
+control_concentrations = 1;
+
+num_controls = 5;
+
+%controls = [32,16,16,16,44];
+control_replicates = [35,20,20,20,25]; 
+
+
+
+%% Give warning that there are empty wells!!!!
+
+combinations = 0;
+allow_empty_wells = true;
+compound_names = ["comp\(i)" | i in 1..compounds];
+
+compound_concentration_names = ["0.3", "1", "3", "5", "10", "15", "30", "100"];
+
+compound_concentration_indicators = ["" | i in 1..compound_concentrations]; 
+
+
+control_names = ["pos","neg","blank","dmso","fake"];
+
+combination_names = [];
+  
+combination_concentration_names = ["comb-conc\(i)" | i in 1..combination_concentrations];
+
+control_concentration_names =  ["cont-conc\(i)" | i in 1..control_concentrations];
+
+
+%% Media (blank) controls %%  
+blanks = 0;
+blanks_name = "";  
