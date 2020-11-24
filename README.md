@@ -1,6 +1,6 @@
-# multiplate-designer
+# PLAID
 
-**PLAID** (Plates created using Artificial Intelligence Design) is a flexible
+**PLAID** (Plate Layouts using Artificial Intelligence Design) is a flexible
 constraint-programming model representing the Plate Layout Design
 problem. **PLAID** was developed with the goal of helping
 researchers plan well-designed experiments by creating a robust
