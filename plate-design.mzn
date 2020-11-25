@@ -492,33 +492,6 @@ solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), in
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Pretty printing %%%
-
-output ["\(numplates) plates\n"];
-
-output [if (inner_emptywells>0) then "warning: there are \(inner_emptywells) empty wells. Consider using them as controls.\n\n" else "" endif];
-
-output ["Plate 1:\n"];
-         
-%%TODO: change output so symbols are not hardcoded
-output [if fix(plates[i,j,k]) == 0 then "  ." 
-        elseif fix(plates[i,j,k]) == (experiments+1) then "  +" %% Positive controls
-        elseif fix(plates[i,j,k]) == (experiments+2) then "  -" %% Negative controls
-        elseif fix(plates[i,j,k]) == (experiments+3) then "  x" %% Blank controls
-        elseif fix(plates[i,j,k]) == (experiments+4) then "  ~" %% DMSO controls
-        elseif fix(plates[i,j,k]) == (experiments+5) then "  *" %% other
-        elseif fix(plates[i,j,k]) == (experiments+5) then "  #" %% other
-        else show_int(3,plates[i,j,k]) endif ++
-        %% Adding lines and headings %%
-        if j== numrows /\ k == numcols /\ i<numplates then "\n\n Plate \(i+1):\n" 
-        elseif k == numcols then "\n" else " " endif |
-        i in Plates, j in Rows, k in Columns];        
-         
-output ["Compound's plate:\n", show(experiment_plate)];
-         
-output ["Experiment's row:\n", show(experiment_row)];
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% CSV Ouput %%%
 
