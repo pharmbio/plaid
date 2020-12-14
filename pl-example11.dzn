@@ -35,12 +35,12 @@ combination_concentration_names = ["1","5.62","10"];%["comb-conc\(i)" | i in 1..
 
 
 %%% Controls %%%
-num_controls = 8+1;
+num_controls = 9;
 control_concentrations = 2;
 
 control_names = ["[dmso]","[sorbitol]","[I]","[II]","[III]","[IV]","[V]","[VI]","blank"];
 
-control_replicates = [4| i in 1..8]++[12];
+control_replicates = [4,4,4,4,4,4,4,4,12];
   
 control_concentration_names = ["1","5.62"];
  
