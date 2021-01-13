@@ -2,7 +2,7 @@
 %% Description: same data as in pl-example01, but with a different plate size
 %% so we can test having no edge.
 %% Produces 4 plates.
-%% 2020/Nov/19: It takes about 4s 459msec
+%% 2021/Jan/13: It takes about 6s 459msec
 
 %% Plate dimentions: (this is a 96-well plate)
 num_rows = 6; %% height
@@ -13,19 +13,30 @@ horizontal_cell_lines = 1;
 vertical_cell_lines = 1;
 
 allow_empty_wells = false;
-
 size_empty_edge = 0;
 
-replicates	 = 2;
+% New and unused! (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
+replicates_on_different_plates = true;
+replicates_on_same_plate = false;
 
 
 %%% Compounds %%%
 compounds = 10; %% number of drugs/compounds
-compound_concentrations	 = 8; 
+compound_concentrations	 = [ 8 | i in 1..compounds]; 
+compound_replicates	 = [ 2 | i in 1..compounds] ;
 
 compound_names = ["comp\(i)" | i in 1..compounds];
-compound_concentration_names = ["0.3", "1", "3", "5", "10", "15", "30", "100"];
-compound_concentration_indicators = ["" | i in 1..compound_concentrations]; 
+compound_concentration_names = [|"a0.3", "a1", "a3", "a5", "a10", "a15", "a30", "a100"
+|"b0.3", "b1", "b3", "b5", "b10", "b15", "b30", "b100"
+|"c0.3", "c1", "c3", "c5", "c10", "c15", "c30", "c100"
+|"d0.3", "d1", "d3", "d5", "d10", "d15", "d30", "d100"
+|"e0.3", "e1", "e3", "e5", "e10", "e15", "e30", "e100"
+|"f0.3", "f1", "f3", "f5", "f10", "f15", "f30", "f100"
+|"g0.3", "g1", "g3", "g5", "g10", "g15", "g30", "g100"
+|"h0.3", "h1", "h3", "h5", "h10", "h15", "h30", "h100"
+|"i0.3", "i1", "i3", "i5", "i10", "i15", "i30", "i100"
+|"j0.3", "j1", "j3", "j5", "j10", "j15", "j30", "j100"|];
+compound_concentration_indicators = ["" | i in 1..max(compound_concentrations)]; 
 
 
 %%% Combinations %%%
@@ -38,11 +49,7 @@ combination_concentrations = 0;
 %%% Controls %%%
 num_controls = 4;
 control_replicates = [32,16,16,16];
-%control_replicates = [16,16,16,16,16];
-control_concentrations = 1;
+control_concentrations = [1,1,1,1];
 control_names = ["pos","neg","blank","dmso"];
-control_concentration_names =  ["cont-conc\(i)" | i in 1..control_concentrations];  
+control_concentration_names =  array2d(1..num_controls, 1..1,["cont\(i)-conc\(1)" | i in 1..num_controls]);
   
-%% Media (blank) controls %%  
-blanks = 0;
-blanks_name = "";    

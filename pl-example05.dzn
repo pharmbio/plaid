@@ -5,23 +5,37 @@
 num_rows = 8; %% height
 num_cols = 12; %% width
 
-%% number of drugs/compounds
-compounds = 1;
-
-combinations 	= 1;
-
 vertical_cell_lines	 = 1;
 horizontal_cell_lines	 = 1;
 size_empty_edge = 1;
+allow_empty_wells = true;
 
-replicates	 = 2;
+% New and unused! (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
+replicates_on_different_plates = true;
+replicates_on_same_plate = false;
 
-%% Concentrations %%%
-compound_concentrations	 = 1; 
+%% Compounds %%
+compounds = 1;
+
+compound_concentrations	 = [1]; 
+
+compound_replicates	 = [2| i in 1..compounds]; 
+
+
+compound_concentration_names = [|"comp-conc1"|];
+
+compound_concentration_indicators = [""]; 
+
+compound_names = ["BPA"]; 
+
+%% Combinations %%%
+combinations 	= 1;
 
 combination_concentrations = 1;
 
-control_concentrations = 2;
+combination_names = ["BPA+H"]; 
+  
+combination_concentration_names = ["comb-conc1"];
 
 
 %% Controls %%
@@ -29,27 +43,9 @@ control_concentrations = 2;
 num_controls = 4;
 
 control_replicates = [10,10,10,10];
-%control_replicates = [32,16,16,16];
 
-allow_empty_wells = true;
-
-compound_concentration_names = ["comp-conc\(i)" | i in 1..compound_concentrations];
-compound_concentration_indicators = ["" | i in 1..compound_concentrations]; %["\\dotuline","\\uwave","\\uuline","","","","",""];
-
-compound_names = ["BPA"]; %, "BADGE","PFOA","4-MBC","DBP","DEHP","TCEP","OMC","DB","H"];
+control_concentrations = [2 | i in 1..num_controls];
 
 control_names = ["pos","neg","blank","dmso"];
 
-combination_names = ["BPA+H"]; %["OMC+ BPA", "OMC+ BADGE", "OMC+ PFOA", "OMC+ 4-MBC", "OMC+ DBP", "OMC+ DEHP", "OMC+ TCEP", "TCEP+ BPA", "TCEP+ BADGE", 
- % "TCEP+ PFOA", "TCEP+ 4-MBC", "TCEP+ DBP", "TCEP+ DEHP", "DEHP+ BPA", "DEHP+ BADGE", "DEHP+ PFOA", "DEHP+ 4-MBC", "DEHP+ DBP", "DBP+ BPA",
- % "DBP+ BADGE", "DBP+ PFOA", "DBP+ 4-MBC", "4-MBC+ BPA", "4-MBC+ BADGE", "4-MBC+ PFOA", "PFOA+ BPA", "PFOA+ BADGE", "BADGE+ BPA"];
-  
-  
-combination_concentration_names = ["comb-conc\(i)" | i in 1..combination_concentrations];
-
-control_concentration_names =  ["cont-conc\(i)" | i in 1..control_concentrations];
-  
-  
-%% Media (blank) controls %%  
-blanks = 0;
-blanks_name = "";    
+control_concentration_names =  array2d(1..num_controls, 1..2,["cont\(ceil(i/1))-conc\((i mod 1) + 1)" | i in 1..num_controls*2]);    

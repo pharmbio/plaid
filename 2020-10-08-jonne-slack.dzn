@@ -1,72 +1,50 @@
 %%% Taken from a Slack conversation
+%% 2021/Jan/13: satisfiable. It generates 1 plate in aprox. 1m 15s
 
 %% Plate dimentions: (this is a 384-well plate)
-numrows = 16; %% height
-numcols = 24; %% width
+num_rows = 16; %% height
+num_cols = 24; %% width
 
-%% number of drugs/compounds
-compounds = 8;
-
-combinations = 28;
-
-replicates	 = 2;
-
-%% Concentrations %%%
-compound_concentrations	 = 6; 
-
-combination_concentrations = 3;
-
-control_concentrations = 2;
-
-
-%% Controls %%
-num_controls = 8+1;
-
-control_replicates = [2| i in 1..8]++[6];
-
-
+vertical_cell_lines	 = 1;
+horizontal_cell_lines	 = 1;
+size_empty_edge = 1;
 allow_empty_wells = false;
 
-%% Concentration Names %% 
-%% Examples:
-%concentration_names = ["L", "M", "H"];
-%concentration_names = ["\(i)" | i in 1..concentrations];
+% New and unused! (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
+replicates_on_different_plates = true;
+replicates_on_same_plate = false;
 
-%compound_concentration_names = ["0.1", "0.3", "1", "3", "5", "10", "30", "100"];
-
-%compound_concentration_names = ["comp-conc\(i)" | i in 1..compound_concentrations];
-
-compound_concentration_names = ["1", "3.16", "5.62", "10", "17.78", "56.23"];
-
-%%% Concentration indicators (to be used for drawing plates in latex %%%
-%% Example:
-%concentration_indicators = ["" | i in 1..concentrations]; %% No indicators
-
-%compound_concentration_indicators = ["\\dotuline","\\uwave","\\uuline"]++["" | i in 1..compound_concentrations-3];
-
-compound_concentration_indicators = ["" | i in 1..compound_concentrations];
-
-%compound_names = ["BPA", "BADGE", "PFOA", "4-MBC", "DBP", "DEHP", "TCEP", "OMC"];
-
+%%% Compounds %%%
+compounds = 8; %% number of drugs/compounds
+compound_replicates	 = [ 2 | i in 1..compounds];
+compound_concentrations	 = [ 6 | i in 1..compounds];
 compound_names = ["(\(i))(M)" | i in 1..compounds];
 
-%Controls
-%control_names = ["DMSO", "H2O", "Blank"];
+compound_concentration_names = [|"1", "3.16", "5.62", "10", "17.78", "56.23"
+|"1", "3.16", "5.62", "10", "17.78", "56.23"
+|"1", "3.16", "5.62", "10", "17.78", "56.23"
+|"1", "3.16", "5.62", "10", "17.78", "56.23"
+|"1", "3.16", "5.62", "10", "17.78", "56.23"
+|"1", "3.16", "5.62", "10", "17.78", "56.23"
+|"1", "3.16", "5.62", "10", "17.78", "56.23"
+|"1", "3.16", "5.62", "10", "17.78", "56.23"|];
 
-%control_names = ["cont\(i)" | i in 1..8]++["blank"];
+compound_concentration_indicators = ["" | i in 1..max(compound_concentrations)];
 
-control_names = ["[dmso]","[sorbitol]","[I]","[II]","[III]","[IV]","[V]","[VI]","blank"];
 
-%combination_names = ["OMC+ BPA", "OMC+ BADGE", "OMC+ PFOA", "OMC+ 4-MBC", "OMC+ DBP", "OMC+ DEHP", "OMC+ TCEP", "TCEP+ BPA", "TCEP+ BADGE", 
- % "TCEP+ PFOA", "TCEP+ 4-MBC", "TCEP+ DBP", "TCEP+ DEHP", "DEHP+ BPA", "DEHP+ BADGE", "DEHP+ PFOA", "DEHP+ 4-MBC", "DEHP+ DBP", "DBP+ BPA",
- % "DBP+ BADGE", "DBP+ PFOA", "DBP+ 4-MBC", "4-MBC+ BPA", "4-MBC+ BADGE", "4-MBC+ PFOA", "PFOA+ BPA", "PFOA+ BADGE", "BADGE+ BPA"];
-  
+%%% Combinations %%%
+combinations = 28;
+combination_concentrations = 3;
 combination_names = ["(1)(2)","(1)(3)","(1)(4)","(1)(5)","(1)(6)","(1)(7)","(1)(8)","(2)(3)","(2)(4)","(2)(5)","(2)(6)","(2)(7)","(2)(8)","(3)(4)","(3)(5)","(3)(6)",
 "(3)(7)","(3)(8)","(4)(5)","(4)(6)","(4)(7)","(4)(8)","(5)(6)","(5)(7)","(5)(8)","(6)(7)","(6)(8)","(7)(8)"];
 
-combination_concentration_names = ["1","5.62","10"];%["comb-conc\(i)" | i in 1..combination_concentrations];
+combination_concentration_names = ["1","5.62","10"];
 
-%control_concentration_names = ["cont-conc\(i)" | i in 1..control_concentrations];
+%% Controls %%
+num_controls = 8+1;
+control_concentrations = [ 2 | i in 1..num_controls];
+control_replicates = [2| i in 1..8]++[6];
+control_names = ["[dmso]","[sorbitol]","[I]","[II]","[III]","[IV]","[V]","[VI]","blank"];
   
-control_concentration_names = ["1","5.62"];
+control_concentration_names = [|"1","5.62"|"1","5.62"|"1","5.62"|"1","5.62"|"1","5.62"|"1","5.62"|"1","5.62"|"1","5.62"|"1","5.62"|];
  

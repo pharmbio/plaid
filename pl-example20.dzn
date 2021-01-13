@@ -1,55 +1,39 @@
-%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Description: 1 plate divided horizontally (top part and lower part have the same layout).
-%% 2020/Dec/09: satisfiable. It generates 1 plate
+%% 2021/Jan/13: satisfiable. It generates 1 plate in aprox. 45sec 
 
 %% Plate dimentions: (this is a 1536-well plate)
 num_rows = 16; %% height
 num_cols = 48; %% width
 
-%% number of drugs/compounds
-compounds = 7;
-
-combinations 	= 1;
-
 vertical_cell_lines	 = 1;
 horizontal_cell_lines	 = 2;
 size_empty_edge = 1;
-
-replicates	 = 5;
-
-%% Concentrations %%%
-compound_concentrations	 = 3; 
-
-combination_concentrations = 1;
-
-control_concentrations = 1;
-
-
-%% Controls %%
-
-num_controls = 4;
-
-control_replicates = [44,44,44,34];
-
 allow_empty_wells = false;
 
-compound_concentration_names = ["L","M","H"];
-compound_concentration_indicators = ["" | i in 1..compound_concentrations]; %["\\dotuline","\\uwave","\\uuline","","","","",""];
+% New and unused! (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
+replicates_on_different_plates = true;
+replicates_on_same_plate = false;
 
-compound_names = ["BPA","BADGE","PFOA","4-MBC","DBP","DEHP","TCEP"]; %,"OMC","DB","H"];
+%%% Compounds %%%
+compounds = 7; %% number of drugs/compounds
+compound_replicates	 = [ 5 | i in 1..compounds];
+compound_concentrations	 = [ 3 | i in 1..compounds];
 
-control_names = ["pos","neg","blank","dmso"];
+compound_concentration_names = [|"L","M","H"|"L","M","H"|"L","M","H"|"L","M","H"|"L","M","H"|"L","M","H"|"L","M","H"|];
+compound_concentration_indicators = ["" | i in 1..max(compound_concentrations)]; 
 
-combination_names = ["BPA+H"]; %["OMC+ BPA", "OMC+ BADGE", "OMC+ PFOA", "OMC+ 4-MBC", "OMC+ DBP", "OMC+ DEHP", "OMC+ TCEP", "TCEP+ BPA", "TCEP+ BADGE", 
- % "TCEP+ PFOA", "TCEP+ 4-MBC", "TCEP+ DBP", "TCEP+ DEHP", "DEHP+ BPA", "DEHP+ BADGE", "DEHP+ PFOA", "DEHP+ 4-MBC", "DEHP+ DBP", "DBP+ BPA",
- % "DBP+ BADGE", "DBP+ PFOA", "DBP+ 4-MBC", "4-MBC+ BPA", "4-MBC+ BADGE", "4-MBC+ PFOA", "PFOA+ BPA", "PFOA+ BADGE", "BADGE+ BPA"];
-  
-  
+compound_names = ["BPA","BADGE","PFOA","4-MBC","DBP","DEHP","TCEP"]; 
+
+%%% Combinations %%%
+combinations 	= 1;
+combination_concentrations = 1;
+combination_names = ["BPA+H"];
 combination_concentration_names = ["comb-conc\(i)" | i in 1..combination_concentrations];
 
-control_concentration_names =  ["cont-conc\(i)" | i in 1..control_concentrations];
-  
-  
-%% Media (blank) controls %%  
-blanks = 0;
-blanks_name = "";    
+%% Controls %%
+num_controls = 4;
+control_concentrations = [1,1,1,1];
+control_replicates = [44,44,44,34];
+control_names = ["pos","neg","blank","dmso"];
+control_concentration_names = array2d(1..num_controls, 1..1,["cont\(i)-conc1" | i in 1..num_controls]);
