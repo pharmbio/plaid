@@ -60,7 +60,9 @@ array[1..num_controls] of string: control_names;
 int: blanks = 0;
 string: blanks_name = "";
 
+%%% Testing %%%
 
+bool: testing = false;
 
 
 %% Plate size / number of wells
@@ -543,41 +545,41 @@ solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), in
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Pretty printing %%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%% Pretty printing %%%
 
-output ["\(numplates) plates\n"];
+output [if testing then "\(numplates) plates\n" else "" endif];
 
-output [if (inner_emptywells>0) then "warning: there are \(inner_emptywells) empty wells. Consider using them as controls.\n\n" else "" endif];
+% output [if (inner_emptywells>0) then "warning: there are \(inner_emptywells) empty wells. Consider using them as controls.\n\n" else "" endif];
 
-output ["Plate 1:\n"];
+% output ["Plate 1:\n"];
          
-%%TODO: change output so symbols are not hardcoded
-output [if fix(plates[i,j,k]) == 0 then "  ." 
-        elseif fix(plates[i,j,k]) == (experiments+1)  then "  +" %% Positive controls
-        elseif fix(plates[i,j,k]) == (experiments+2)  then "  -" %% Negative controls
-        elseif fix(plates[i,j,k]) == (experiments+3)  then "  x" %% Blank controls
-        elseif fix(plates[i,j,k]) == (experiments+4)  then "  ~" %% DMSO controls
-        elseif fix(plates[i,j,k]) == (experiments+5)  then "  *" %% other
-        elseif fix(plates[i,j,k]) == (experiments+6)  then "  #" %% other
-        elseif fix(plates[i,j,k]) == (experiments+7)  then "  &" %% other
-        elseif fix(plates[i,j,k]) == (experiments+8)  then "  @" %% other
-        elseif fix(plates[i,j,k]) == (experiments+9)  then "  <" %% other
-        elseif fix(plates[i,j,k]) == (experiments+10) then "  >" %% other
-        elseif fix(plates[i,j,k]) == (experiments+11) then "  $" %% other
-        else show_int(3,plates[i,j,k]) endif ++
-        %% Adding lines and headings %%
-        if j== numrows /\ k == numcols /\ i<numplates then "\n\n Plate \(i+1):\n" 
-        elseif k == numcols then "\n" else " " endif |
-        i in Plates, j in Rows, k in Columns];        
+% %%TODO: change output so symbols are not hardcoded
+% output [if fix(plates[i,j,k]) == 0 then "  ." 
+%         elseif fix(plates[i,j,k]) == (experiments+1)  then "  +" %% Positive controls
+%         elseif fix(plates[i,j,k]) == (experiments+2)  then "  -" %% Negative controls
+%         elseif fix(plates[i,j,k]) == (experiments+3)  then "  x" %% Blank controls
+%         elseif fix(plates[i,j,k]) == (experiments+4)  then "  ~" %% DMSO controls
+%         elseif fix(plates[i,j,k]) == (experiments+5)  then "  *" %% other
+%         elseif fix(plates[i,j,k]) == (experiments+6)  then "  #" %% other
+%         elseif fix(plates[i,j,k]) == (experiments+7)  then "  &" %% other
+%         elseif fix(plates[i,j,k]) == (experiments+8)  then "  @" %% other
+%         elseif fix(plates[i,j,k]) == (experiments+9)  then "  <" %% other
+%         elseif fix(plates[i,j,k]) == (experiments+10) then "  >" %% other
+%         elseif fix(plates[i,j,k]) == (experiments+11) then "  $" %% other
+%         else show_int(3,plates[i,j,k]) endif ++
+%         %% Adding lines and headings %%
+%         if j== numrows /\ k == numcols /\ i<numplates then "\n\n Plate \(i+1):\n" 
+%         elseif k == numcols then "\n" else " " endif |
+%         i in Plates, j in Rows, k in Columns];        
          
-output ["Compound's plate:\n", show(experiment_plate)];
+% output ["Compound's plate:\n", show(experiment_plate)];
          
-output ["\nExperiment's row:\n", show(experiment_row)];
+% output ["\nExperiment's row:\n", show(experiment_row)];
 
-output ["\nExperiment's column:\n", show(experiment_column)];
+% output ["\nExperiment's column:\n", show(experiment_column)];
 
-output ["\nControls per row:\n", show(controls_in_row)];
+% output ["\nControls per row:\n", show(controls_in_row)];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% CSV Ouput %%%

@@ -40,4 +40,4 @@ num_controls = 4;
 control_replicates = [10,4,4,4];
 control_concentrations = [1 | i in 1..num_controls];
 control_names = ["pos","neg","blank","dmso"];
-  control_concentration_names =  array2d(1..num_controls, 1..1,["cont\(i)-conc\(1)" | i in 1..num_controls]);    
+control_concentration_names =  array2d(1..num_controls, 1..1,["cont\(i)-conc\(1)" | i in 1..num_controls]);    
