@@ -1,3 +1,4 @@
+2 plates
 
 plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
 plate_1,B04,BPA+H,comb-conc1,BPA+H_comb-conc1

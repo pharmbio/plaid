@@ -1,3 +1,4 @@
+2 plates
 
 plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
 plate_1,B02,blank,cont3-conc1,blank_cont3-conc1
