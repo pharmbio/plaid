@@ -1,60 +1,82 @@
-%% This data produces an empty plate
+%% This data file has been updates with the current variables and some explanations but currently does not work: an empty plate cannot be generated.
 
 %% Plate dimentions: (any plate dimentions can be used)
 % A 384-well plate
-numrows = 16; %% height
-numcols = 24; %% width
+num_rows = 16; %% height
+num_cols = 24; %% width
 
 % A 96-well plate)
 %numrows = 8; %% height
 %numcols = 12; %% width
 
+allow_empty_wells = true; % Switch to false if you want to make sure you have enough compounds, combinations and controls to fill in all plates.
+
+vertical_cell_lines	 = 1;
+horizontal_cell_lines	 = 1;
+size_empty_edge = 1;
+
+% New and used!
+concentrations_on_different_rows = true; %Spread the concentrations of a given replica across different rows
+concentrations_on_different_columns = true; %Spread the concentrations of a given replica across different columns
+
+% New and unused! (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
+replicates_on_different_plates = true;
+replicates_on_same_plate = false;
+
+%%% Compounds %%%
+
 %% number of drugs/compounds
 compounds = 0;
 
-%% number of combinations of compounds (unrelated to previous value)
-combinations = 0;
+% Number of replicates per compounds in all of its concentrations.
+compound_replicates	 = [];
 
-% Number of replicates for the compounds and combinations in all concentrations.
-replicates	 = 0;
-
-% Number of concentrations for the compounds
-compound_concentrations	 = 0; 
-
-% Number of concentrations for the combinations
-combination_concentrations	 = 0; 
-
-% Number of concentrations for the controls
-control_concentrations = 0;
-
-num_controls = 0;
-
-%% The number of replicates of each control.
-%% control_replicates must have num_controls elements
-control_replicates = [];
-
-
-allow_empty_wells = true; % Switch to false if you want to make sure you have enough compounds, combinations and controls to fill in all plates.
-
+% Number of concentrations for each compound
+compound_concentrations	 = []; 
 
 % Name of each compound. Used in the .csv output
 % Names should appear between quotation marks and separated by commas
 % For example compound_names = ["a", "b", "c", "d"];
 compound_names = [];
 
+
 % Name of each concentration for the compounds. Used in the .csv output
 % Names should appear between quotation marks and separated by commas
-% For example compound_concentration_names = ["0.1", "30", "H"];
+% For example compound_concentration_names = [|"0.1", "30", "H"|"0.1", "30", "H"|]; % 3 concentrations for 2 compounds
 compound_concentration_names = [];
 
 % Latex syntax used for indicating the concentration of each compound. Can be left as in the example.
-compound_concentration_indicators = ["" | i in 1..compound_concentrations];
+compound_concentration_indicators = ["" | i in 1..max(compound_concentrations)];
+
+
+%%% Combinations %%%
+%% number of combinations of compounds (unrelated to previous value)
+combinations = 0;
+
+% Number of concentrations for the combinations
+combination_concentrations	 = 0; 
+
 
 % Name of each combination. Used in the .csv output
 combination_names = []; 
 
 % Name of each concentration used for combinations. Used in the .csv output
 combination_concentration_names = [];
+
+
+
+%%% Controls %%%
+
+num_controls = 0;
+
+% Number of concentrations for each control. Must have num_controls elements
+control_concentrations = [];
+
+
+%% The number of replicates for each control.
+%% control_replicates must have num_controls elements
+control_replicates = [];
+
 
 % Name of each control. Used in the .csv output
 control_names = [];

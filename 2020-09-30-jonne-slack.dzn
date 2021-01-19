@@ -1,45 +1,59 @@
 %%% Taken from a Slack conversation
+%% 2021/Jan/13: satisfiable. It generates 1 plate in aprox. 1m
 
 %% Plate dimentions: (this is a 384-well plate)
-numrows = 16; %% height
-numcols = 24; %% width
+num_rows = 16; %% height
+num_cols = 24; %% width
 
-
-%% number of drugs/compounds
-compounds = 5;
-
-combinations = 0;
-
-
-replicates	 = 6;
-compound_concentrations	 = 8; 
-combination_concentrations	 = 0; 
-control_concentrations = 1;
-
-num_controls = 2;
-
-control_replicates = [34,34];
-
-
+vertical_cell_lines	 = 1;
+horizontal_cell_lines	 = 1;
+size_empty_edge = 1;
 allow_empty_wells = false;
 
-%concentration_names = ["L", "M", "H"];
+% New and used!
+concentrations_on_different_rows = true;
+concentrations_on_different_columns = true;
 
-%concentration_names = ["\(i)" | i in 1..concentrations];
+% New and unused! (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
+replicates_on_different_plates = true;
+replicates_on_same_plate = false;
 
-compound_concentration_names = ["0.1", "0.3", "1", "3", "5", "10", "30", "100"];
+%%% Compounds %%%
+compounds = 5; %% number of drugs/compounds
+compound_replicates	 = [6,6,6,6,6];
+compound_concentrations	 = [8,8,8,8,8]; 
 
-combination_names = []; 
-combination_concentration_names = [];
-
-compound_concentration_indicators = ["\\dotuline","\\uwave","\\uuline"]++["" | i in 1..compound_concentrations-3];
-
-%concentration_indicators = ["" | i in 1..concentrations];
+compound_concentration_names = [|"0.1", "0.3", "1", "3", "5", "10", "30", "100"
+|"0.1", "0.3", "1", "3", "5", "10", "30", "100"
+|"0.1", "0.3", "1", "3", "5", "10", "30", "100"
+|"0.1", "0.3", "1", "3", "5", "10", "30", "100"
+|"0.1", "0.3", "1", "3", "5", "10", "30", "100"|];
 
 compound_names = ["SOR", "ETO", "FEN", "MET", "BC"];
 
+compound_concentration_indicators = ["\\dotuline","\\uwave","\\uuline"]++["" | i in 1..max(compound_concentrations)-3];
+
+%%% Combinations %%%
+combinations = 0;
+combination_concentrations	 = 0; 
+combination_names = []; 
+combination_concentration_names = [];
+
+
+%%% Controls %%%
+num_controls = 2;
+control_replicates = [34,34];
+control_concentrations = [1,1];
+control_concentration_names = [|"1"|"1"|];
 control_names = ["DMSO", "H2O"];
 
-control_concentration_names = ["1"];
+
+
+
+
+
+
+
+
 
  
