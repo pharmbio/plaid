@@ -15,6 +15,10 @@ vertical_cell_lines	 = 1;
 horizontal_cell_lines	 = 1;
 size_empty_edge = 1;
 
+% New and used!
+concentrations_on_different_rows = true; %Spread the concentrations of a given replica across different rows
+concentrations_on_different_columns = true; %Spread the concentrations of a given replica across different columns
+
 % New and unused! (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
 replicates_on_different_plates = true;
 replicates_on_same_plate = false;

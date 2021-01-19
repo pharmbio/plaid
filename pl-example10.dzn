@@ -8,12 +8,15 @@
 num_rows = 6; %% height
 num_cols = 10; %% width
 
-
 horizontal_cell_lines = 1;
 vertical_cell_lines = 1;
 
 allow_empty_wells = false;
 size_empty_edge = 0;
+
+% New and used!
+concentrations_on_different_rows = true;
+concentrations_on_different_columns = true;
 
 % New and unused! (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
 replicates_on_different_plates = true;
