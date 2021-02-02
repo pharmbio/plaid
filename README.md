@@ -107,13 +107,11 @@ Got ideas for improvement? We would love to hear about your suggestions!
 
 Our ModRef2020 extended abstract can be used to cite this project.
 
-```
-M. A. Francisco Rodríguez, and O. Spjuth. *A Constraint
-Programming Approach to Microplate Layout Design* In: J. Espasa and N.
+
+M. A. Francisco Rodríguez, and O. Spjuth. *A Constraint Programming Approach to Microplate Layout Design* In: J. Espasa and N.
 Dang (editors), Proceedings of ModRef 2020, the 19th International
-Workshop on Constraint Modelling and Reformulation, held at CP 2020,
-September 2020.
-```
+Workshop on Constraint Modelling and Reformulation, held at CP 2020, September 2020.
+
 
 
 <a name="references"></a>
