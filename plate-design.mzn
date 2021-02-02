@@ -9,7 +9,7 @@
 %
 % Authors: Maria Andreina FRANCISCO RODRIGUEZ (maria.andreina.francisco@farmbio.uu.se)
 % Version: 1.0
-% Last Revision: January 2021
+% Last Revision: February 2021
 
 
 include "globals.mzn";
@@ -17,7 +17,6 @@ include "gecode.mzn";
 
 
 %%%% Input Data  %%%%
-
 
 %% Information about constraints %%
 int: horizontal_cell_lines;
@@ -62,7 +61,7 @@ string: blanks_name = "";
 
 %%% Testing %%%
 
-bool: testing = false;
+bool: testing = true;
 
 
 %% Plate size / number of wells
@@ -143,8 +142,6 @@ constraint assert(inner_emptywells >= 0,"Model ERROR! Inner empty wells is negat
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Plates (our solution!!) %%%%%%%%%%%
-% +1 = blanks
-%% FIX ME!!
 array [Plates,Rows,Columns] of var 0..(experiments+num_controls*max_control_concentrations): plates; 
 
 % 0 = empty wells
@@ -193,21 +190,18 @@ constraint global_cardinality(array1d(1..numplates*numcols*numrows, plates),[ i 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Channelling constraints: an experiment/compound is located at a given plate
-%constraint forall(l in 1..experiments, i in Plates)(experiment_plate[l] == i <-> count_eq([array1d(1..numplates*numcols*numrows,plates)[p] | p in (i-1)*numcols*numrows+1..i*numcols*numrows],l,1));
-
-%constraint forall(l in 1..experiments, i in Plates)(count_eq([array1d(1..numplates*numcols*numrows,plates)[p] | p in (i-1)*numcols*numrows+1..i*numcols*numrows],l,(experiment_plate[l] == i)));
 
 constraint forall(l in 1..experiments, i in Plates)(count_eq([plates[i,j,k] | j in Rows, k in Columns],l,(experiment_plate[l] == i)));
 
-%% This constraint does not hold now that not all numbers for experiments must appear
-%constraint forall(l in 1..experiments, i in Plates)(count_eq([array1d(1..numplates*numcols*numrows,plates)[p] | p in 1..numplates*numcols*numrows where
- %(p < (i-1)*numcols*numrows+1 \/ p > i*numcols*numrows)],l,(experiment_plate[l] != i)));
+constraint forall(l in 1..experiments)(count_eq([plates[i,j,k] | i in Plates, j in Rows, k in Columns],l,(experiment_plate[l] != 0)));
+
 
 
 %% For experiments that do not exist = plate 0 (redundant)
 constraint forall(l in 1..experiments)(count_eq(array1d(1..numplates*numcols*numrows, plates),l,0) <-> (experiment_plate[l] == 0));
 constraint forall(l in 1..experiments)(count_eq(array1d(1..numplates*numcols*numrows, plates),l,0) <-> (experiment_row[l] == 0));
 constraint forall(l in 1..experiments)(count_eq(array1d(1..numplates*numcols*numrows, plates),l,0) <-> (experiment_column[l] == 0));
+
 
 %% There might be a stronger version of these constraints...
 constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)((experiment_row[l] == j) <- (plates[i,j,k] == l));
@@ -415,8 +409,6 @@ constraint forall(i in Plates)(global_cardinality_low_up([plates[i,j,k] | j in R
 
 
 
-%[control_replicates[((i-1) mod num_controls)+1] | i in 1..num_controls*control_concentrations]
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Distributing controls
 
@@ -427,90 +419,56 @@ constraint forall(i in Plates, j in 1..numrows-1, k in 1..numcols-1) (alldiffere
 
 %% TODO: relax this constraint when there are too many controls in the plate
 %% Strong version
-constraint forall(c in 1..num_controls*max_control_concentrations) (
-forall(i in Plates, j in 2..numrows-1, k in 2..numcols-1)(plates[i,j,k] == experiments+c -> 
-           plates[i,j-1,k-1]!= experiments+c /\ 
-           plates[i,j-1,k]  != experiments+c /\
-           plates[i,j-1,k+1]!= experiments+c /\
-           plates[i,j,k-1]  != experiments+c /\
-           plates[i,j,k+1]  != experiments+c /\
-           plates[i,j+1,k-1]!= experiments+c /\
-           plates[i,j+1,k]  != experiments+c /\
-           plates[i,j+1,k+1]!= experiments+c)
-           );
+ constraint forall(i in Plates, j in 2..numrows-1, k in 2..numcols-1)(plates[i,j,k] > experiments -> 
+            plates[i,j-1,k-1]!= plates[i,j,k] /\ 
+            plates[i,j-1,k]  != plates[i,j,k] /\
+            plates[i,j-1,k+1]!= plates[i,j,k] /\
+            plates[i,j,k-1]  != plates[i,j,k] /\
+            plates[i,j,k+1]  != plates[i,j,k] /\
+            plates[i,j+1,k-1]!= plates[i,j,k] /\
+            plates[i,j+1,k]  != plates[i,j,k] /\
+            plates[i,j+1,k+1]!= plates[i,j,k]
+            );
 
 % j=1
-constraint forall(c in 1..num_controls*max_control_concentrations) (
-forall(i in Plates, k in 2..numcols-1)(plates[i,1,k] == experiments+c -> 
-           plates[i,1,k-1]  != experiments+c /\
-           plates[i,1,k+1]  != experiments+c /\
-           plates[i,2,k-1]!= experiments+c /\
-           plates[i,2,k]  != experiments+c /\
-           plates[i,2,k+1]!= experiments+c)
+constraint forall(i in Plates, k in 2..numcols-1)(plates[i,1,k] > experiments -> 
+           plates[i,1,k-1]  != plates[i,1,k] /\
+           plates[i,1,k+1]  != plates[i,1,k] /\
+           plates[i,2,k-1]!= plates[i,1,k] /\
+           plates[i,2,k]  != plates[i,1,k] /\
+           plates[i,2,k+1]!= plates[i,1,k]
            );
 
 % j = numrows
-constraint forall(c in 1..num_controls*max_control_concentrations) (
-forall(i in Plates, k in 2..numcols-1)(plates[i,numrows,k] == experiments+c -> 
-           plates[i,numrows-1,k-1]!= experiments+c /\ 
-           plates[i,numrows-1,k]  != experiments+c /\
-           plates[i,numrows-1,k+1]!= experiments+c /\
-           plates[i,numrows,k-1]  != experiments+c /\
-           plates[i,numrows,k+1]  != experiments+c)
+constraint forall(i in Plates, k in 2..numcols-1)(plates[i,numrows,k] > experiments -> 
+           plates[i,numrows-1,k-1]!= plates[i,numrows,k] /\ 
+           plates[i,numrows-1,k]  != plates[i,numrows,k] /\
+           plates[i,numrows-1,k+1]!= plates[i,numrows,k] /\
+           plates[i,numrows,k-1]  != plates[i,numrows,k] /\
+           plates[i,numrows,k+1]  != plates[i,numrows,k]
            );
            
 % First column: k = 1           
-constraint forall(c in 1..num_controls*max_control_concentrations) (
-forall(i in Plates, j in 2..numrows-1)(plates[i,j,1] == experiments+c -> 
-           plates[i,j-1,1]  != experiments+c /\
-           plates[i,j-1,2]!= experiments+c /\
-           plates[i,j,2]  != experiments+c /\
-           plates[i,j+1,1]  != experiments+c /\
-           plates[i,j+1,2]!= experiments+c)
+constraint forall(i in Plates, j in 2..numrows-1)(plates[i,j,1] > experiments -> 
+           plates[i,j-1,1]  != plates[i,j,1] /\
+           plates[i,j-1,2]!= plates[i,j,1] /\
+           plates[i,j,2]  != plates[i,j,1] /\
+           plates[i,j+1,1]  != plates[i,j,1] /\
+           plates[i,j+1,2]!= plates[i,j,1]
            );
 
 % Last column: k = numcols
-constraint forall(c in 1..num_controls*max_control_concentrations) (
-forall(i in Plates, j in 2..numrows-1)(plates[i,j,numcols] == experiments+c -> 
-           plates[i,j-1,numcols-1]!= experiments+c /\ 
-           plates[i,j-1,numcols]  != experiments+c /\
-           plates[i,j,numcols-1]  != experiments+c /\
-           plates[i,j+1,numcols-1]!= experiments+c /\
-           plates[i,j+1,numcols]  != experiments+c)
+constraint forall(i in Plates, j in 2..numrows-1)(plates[i,j,numcols] > experiments -> 
+           plates[i,j-1,numcols-1]!= plates[i,j,numcols] /\ 
+           plates[i,j-1,numcols]  != plates[i,j,numcols] /\
+           plates[i,j,numcols-1]  != plates[i,j,numcols] /\
+           plates[i,j+1,numcols-1]!= plates[i,j,numcols] /\
+           plates[i,j+1,numcols]  != plates[i,j,numcols]
            );            
   
-  
-% Upper left corner
-constraint forall(c in 1..num_controls*max_control_concentrations) (
-forall(i in Plates, k in 2..numcols-1)(plates[i,1,1] == experiments+c -> 
-           plates[i,1,2]  != experiments+c /\
-           plates[i,2,1]  != experiments+c /\
-           plates[i,2,2]!= experiments+c)
-           );
- 
-% Lower left corder: j = numrows
-constraint forall(c in 1..num_controls*max_control_concentrations) (
-forall(i in Plates)(plates[i,numrows,1] == experiments+c -> 
-           plates[i,numrows-1,1]  != experiments+c /\
-           plates[i,numrows-1,2]!= experiments+c /\
-           plates[i,numrows,2]  != experiments+c)
-           );
-          
-% Upper right corner: j=1 k = numcols
-constraint forall(c in 1..num_controls*max_control_concentrations) (
-forall(i in Plates)(plates[i,1,numcols] == experiments+c -> 
-           plates[i,1,numcols-1]  != experiments+c /\
-           plates[i,2,numcols-1]!= experiments+c /\
-           plates[i,2,numcols]  != experiments+c)
-           );
-            
-% Lower right corner: j = numrows k = numcols
-constraint forall(c in 1..num_controls*max_control_concentrations) (
-forall(i in Plates)(plates[i,numrows,numcols] == experiments+c -> 
-           plates[i,numrows-1,numcols-1]!= experiments+c /\ 
-           plates[i,numrows-1,numcols]  != experiments+c /\
-           plates[i,numrows,numcols-1]  != experiments+c)
-           );
+    
+%% All especial cases for the corners are now covered by the alldifferent_except_0 constraint
+
                                                
 %% Softer version
 %constraint forall(c in 1..num_controls) (
