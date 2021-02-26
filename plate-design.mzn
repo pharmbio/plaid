@@ -32,9 +32,9 @@ int: size_empty_edge;
 %% Compounds %%
 int: compounds; %% number of drugs/compounds
 array [1..compounds] of int: compound_replicates;
-int: replicates = max(compound_replicates);
+int: replicates = max(compound_replicates++[0]);
 array [1..compounds] of int: compound_concentrations;
-int: max_compound_concentrations = max(compound_concentrations);
+int: max_compound_concentrations = max(compound_concentrations++[0]);
 
 array[1..compounds] of string: compound_names;
 
@@ -51,7 +51,7 @@ int: num_controls;
 
 array [1..num_controls] of int: control_replicates; 
 array [1..num_controls] of int: control_concentrations;
-int: max_control_concentrations = max(control_concentrations);
+int: max_control_concentrations = max(control_concentrations++[0]);
 array[1..num_controls,1..max_control_concentrations] of string: control_concentration_names;
 array[1..num_controls] of string: control_names;
 
@@ -88,25 +88,29 @@ array[1..combination_concentrations] of string: combination_concentration_names;
 
 
 %%% Datafile validation %%%
-constraint assert(compounds >= 0,"Invalid datafile: Number of compounds should not be less than zero");
-constraint assert(combinations >= 0,"Invalid datafile: Number of compounds should not be less than zero");
-constraint assert(num_controls >= 0,"Invalid datafile: Number of controls should not be less than zero");
-constraint assert(vertical_cell_lines > 0,"Invalid datafile: Number of cell lines should be larger than zero");
-constraint assert(horizontal_cell_lines > 0,"Invalid datafile: Number of cell lines should be larger than zero");
-constraint assert(numrows > 0,"Invalid datafile: Number of rows should be larger than zero");
-constraint assert(numcols > 0,"Invalid datafile: Number of columns should be larger than zero");
-constraint assert(min(compound_replicates) > 0,"Invalid datafile: Number of replicates should be larger than zero");
-constraint assert(min(compound_concentrations) > 0,"Invalid datafile: Number of concentrations should be larger than zero");
+constraint assert(compounds >= 0,"Invalid datafile: Number of compounds should not be less than zero.");
+constraint assert(combinations >= 0,"Invalid datafile: Number of compounds should not be less than zero.");
+constraint assert(num_controls >= 0,"Invalid datafile: Number of controls should not be less than zero.");
+constraint assert(vertical_cell_lines > 0,"Invalid datafile: Number of cell lines should be larger than zero.");
+constraint assert(horizontal_cell_lines > 0,"Invalid datafile: Number of cell lines should be larger than zero.");
+constraint assert(numrows > 0,"Invalid datafile: Number of rows should be larger than zero.");
+constraint assert(numcols > 0,"Invalid datafile: Number of columns should be larger than zero.");
+constraint assert(compounds==0 \/ min(compound_replicates) > 0,"Invalid datafile: Number of replicates should be larger than zero.");
+constraint assert(compounds==0 \/ min(compound_concentrations) > 0,"Invalid datafile: Number of concentrations should be larger than zero.");
+
 
 %% Number of wells needed. Note that plates might not be full
 int: total_wells = sum([compound_concentrations[i]*compound_replicates[i] | i in 1..compounds]) + combinations*combination_concentrations*replicates + sum([control_concentrations[i]*control_replicates[i] | i in 1..num_controls]); 
 
+constraint assert(total_wells > 0, "Invalid datafile: the plates cannot be completely empty.");
+
 int: inner_plate_size = (numcols-2*size_empty_edge)*(numrows-2*size_empty_edge);
 
-constraint assert(min(compound_concentrations) <= inner_plate_size,"Invalid datafile: Number of concentrations does not fit in one plate");
+constraint assert(min(compound_concentrations) <= inner_plate_size, "Invalid datafile: Number of concentrations does not fit in one plate. If you think this is a mistake, please contact the development team.");
 
 %% Number of plates needed
-int: numplates = ceil(total_wells/inner_plate_size);         
+%% max is used to avoid division-by-zero errors
+int: numplates = max(ceil(total_wells/inner_plate_size),1);         
               
 %% Detecting some unsatisfiable cases.
 %% Conditions E01 and E02 need to be updated or the model needs to be more flexible.                                                                      
@@ -134,6 +138,7 @@ int: emptywells = numplates*numcols*numrows - total_wells;
 %% To be used as in redundant constraints: empty wells other than those in the outermost border
 %% Also used as a validation/warning
 int: inner_emptywells = numplates*inner_plate_size - total_wells; 
+
 
 constraint assert(inner_emptywells == 0 \/ allow_empty_wells,"Warning: There are \(inner_emptywells) empty wells. You can allow the plates to have inner empty wells or modify other quantities to fill them up.");
 
@@ -181,6 +186,7 @@ constraint forall(b in 0..size_empty_edge-1) (forall(i in Plates, j in Rows, k i
 
 %constraint global_cardinality(array1d(1..numplates*numcols*numrows, plates),[ i | i in 0..experiments + num_controls*max_control_concentrations + 1],[emptywells]++[ ((floor((i-1))) mod max_compound_concentrations) < compound_concentrations[floor(((i-1)/(replicates*max_compound_concentrations)))+1] | i in 1..compound_ids]++[1 | i in compound_ids+1..experiments]++[control_replicates[((i-1) mod num_controls)+1] | i in 1..num_controls*max_control_concentrations]++[blanks]);
 
+% TODO: merge both global_cardinality
 constraint global_cardinality(array1d(1..numplates*numcols*numrows, plates),[0]++[ experiments+i | i in 1..num_controls*max_control_concentrations],[emptywells]++[control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1]) | i in 1..num_controls*max_control_concentrations]);
 
 constraint global_cardinality(array1d(1..numplates*numcols*numrows, plates),[ i | i in 1..compound_ids]++[i | i in compound_ids+1..experiments], [(floor((i-1)/(compounds*max_compound_concentrations))<compound_replicates[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) /\ ((floor((i-1))) mod max_compound_concentrations) < compound_concentrations[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1] | i in 1..compound_ids]++[1|i in compound_ids+1..experiments]);
@@ -375,8 +381,9 @@ constraint count_eq([plates[i,j,k] | i in {numplates-1,numplates} where (i>0), j
 % I would like to do something that allows example-02 and example-03 to work
 % This constraint assumes that there is no plate with only controls, but that seems fair enough
 
-int: temp_low = max(((sum([compound_concentrations[i]*compound_replicates[i] | i in 1..compounds]) + combinations*combination_concentrations*replicates) mod inner_plate_size), min(compound_concentrations) );
-constraint global_cardinality_low_up(experiment_plate,[ i | i in Plates],[ temp_low | i in Plates],[ inner_plate_size | i in Plates]);
+
+int: min_compounds_plate = max(floor((sum([compound_concentrations[i]*compound_replicates[i] | i in 1..compounds]) + combinations*combination_concentrations*replicates)/inner_plate_size), min(compound_concentrations) );
+constraint global_cardinality_low_up(experiment_plate,[ i | i in Plates],[ min_compounds_plate | i in Plates],[ inner_plate_size | i in Plates]);
 
 
 
@@ -489,13 +496,17 @@ constraint forall(i in Plates)(global_cardinality_low_up([plates[i,j,k] | j in R
 
 
 
+%% HERE!!!
+%% I need to work on these constraints, which seem to be quite ineficient. I believe I need to use variables for halves plates, maybe even for quarter plates.
+
+
 % %%% NEW %%%
 % %% Balancing the total of controls between upper and lower half-plates
 %% FIX ME!!!!! 3 times
-constraint forall(i in Plates)(global_cardinality_low_up([plates[i,j,k] | j in 1..ceil(numrows/2), k in Columns], [experiments+d | d in 1..num_controls*max_control_concentrations], [floor(min_controls_per_plate[c]/2) | c in 1..num_controls*max_control_concentrations], [ceil(max_controls_per_plate[c]/2) | c in 1..num_controls*max_control_concentrations]));
+%constraint forall(i in Plates)(global_cardinality_low_up([plates[i,j,k] | j in 1..ceil(numrows/2), k in Columns], [experiments+d | d in 1..num_controls*max_control_concentrations], [floor(min_controls_per_plate[c]/2) | c in 1..num_controls*max_control_concentrations], [ceil(max_controls_per_plate[c]/2) | c in 1..num_controls*max_control_concentrations]));
 
 %% FIX ME!!!!! 3 times
-constraint forall(i in Plates)(global_cardinality_low_up([plates[i,j,k] | j in ceil(numrows/2)+1..numrows, k in Columns], [experiments+d | d in 1..num_controls*max_control_concentrations], [floor(controls_per_plate[c]/2) | c in 1..num_controls*max_control_concentrations], [ceil(controls_per_plate[c]/2) | c in 1..num_controls*max_control_concentrations]));
+%constraint forall(i in Plates)(global_cardinality_low_up([plates[i,j,k] | j in ceil(numrows/2)+1..numrows, k in Columns], [experiments+d | d in 1..num_controls*max_control_concentrations], [floor(controls_per_plate[c]/2) | c in 1..num_controls*max_control_concentrations], [ceil(controls_per_plate[c]/2) | c in 1..num_controls*max_control_concentrations]));
 
 
 
@@ -599,28 +610,28 @@ solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), in
 
 output [if testing then "\(numplates) plates\n" else "" endif];
 
-% output [if (inner_emptywells>0) then "warning: there are \(inner_emptywells) empty wells. Consider using them as controls.\n\n" else "" endif];
+output [if (inner_emptywells>0) then "warning: there are \(inner_emptywells) empty wells. Consider using them as controls.\n\n" else "" endif];
 
-% output ["Plate 1:\n"];
+output ["Plate 1:\n"];
          
-% %%TODO: change output so symbols are not hardcoded
-% output [if fix(plates[i,j,k]) == 0 then "  ." 
-%         elseif fix(plates[i,j,k]) == (experiments+1)  then "  +" %% Positive controls
-%         elseif fix(plates[i,j,k]) == (experiments+2)  then "  -" %% Negative controls
-%         elseif fix(plates[i,j,k]) == (experiments+3)  then "  x" %% Blank controls
-%         elseif fix(plates[i,j,k]) == (experiments+4)  then "  ~" %% DMSO controls
-%         elseif fix(plates[i,j,k]) == (experiments+5)  then "  *" %% other
-%         elseif fix(plates[i,j,k]) == (experiments+6)  then "  #" %% other
-%         elseif fix(plates[i,j,k]) == (experiments+7)  then "  &" %% other
-%         elseif fix(plates[i,j,k]) == (experiments+8)  then "  @" %% other
-%         elseif fix(plates[i,j,k]) == (experiments+9)  then "  <" %% other
-%         elseif fix(plates[i,j,k]) == (experiments+10) then "  >" %% other
-%         elseif fix(plates[i,j,k]) == (experiments+11) then "  $" %% other
-%         else show_int(3,plates[i,j,k]) endif ++
-%         %% Adding lines and headings %%
-%         if j== numrows /\ k == numcols /\ i<numplates then "\n\n Plate \(i+1):\n" 
-%         elseif k == numcols then "\n" else " " endif |
-%         i in Plates, j in Rows, k in Columns];        
+%%TODO: change output so symbols are not hardcoded
+output [if fix(plates[i,j,k]) == 0 then "  ." 
+        elseif fix(plates[i,j,k]) == (experiments+1)  then "  +" %% Positive controls
+        elseif fix(plates[i,j,k]) == (experiments+2)  then "  -" %% Negative controls
+        elseif fix(plates[i,j,k]) == (experiments+3)  then "  x" %% Blank controls
+        elseif fix(plates[i,j,k]) == (experiments+4)  then "  ~" %% DMSO controls
+        elseif fix(plates[i,j,k]) == (experiments+5)  then "  *" %% other
+        elseif fix(plates[i,j,k]) == (experiments+6)  then "  #" %% other
+        elseif fix(plates[i,j,k]) == (experiments+7)  then "  &" %% other
+        elseif fix(plates[i,j,k]) == (experiments+8)  then "  @" %% other
+        elseif fix(plates[i,j,k]) == (experiments+9)  then "  <" %% other
+        elseif fix(plates[i,j,k]) == (experiments+10) then "  >" %% other
+        elseif fix(plates[i,j,k]) == (experiments+11) then "  $" %% other
+        else show_int(3,plates[i,j,k]) endif ++
+        %% Adding lines and headings %%
+        if j== numrows /\ k == numcols /\ i<numplates then "\n\n Plate \(i+1):\n" 
+        elseif k == numcols then "\n" else " " endif |
+        i in Plates, j in Rows, k in Columns];        
          
 %  output ["Compound's plate:\n", show(experiment_plate)];
 
