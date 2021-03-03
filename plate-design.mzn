@@ -9,7 +9,7 @@
 %
 % Authors: Maria Andreina FRANCISCO RODRIGUEZ (maria.andreina.francisco@farmbio.uu.se)
 % Version: 1.0
-% Last Revision: February 2021
+% Last Revision: March 2021
 
 
 include "globals.mzn";
@@ -284,6 +284,7 @@ array [Columns] of var 0..numplates*numrows: controls_in_column;
 constraint (sum(controls_in_row) == sum([control_replicates[i]*control_concentrations[i] | i in 1..num_controls]) + emptywells);
 constraint (sum(controls_in_column) == sum([control_replicates[i]*control_concentrations[i] | i in 1..num_controls]) + emptywells);
 
+
 %Among: Requires exactly n variables in x to take one of the values in v .
 constraint forall(j in Rows) (among(controls_in_row[j], [plates[i,j,k] | i in Plates, k in Columns], ({0} union experiments+1..experiments+num_controls*max_control_concentrations)));
 
@@ -428,13 +429,19 @@ array [Plates,Vertical] of var 0..ceil(inner_plate_size/2): ul_half_plates;
 %array [Plates,Horizontal] of var 0..ceil(inner_plate_size/2): lr_half_plates;
 
 %%% Counting the number of experiments in the upper and lower half-plates
-constraint forall(i in Plates) (among(ul_half_plates[i,upper],[plates[i,j,k] | j in 1..ceil(numrows/2), k in Columns], 1..experiments));
+constraint forall(i in Plates) (among(ul_half_plates[i,upper],[plates[i,j,k] | j in 1..floor(numrows/2), k in Columns], 1..experiments));
 constraint forall(i in Plates) (among(ul_half_plates[i,lower],[plates[i,j,k] | j in floor(numrows/2)+1..numrows, k in Columns], 1..experiments));
 
-constraint forall(i in Plates) (sum(e in 1..experiments)(experiment_plate[e] == i /\ experiment_row[e] <= ceil(numrows/2)) == ul_half_plates[i,upper]);
-constraint forall(i in Plates) (sum(e in 1..experiments)(experiment_plate[e] == i /\ experiment_row[e] > ceil(numrows/2)) == ul_half_plates[i,lower]);
+constraint forall(i in Plates) (sum(e in 1..experiments)(experiment_plate[e] == i /\ experiment_row[e] <= floor(numrows/2)) == ul_half_plates[i,upper]);
+constraint forall(i in Plates) (sum(e in 1..experiments)(experiment_plate[e] == i /\ experiment_row[e] > floor(numrows/2)) == ul_half_plates[i,lower]);
 
+constraint (sum(e in 1..experiments)(experiment_row[e] <= floor(numrows/2)) == sum(i in Plates)(ul_half_plates[i,upper]));
+constraint (sum(e in 1..experiments)(experiment_row[e] > floor(numrows/2)) == sum(i in Plates)(ul_half_plates[i,lower]));
 
+%% These constraints should be redundant when using the two constraints above.
+%% CHECK LATER!
+constraint (among(sum(i in Plates)(ul_half_plates[i,upper]),experiment_row, 1..floor(numrows/2)));
+constraint (among(sum(i in Plates)(ul_half_plates[i,lower]),experiment_row, floor(numrows/2)+1..numrows));
 
 %%% Counting the number of experiments in left-most and right-most half-plates
 %constraint forall(i in Plates) (among(lr_half_plates[i,left],[plates[i,j,k] | j in Rows, k in 1..ceil(numcols/2)], 1..experiments));
@@ -457,8 +464,7 @@ constraint forall(i in Plates) (sum(e in 1..experiments)(experiment_plate[e] == 
 %%% NEW %%%
 %% Implied constraints %%
 constraint (sum(ul_half_plates) == sum([compound_concentrations[i]*compound_replicates[i] | i in 1..compounds]) + combinations*combination_concentrations*replicates);
-%constraint (sum(lr_half_plates) == experiments);
-%constraint (sum(quarter_plates) == experiments);
+
 
 %constraint forall(i in Plates)(sum(v in Vertical)(ul_half_plates[i,v])<=at_most);
 %constraint forall(i in Plates)(sum(h in Horizontal)(lr_half_plates[i,h])<=at_most);
@@ -474,7 +480,7 @@ constraint (sum(ul_half_plates) == sum([compound_concentrations[i]*compound_repl
 %% Implied constraints
 %constraint forall(i in Plates)(count_eq(experiment_plate, i, sum(h in Horizontal)(lr_half_plates[i,h])));
 
-%constraint forall(i in Plates)(count_eq(experiment_plate, i, sum(v in Vertical)(ul_half_plates[i,v])));
+constraint forall(i in Plates)(count_eq(experiment_plate, i, sum(v in Vertical)(ul_half_plates[i,v])));
 
 %constraint forall(i in Plates)(count_eq(experiment_plate, i, sum(v in Vertical, h in Horizontal)(quarter_plates[i,v,h])));
 
@@ -499,18 +505,48 @@ constraint forall(i in Plates)(global_cardinality_low_up([plates[i,j,k] | j in R
 %% HERE!!!
 %% I need to work on these constraints, which seem to be quite ineficient. I believe I need to use variables for halves plates, maybe even for quarter plates.
 
+array [Plates,Vertical,1..num_controls*max_control_concentrations] of var int: controls_ul_plates;
+
+%array [Plates,Horizontal,1..num_controls*max_control_concentrations] of var int: controls_lr_plates;
+
+constraint forall(i in Plates)(global_cardinality([plates[i,j,k] | j in 1..floor(numrows/2), k in Columns], [experiments+d | d in 1..num_controls*max_control_concentrations], [controls_ul_plates[i,upper,d] | d in 1..num_controls*max_control_concentrations]));
+
+constraint forall(i in Plates)(global_cardinality([plates[i,j,k] | j in floor(numrows/2)+1..numrows, k in Columns], [experiments+d | d in 1..num_controls*max_control_concentrations], [controls_ul_plates[i,lower,d] | d in 1..num_controls*max_control_concentrations]));
+
+constraint forall(i in Plates, v in Vertical, d in 1..num_controls*max_control_concentrations)(controls_ul_plates[i,v,d]<=ceil(max_controls_per_plate[d]/2));
+constraint forall(i in Plates, v in Vertical, d in 1..num_controls*max_control_concentrations)(controls_ul_plates[i,v,d]>=floor(min_controls_per_plate[d]/2));
+
+constraint forall(i in Plates, d in 1..num_controls*max_control_concentrations)(abs(controls_ul_plates[i,upper,d] - controls_ul_plates[i,lower,d]) <= 1);
+
+constraint forall(i in Plates, d in 1..num_controls*max_control_concentrations)(controls_ul_plates[i,upper,d] + controls_ul_plates[i,lower,d] <= max_controls_per_plate[d]);
+
+constraint forall(i in 1..num_controls*max_control_concentrations)(sum([controls_ul_plates[p,v,i] | v in Vertical, p in Plates]) == control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1]) );
+
+%% Half of the total number of controls on each half of the plate.
+constraint forall(i in Plates)(abs(sum(d in 1..num_controls*max_control_concentrations)(controls_ul_plates[i,upper,d]) - sum(d in 1..num_controls*max_control_concentrations)(controls_ul_plates[i,lower,d])) <= 1);
+
 
 % %%% NEW %%%
 % %% Balancing the total of controls between upper and lower half-plates
 %% FIX ME!!!!! 3 times
-%constraint forall(i in Plates)(global_cardinality_low_up([plates[i,j,k] | j in 1..ceil(numrows/2), k in Columns], [experiments+d | d in 1..num_controls*max_control_concentrations], [floor(min_controls_per_plate[c]/2) | c in 1..num_controls*max_control_concentrations], [ceil(max_controls_per_plate[c]/2) | c in 1..num_controls*max_control_concentrations]));
+
+%constraint forall(i in Plates)(global_cardinality_low_up([plates[i,j,k] | j in 1..floor(numrows/2), k in Columns], [experiments+d | d in 1..num_controls*max_control_concentrations], [floor(min_controls_per_plate[c]/2) | c in 1..num_controls*max_control_concentrations], [ceil(max_controls_per_plate[c]/2) | c in 1..num_controls*max_control_concentrations]));
 
 %% FIX ME!!!!! 3 times
-%constraint forall(i in Plates)(global_cardinality_low_up([plates[i,j,k] | j in ceil(numrows/2)+1..numrows, k in Columns], [experiments+d | d in 1..num_controls*max_control_concentrations], [floor(controls_per_plate[c]/2) | c in 1..num_controls*max_control_concentrations], [ceil(controls_per_plate[c]/2) | c in 1..num_controls*max_control_concentrations]));
+%constraint forall(i in Plates)(global_cardinality_low_up([plates[i,j,k] | j in floor(numrows/2)+1..numrows, k in Columns], [experiments+d | d in 1..num_controls*max_control_concentrations], [floor(controls_per_plate[c]/2) | c in 1..num_controls*max_control_concentrations], [ceil(controls_per_plate[c]/2) | c in 1..num_controls*max_control_concentrations]));
 
 
+%% Implied constraints for half plates
+%% Connecting the number of compounds with the number of controls for each half plate.
+constraint forall(i in Plates, v in Vertical)(ul_half_plates[i,v] + sum(d in 1..num_controls*max_control_concentrations)(controls_ul_plates[i,v,d]) <= ceil(inner_plate_size/2));
+
+constraint forall(i in Plates)(ul_half_plates[i,upper] + ul_half_plates[i,lower] + sum(d in 1..num_controls*max_control_concentrations,v in Vertical)(controls_ul_plates[i,v,d]) + count([plates[i,j,k] | j in Rows, k in Columns], 0) == numcols*numrows);
 
 
+constraint forall(i in Plates)(ul_half_plates[i,upper] + ul_half_plates[i,lower] + sum(d in 1..num_controls*max_control_concentrations,v in Vertical)(controls_ul_plates[i,v,d]) + count([plates[i,j,k] | j in 1+size_empty_edge..numrows-size_empty_edge, k in 1+size_empty_edge..numcols-size_empty_edge], 0) == inner_plate_size);
+
+%% Is this helping? I don't think so!
+constraint (sum(r in 1..floor(numrows/2))(controls_in_row[r]) == sum(i in Plates, d in 1..num_controls*max_control_concentrations)(controls_ul_plates[i,upper,d]) + count([plates[i,j,k] | i in Plates, j in 1..floor(numrows/2), k in Columns], 0));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Distributing controls
@@ -633,15 +669,19 @@ output [if fix(plates[i,j,k]) == 0 then "  ."
         elseif k == numcols then "\n" else " " endif |
         i in Plates, j in Rows, k in Columns];        
          
-%  output ["Compound's plate:\n", show(experiment_plate)];
+output ["Compound's plate:\n", show(experiment_plate)];
 
-% output ["Compound's plate:\n", show(compound_concentration_names)];    
+%output ["Compound's plate:\n", show(compound_concentration_names)];    
      
-% output ["\nExperiment's row:\n", show(experiment_row)];
+ output ["\nExperiment's row:\n", show(experiment_row)];
 
-% output ["\nExperiment's column:\n", show(experiment_column)];
+ output ["\nExperiment's column:\n", show(experiment_column)];
 
 % output ["\nControls per row:\n", show(controls_in_row)];
+
+output ["\nControls per half plates:\n", show(controls_ul_plates)];
+
+output ["\nCompounds per half plates:\n", show(ul_half_plates)];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% CSV Ouput %%%
