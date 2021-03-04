@@ -255,10 +255,26 @@ int: min_columns_combination = min(combination_concentrations,numcols-2*size_emp
 
 
 % Spread the compounds across different rows and columns
-%% FIX ME! (twice) -- fixed??
-%constraint if concentrations_on_different_rows then forall(l in 0..(compounds*replicates-1)) (nvalue(min(compound_concentrations[floor(l/replicates)+1],numrows-2*size_empty_edge), [experiment_row[l*max_compound_concentrations+i]| i in 1..compound_concentrations[floor(l/replicates)+1]])) endif; 
 
+%% Speads constraints over different rows. It's been replaced by the more restrictive alldifferent version below.
 constraint if concentrations_on_different_rows then (forall(l in 1..compounds) (forall(r in 0..(compound_replicates[l]-1)) (nvalue(min(compound_concentrations[l],numrows-2*size_empty_edge), [experiment_row[r*compounds*max_compound_concentrations+(l-1)*max_compound_concentrations+i]| i in 1..compound_concentrations[l]])))) endif; 
+
+
+constraint if concentrations_on_different_rows then (forall(l in 1..compounds) (forall(r in 0..(compound_replicates[l]-1)) (
+alldifferent([experiment_row[r*compounds*max_compound_concentrations+(l-1)*max_compound_concentrations+i]| i in 1..min(compound_concentrations[l],numrows-2*size_empty_edge)])
+))) endif; 
+
+%% -> Bring back once I've improved example01
+% constraint if concentrations_on_different_rows then (forall(l in 1..compounds) (forall(r in 0..(compound_replicates[l]-1)) (
+
+% forall(m in 1..ceil(compound_concentrations[l]/numrows-2*size_empty_edge))(
+
+% alldifferent([experiment_row[r*compounds*max_compound_concentrations+(l-1)*max_compound_concentrations+i + (m-1)*min(compound_concentrations[l],numrows-2*size_empty_edge)]| i in 1..min(compound_concentrations[l],numrows-2*size_empty_edge)])
+
+% )
+% ))) endif; 
+
+
 
 %% FIX ME! (twice) -- fixed??
 %constraint if concentrations_on_different_columns then forall(l in 0..(compounds*replicates-1)) (nvalue(min(compound_concentrations[floor(l/replicates)+1],numcols-2*size_empty_edge), [experiment_column[l*max_compound_concentrations+i]| i in 1..compound_concentrations[floor(l/replicates)+1]])) endif; 
@@ -438,10 +454,16 @@ constraint forall(i in Plates) (sum(e in 1..experiments)(experiment_plate[e] == 
 constraint (sum(e in 1..experiments)(experiment_row[e] <= floor(numrows/2)) == sum(i in Plates)(ul_half_plates[i,upper]));
 constraint (sum(e in 1..experiments)(experiment_row[e] > floor(numrows/2)) == sum(i in Plates)(ul_half_plates[i,lower]));
 
-%% These constraints should be redundant when using the two constraints above.
+%% The following constraints should be redundant when using the two constraints above.
 %% CHECK LATER!
 constraint (among(sum(i in Plates)(ul_half_plates[i,upper]),experiment_row, 1..floor(numrows/2)));
 constraint (among(sum(i in Plates)(ul_half_plates[i,lower]),experiment_row, floor(numrows/2)+1..numrows));
+
+
+constraint if (numrows mod 2 == 0) then (forall(i in Plates)(abs(ul_half_plates[i,upper]-ul_half_plates[i,lower])<=1)) endif;
+
+constraint if (numrows mod 2 == 0) then (among(among(experiment_row, floor(numrows/2)+1..numrows), experiment_row, 1..floor(numrows/2)) ) endif;
+
 
 %%% Counting the number of experiments in left-most and right-most half-plates
 %constraint forall(i in Plates) (among(lr_half_plates[i,left],[plates[i,j,k] | j in Rows, k in 1..ceil(numcols/2)], 1..experiments));
@@ -625,6 +647,8 @@ constraint forall(i in Plates, j in 2..numrows-1)(plates[i,j,numcols] > experime
 %solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(plates, random, indomain_max)]) satisfy; 
 
 solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(experiment_row, first_fail, indomain_random), int_search(plates, first_fail, indomain_random)]) satisfy; 
+
+%solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(experiment_row, random, indomain_split), int_search(plates, first_fail, indomain_random)]) satisfy; 
 
 %solve satisfy;
 
