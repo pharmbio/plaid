@@ -2,6 +2,7 @@
 %% Description: Half the number of concentrations in pl-example01
 %% Produces 2 plates.
 %% 2021/Jan/13: It takes about 5sec 23msec
+%% 2021/Mar/04: It takes about 1sec 854msec
 
 %% Plate dimentions: (this is a 96-well plate)
 num_rows = 8; %% height

@@ -1,8 +1,7 @@
 %%% Exp_DoseResponse conditions	%%%
 %% Description: only half of the contents in pl-example01
-%% Produces 2 plates.
-%% 2021/Jan/13: It takes about 3s 689msec
-%% 2021/Mar/04: It takes about 1s 838msec
+%% Produces 3 plates.
+%% 2021/Mar/04: It takes about ??
 
 %% Plate dimentions: (this is a 96-well plate)
 num_rows = 8; %% height
@@ -24,7 +23,7 @@ replicates_on_different_plates = true;
 replicates_on_same_plate = false;
 
 %%% Compounds %%%
-compounds = 10; %% number of drugs/compounds
+compounds = 15; %% number of drugs/compounds
 compound_concentrations	 = [ 8 | i in 1..compounds ]; 
 compound_replicates	 = [ 1 | i in 1..compounds ];
 compound_names = ["comp\(i)" | i in 1..compounds];
@@ -38,7 +37,13 @@ compound_concentration_names = [|"a0.3", "a1", "a3", "a5", "a10", "a15", "a30", 
 |"g0.3", "g1", "g3", "g5", "g10", "g15", "g30", "g100"
 |"h0.3", "h1", "h3", "h5", "h10", "h15", "h30", "h100"
 |"i0.3", "i1", "i3", "i5", "i10", "i15", "i30", "i100"
-|"j0.3", "j1", "j3", "j5", "j10", "j15", "j30", "j100"|];
+|"j0.3", "j1", "j3", "j5", "j10", "j15", "j30", "j100"
+|"k0.3", "k1", "k3", "k5", "k10", "k15", "k30", "k100"
+|"l0.3", "l1", "l3", "l5", "l10", "l15", "l30", "l100"
+|"m0.3", "m1", "m3", "m5", "m10", "m15", "m30", "m100"
+|"n0.3", "n1", "n3", "n5", "n10", "n15", "n30", "n100"
+|"o0.3", "o1", "o3", "o5", "o10", "o15", "o30", "o100"
+|];
 
 compound_concentration_indicators = ["" | i in 1..max(compound_concentrations)]; 
 
@@ -52,7 +57,7 @@ combination_concentrations = 0;
 
 %%% Controls %%%
 num_controls = 4;
-control_replicates = [16,8,8,8];
+control_replicates = [24,12,12,12];
 control_concentrations = [1,1,1,1];
 control_names = ["pos","neg","blank","dmso"];
 control_concentration_names =  array2d(1..num_controls, 1..1,["cont\(i)-conc\(1)" | i in 1..num_controls]);    
