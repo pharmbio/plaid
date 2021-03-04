@@ -191,12 +191,12 @@ constraint forall(b in 0..size_empty_edge-1) (forall(i in Plates, j in Rows, k i
 
 constraint global_cardinality(array1d(1..numplates*numcols*numrows, plates),[0]++[ i | i in 1..compound_ids]++[i | i in compound_ids+1..experiments]++[ experiments+i | i in 1..num_controls*max_control_concentrations],[emptywells]++[(floor((i-1)/(compounds*max_compound_concentrations))<compound_replicates[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) /\ ((floor((i-1))) mod max_compound_concentrations) < compound_concentrations[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1] | i in 1..compound_ids]++[1|i in compound_ids+1..experiments]++[control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1]) | i in 1..num_controls*max_control_concentrations]);
 
-%% Experiments that do not exists, are not in any plate, row, or column.
-constraint forall(i in 1..compound_ids)(experiment_plate[i] == 0 <-> ((floor((i-1)/(compounds*max_compound_concentrations))<compound_replicates[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) /\ ((floor((i-1))) mod max_compound_concentrations) < compound_concentrations[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) == false);
+%% Experiments that do not exists are not located in any plate, row, or column.
+constraint forall(i in 1..compound_ids)(((floor((i-1)/(compounds*max_compound_concentrations))<compound_replicates[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) /\ ((floor((i-1))) mod max_compound_concentrations) < compound_concentrations[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) == false <-> experiment_plate[i] = 0);
 
-constraint forall(i in 1..compound_ids)(experiment_row[i] == 0 <-> ((floor((i-1)/(compounds*max_compound_concentrations))<compound_replicates[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) /\ ((floor((i-1))) mod max_compound_concentrations) < compound_concentrations[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) == false);
+constraint forall(i in 1..compound_ids)(((floor((i-1)/(compounds*max_compound_concentrations))<compound_replicates[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) /\ ((floor((i-1))) mod max_compound_concentrations) < compound_concentrations[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) == false <-> experiment_row[i] = 0);
 
-constraint forall(i in 1..compound_ids)(experiment_column[i] == 0 <-> ((floor((i-1)/(compounds*max_compound_concentrations))<compound_replicates[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) /\ ((floor((i-1))) mod max_compound_concentrations) < compound_concentrations[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) == false);
+constraint forall(i in 1..compound_ids)(((floor((i-1)/(compounds*max_compound_concentrations))<compound_replicates[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) /\ ((floor((i-1))) mod max_compound_concentrations) < compound_concentrations[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) == false <-> experiment_column[i] = 0);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -281,10 +281,11 @@ alldifferent([experiment_row[r*compounds*max_compound_concentrations+(l-1)*max_c
 
 
 
-%% FIX ME! (twice) -- fixed??
-%constraint if concentrations_on_different_columns then forall(l in 0..(compounds*replicates-1)) (nvalue(min(compound_concentrations[floor(l/replicates)+1],numcols-2*size_empty_edge), [experiment_column[l*max_compound_concentrations+i]| i in 1..compound_concentrations[floor(l/replicates)+1]])) endif; 
-
 constraint if concentrations_on_different_columns then (forall(l in 1..compounds) (forall(r in 0..(compound_replicates[l]-1)) (nvalue(min(compound_concentrations[l],numcols-2*size_empty_edge), [experiment_column[r*compounds*max_compound_concentrations+(l-1)*max_compound_concentrations+i]| i in 1..compound_concentrations[l]])))) endif; 
+
+constraint if concentrations_on_different_columns then (forall(l in 1..compounds) (forall(r in 0..(compound_replicates[l]-1)) ( 
+alldifferent( [experiment_column[r*compounds*max_compound_concentrations+(l-1)*max_compound_concentrations+i]| i in 1..min(compound_concentrations[l],numcols-2*size_empty_edge)])
+))) endif; 
 
 % Spread the combinations across different rows and columns
 constraint if concentrations_on_different_rows then (forall(l in 0..combinations*replicates-1) (nvalue(min_rows_combination, [experiment_row[compound_ids+l*combination_concentrations+i]| i in 1..combination_concentrations]))) endif; 
