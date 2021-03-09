@@ -56,13 +56,10 @@ array[1..num_controls,1..max_control_concentrations] of string: control_concentr
 array[1..num_controls] of string: control_names;
 
 
-int: blanks = 0;
-string: blanks_name = "";
-
 %%% Testing %%%
 
 bool: testing = true;
-
+bool: balance_controls_inside_plate = true;
 
 %% Plate size / number of wells
 
@@ -239,7 +236,7 @@ constraint forall(l in 1..experiments, k in Columns)(count_eq([plates[i,j,k] | i
 constraint forall(l in 1..compound_ids where ((l mod max_compound_concentrations) == 1))(all_equal([experiment_plate[i] | i in l..(l+compound_concentrations[(floor(((l-1)/max_compound_concentrations)) mod compounds)+1]-1)]));
 
 %% A combination with all concentrations must appear on a single plate
-constraint forall(l in (compound_ids+1)..experiments where ((l-compound_ids) mod combination_concentrations == 1))(all_equal([experiment_plate[i] | i in l..(l+combination_concentrations-1)]));
+%constraint forall(l in (compound_ids+1)..experiments where ((l-compound_ids) mod combination_concentrations == 1))(all_equal([experiment_plate[i] | i in l..(l+combination_concentrations-1)]));
 
 
 
@@ -295,9 +292,11 @@ constraint if concentrations_on_different_columns then (forall(l in 0..combinati
 
 %% Implied constraints 
 %% These constraints are too weak when the number of plates increases
+%% Right now it looks like it's mostly taking time 
 
+constraint global_cardinality_low_up(experiment_row, [i | i in 1+size_empty_edge..(numrows-size_empty_edge)], [0| i in 1+size_empty_edge..(numrows-size_empty_edge)], [numplates*(numcols-2*size_empty_edge)| i in 1+size_empty_edge..(numrows-size_empty_edge)]);
 
-%constraint global_cardinality_low_up(experiment_row, [i | i in 2..(numrows-1)], [0| i in 2..(numrows-1)], [numplates*(numcols-2)| i in 2..(numrows-1)]);
+%constraint global_cardinality_low_up(experiment_row, [i | i in 1+size_empty_edge..(numrows-size_empty_edge)], [10| i in 1+size_empty_edge..(numrows-size_empty_edge)], [10| i in 1+size_empty_edge..(numrows-size_empty_edge)]);
 
 
 array [Rows] of var 0..numplates*numcols: controls_in_row;
@@ -318,9 +317,9 @@ constraint forall(k in Columns) (among(controls_in_column[k], [plates[i,j,k] | i
 %[numplates*(numcols-2)-among([plates[i,j,k] | i in Plates, k in 2..(numcols-1)], (experiments+1..experiments+num_controls*control_concentrations))| j in 2..(numrows-1)]);
 
 %% Implied constraint: how many experiments can be in a row/column? It's too weak and needs to be done per plate.
-%% HINT! I also know how many should be 0!!!! ADD IT! FIX ME! CHECK ME!
 constraint global_cardinality(experiment_row, [j | j in Rows], [numplates*(numcols)-controls_in_row[j]| j in Rows]);
 constraint global_cardinality(experiment_column, [k | k in Columns], [numplates*(numrows)-controls_in_column[k]| k in Columns]);
+
 
 
 
@@ -348,7 +347,8 @@ constraint forall(l in 1..compounds) (nvalue(min(numplates,compound_replicates[l
 
 
 %% Different combination replicas must appear on different plates (if possible!)
-constraint forall(l in 0..(combinations-1)) (nvalue(min_plates, [experiment_plate[compound_ids + l*combination_concentrations + i*combinations*combination_concentrations + 1] | i in 0..(replicates-1)])); 
+%% Taking away combinations.
+%constraint forall(l in 0..(combinations-1)) (nvalue(min_plates, [experiment_plate[compound_ids + l*combination_concentrations + i*combinations*combination_concentrations + 1] | i in 0..(replicates-1)])); 
 
 
 %%% Put empty wells in the corners (as much as possible)
@@ -420,20 +420,13 @@ int: at_most_compounds = max_compound_concentrations*ceil(sum(compound_replicate
 constraint global_cardinality_low_up([experiment_plate[i] | i in 1..compound_ids] ,[ i | i in Plates],[ at_least_compounds | i in Plates],[ at_most_compounds | i in Plates]);
 
 
-% Balancing combinations between plates (and knowing that there must be some sort of balance!)
-int: at_least_combinations = combination_concentrations*floor((combinations*replicates)/numplates); 
-int: at_most_combinations = combination_concentrations*ceil((combinations*replicates)/numplates);
-
-constraint global_cardinality_low_up([experiment_plate[i] | i in compound_ids+1..experiments] ,[ i | i in Plates],[ at_least_combinations | i in Plates],[ at_most_combinations | i in Plates]);
-
-
 
 
 %% Implied constraints 
 %% These constraints are too weak when the number of plates increases
 %%% CHECK! This constraints came from the another version of the code. Need to check that these are still valid.
 
-constraint global_cardinality_low_up(experiment_row, [i | i in 1+size_empty_edge..(numrows-size_empty_edge)], [numplates*floor(at_least_compounds/(numrows-2*size_empty_edge))| i in 1+size_empty_edge..(numrows-size_empty_edge)], [numplates*(numcols-2*size_empty_edge)| i in 1+size_empty_edge..(numrows-size_empty_edge)]);
+%???constraint global_cardinality_low_up(experiment_row, [i | i in 1+size_empty_edge..(numrows-size_empty_edge)], [numplates*floor(at_least_compounds/(numrows-2*size_empty_edge))| i in 1+size_empty_edge..(numrows-size_empty_edge)], [numplates*(numcols-2*size_empty_edge)| i in 1+size_empty_edge..(numrows-size_empty_edge)]);
 
 
 %constraint global_cardinality_low_up(experiment_row, [i | i in 1+size_empty_edge..(numrows-size_empty_edge)], [numplates*floor(at_least/(numrows-2*size_empty_edge))| i in 1+size_empty_edge..(numrows-size_empty_edge)], [numplates*(numcols-2*size_empty_edge)| i in 1+size_empty_edge..(numrows-size_empty_edge)]);
@@ -441,15 +434,12 @@ constraint global_cardinality_low_up(experiment_row, [i | i in 1+size_empty_edge
 %constraint global_cardinality_low_up(experiment_column, [i | i in 1+size_empty_edge..(numcols-size_empty_edge)], [numplates*floor(at_least/(numcols-2*size_empty_edge))| i in 1+size_empty_edge..(numcols-size_empty_edge)], [numplates*(numrows-2*size_empty_edge)| i in 1+size_empty_edge..(numcols-size_empty_edge)]);
 
 
-%%% NEW %%%
 
 enum Vertical = {upper,lower};
 enum Horizontal = {left,right};
 
-%array [Plates,Vertical] of var floor((at_least_compounds + at_least_combinations)/2)..ceil((at_most_compounds + at_most_combinations)/2): ul_half_plates;
-%array [Plates,Horizontal] of var floor((at_least_compounds + at_least_combinations)/2)..ceil((at_most_compounds + at_most_combinations)/2): lr_half_plates;
 
-%% I'm unsure of the current lower/upper limits!
+%% TODO: Are there better lower limits?
 array [Plates,Vertical] of var 0..ceil(inner_plate_size/2): ul_half_plates;
 %array [Plates,Horizontal] of var 0..ceil(inner_plate_size/2): lr_half_plates;
 
@@ -573,10 +563,22 @@ constraint forall(i in Plates, v in Vertical)(ul_half_plates[i,v] + sum(d in 1..
 constraint forall(i in Plates)(ul_half_plates[i,upper] + ul_half_plates[i,lower] + sum(d in 1..num_controls*max_control_concentrations,v in Vertical)(controls_ul_plates[i,v,d]) + count([plates[i,j,k] | j in Rows, k in Columns], 0) == numcols*numrows);
 
 
-constraint forall(i in Plates)(ul_half_plates[i,upper] + ul_half_plates[i,lower] + sum(d in 1..num_controls*max_control_concentrations,v in Vertical)(controls_ul_plates[i,v,d]) + count([plates[i,j,k] | j in 1+size_empty_edge..numrows-size_empty_edge, k in 1+size_empty_edge..numcols-size_empty_edge], 0) == inner_plate_size);
+%%->constraint forall(i in Plates)(ul_half_plates[i,upper] + ul_half_plates[i,lower] + sum(d in 1..num_controls*max_control_concentrations,v in Vertical)(controls_ul_plates[i,v,d]) + count([plates[i,j,k] | j in 1+size_empty_edge..numrows-size_empty_edge, k in 1+size_empty_edge..numcols-size_empty_edge], 0) == inner_plate_size);
 
-%% Is this helping? I don't think so!
-constraint (sum(r in 1..floor(numrows/2))(controls_in_row[r]) == sum(i in Plates, d in 1..num_controls*max_control_concentrations)(controls_ul_plates[i,upper,d]) + count([plates[i,j,k] | i in Plates, j in 1..floor(numrows/2), k in Columns], 0));
+
+%% Is this helping? I don't think so! But it might...
+%%->constraint (sum(r in 1..floor(numrows/2))(controls_in_row[r]) == sum(i in Plates, d in 1..num_controls*max_control_concentrations)(controls_ul_plates[i,upper,d]) + count([plates[i,j,k] | i in Plates, j in 1..floor(numrows/2), k in Columns], 0));
+
+%%->constraint (sum(r in floor(numrows/2)+1..numrows)(controls_in_row[r]) == sum(i in Plates, d in 1..num_controls*max_control_concentrations)(controls_ul_plates[i,lower,d]) + count([plates[i,j,k] | i in Plates, j in floor(numrows/2)+1..numrows, k in Columns], 0));
+
+
+%%% Controls per row %%%
+%% Right now these make the model too slow. Let me fix other issues first.
+ 
+%constraint forall(j in 1+size_empty_edge..numrows-size_empty_edge) (controls_in_row[j] <= ceil(sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])/(numrows-2*size_empty_edge)) + 2*size_empty_edge*numplates);
+
+%constraint forall(j in 1+size_empty_edge..numrows-size_empty_edge) (controls_in_row[j] >= floor(sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])/(numrows-2*size_empty_edge)) + 2*size_empty_edge*numplates);
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Distributing controls
@@ -658,7 +660,7 @@ solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), in
 
 %solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(experiment_row, random, indomain_split), int_search(plates, first_fail, indomain_random)]) satisfy; 
 
-%solve satisfy;
+%%solve satisfy;
 
 
 
