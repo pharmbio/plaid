@@ -13,8 +13,9 @@
 
 
 include "globals.mzn";
-include "gecode.mzn";
-
+%include "gecode.mzn";
+%include "chuffed.mzn";
+ 
 
 %%%% Input Data  %%%%
 
@@ -94,6 +95,7 @@ constraint assert(numrows > 0,"Invalid datafile: Number of rows should be larger
 constraint assert(numcols > 0,"Invalid datafile: Number of columns should be larger than zero.");
 constraint assert(compounds==0 \/ min(compound_replicates) > 0,"Invalid datafile: Number of replicates should be larger than zero.");
 constraint assert(compounds==0 \/ min(compound_concentrations) > 0,"Invalid datafile: Number of concentrations should be larger than zero.");
+
 
 
 %% Number of wells needed. Note that plates might not be full
@@ -211,10 +213,20 @@ constraint forall(l in 1..experiments)(count_eq(array1d(1..numplates*numcols*num
 constraint forall(l in 1..experiments)(count_eq(array1d(1..numplates*numcols*numrows, plates),l,0) <-> (experiment_column[l] == 0));
 
 
+%% Gustav
+%constraint forall(l in 1..experiments)(
+ % (experiment_plate[l] = 0 <-> experiment_row[l] = 0) /\ (experiment_column[l] = 0 <-> experiment_row[l] = 0)
+%);
+
+
 %% There might be a stronger version of these constraints...
 constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)((experiment_row[l] == j) <- (plates[i,j,k] == l));
 
+%constraint forall(i in Plates, j in Rows, k in Columns)(plates[i,j,k] in 1..experiments -> experiment_row[plates[i,j,k]] = j);
+
 constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)((experiment_column[l] == k) <- (plates[i,j,k] == l));
+
+%constraint forall(i in Plates, j in Rows, k in Columns)((experiment_column[plates[i,j,k]] = k) <- (plates[i,j,k] in 1..experiments));
 
 constraint forall(l in 1..experiments, j in Rows)(count_eq([plates[i,j,k] | i in Plates, k in Columns],l,(experiment_row[l] == j)));
 
@@ -236,7 +248,7 @@ constraint forall(l in 1..experiments, k in Columns)(count_eq([plates[i,j,k] | i
 constraint forall(l in 1..compound_ids where ((l mod max_compound_concentrations) == 1))(all_equal([experiment_plate[i] | i in l..(l+compound_concentrations[(floor(((l-1)/max_compound_concentrations)) mod compounds)+1]-1)]));
 
 %% A combination with all concentrations must appear on a single plate
-%constraint forall(l in (compound_ids+1)..experiments where ((l-compound_ids) mod combination_concentrations == 1))(all_equal([experiment_plate[i] | i in l..(l+combination_concentrations-1)]));
+constraint forall(l in (compound_ids+1)..experiments where ((l-compound_ids) mod combination_concentrations == 1))(all_equal([experiment_plate[i] | i in l..(l+combination_concentrations-1)]));
 
 
 
@@ -295,8 +307,6 @@ constraint if concentrations_on_different_columns then (forall(l in 0..combinati
 %% Right now it looks like it's mostly taking time 
 
 constraint global_cardinality_low_up(experiment_row, [i | i in 1+size_empty_edge..(numrows-size_empty_edge)], [0| i in 1+size_empty_edge..(numrows-size_empty_edge)], [numplates*(numcols-2*size_empty_edge)| i in 1+size_empty_edge..(numrows-size_empty_edge)]);
-
-%constraint global_cardinality_low_up(experiment_row, [i | i in 1+size_empty_edge..(numrows-size_empty_edge)], [10| i in 1+size_empty_edge..(numrows-size_empty_edge)], [10| i in 1+size_empty_edge..(numrows-size_empty_edge)]);
 
 
 array [Rows] of var 0..numplates*numcols: controls_in_row;
@@ -654,13 +664,30 @@ constraint forall(i in Plates, j in 2..numrows-1)(plates[i,j,numcols] > experime
            
 %%%% Find a solution! %%%%
 
+array [0..numplates,1..experiments] of var {0} union Rows: crazy_idea;
+
+constraint forall(l in 1..experiments)(crazy_idea[experiment_plate[l],l]==experiment_row[l]);
+
+constraint forall(i in {0} union Plates, l in 1..experiments)(experiment_plate[l] != i -> crazy_idea[i,l] = 0);
+
 %solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(plates, random, indomain_max)]) satisfy; 
 
-solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(experiment_row, first_fail, indomain_random), int_search(plates, first_fail, indomain_random)]) satisfy; 
+%% Best for Gecode
+%solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(experiment_row, first_fail, indomain_random), int_search(plates, first_fail, indomain_random)]) satisfy; 
+
+solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(crazy_idea, first_fail, indomain_random), int_search(plates, first_fail, indomain_random)]) satisfy; 
+
+
+%% Chuffed
+%%solve::seq_search([int_search(experiment_plate, random_order, indomain_min), int_search(experiment_row, random_order, indomain_min), int_search(plates, random_order, indomain_max)]) satisfy; 
+
+
+%solve::seq_search([int_search(experiment_plate, random_order, indomain_min), priority_search(experiment_plate,[int_search([experiment_row[i]],input_order,indomain_split_random)| i in 1..experiments],smallest,complete)]) satisfy;
+
 
 %solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(experiment_row, random, indomain_split), int_search(plates, first_fail, indomain_random)]) satisfy; 
 
-%%solve satisfy;
+%solve satisfy;
 
 
 
@@ -717,7 +744,7 @@ output ["\nControls per half plates:\n", show(controls_ul_plates)];
 
 output ["\nCompounds per half plates:\n", show(ul_half_plates)];
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% CSV Ouput %%%
 
 array[int] of string: letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];

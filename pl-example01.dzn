@@ -1,6 +1,8 @@
 %%% Exp_DoseResponse conditions	%%%
 %% Produces 4 plates.
-%% It takes about 9 sec
+%% 2020: It takes about 9 sec
+%% 2021/Mar/10: It takes about 3min 22 sec
+
 
 %% Plate dimentions: (this is a 96-well plate)
 num_rows = 8; %% height
