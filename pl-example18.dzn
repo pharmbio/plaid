@@ -1,8 +1,8 @@
 %%% Exp_DoseResponse conditions	%%%
-%% Description: only half of the contents in pl-example01
-%% Produces 2 plates.
-%% 2021/Jan/13: It takes about 3s 689msec
-%% 2021/Mar/04: It takes about 1s 838msec
+%% Description: only half of the contents in pl-example08. 1/4 of the contents of pl-example01
+%% Produces 1 plates.
+%% 2020/Dec/04: It takes about 2s 643msec
+%% 2021/M/04: It takes about 2s 643msec
 
 %% Plate dimentions: (this is a 96-well plate)
 num_rows = 8; %% height
@@ -23,25 +23,23 @@ concentrations_on_different_columns = true;
 replicates_on_different_plates = true;
 replicates_on_same_plate = false;
 
+
 %%% Compounds %%%
-compounds = 10; %% number of drugs/compounds
-compound_concentrations	 = [ 8 | i in 1..compounds ]; 
-compound_replicates	 = [ 1 | i in 1..compounds ];
+compounds = 5; %% number of drugs/compounds
+compound_concentrations	 = [8 | i in 1..compounds]; 
+
+compound_replicates	 = [1 | i in 1..compounds];
+
 compound_names = ["comp\(i)" | i in 1..compounds];
+
 
 compound_concentration_names = [|"a0.3", "a1", "a3", "a5", "a10", "a15", "a30", "a100"
 |"b0.3", "b1", "b3", "b5", "b10", "b15", "b30", "b100"
 |"c0.3", "c1", "c3", "c5", "c10", "c15", "c30", "c100"
 |"d0.3", "d1", "d3", "d5", "d10", "d15", "d30", "d100"
-|"e0.3", "e1", "e3", "e5", "e10", "e15", "e30", "e100"
-|"f0.3", "f1", "f3", "f5", "f10", "f15", "f30", "f100"
-|"g0.3", "g1", "g3", "g5", "g10", "g15", "g30", "g100"
-|"h0.3", "h1", "h3", "h5", "h10", "h15", "h30", "h100"
-|"i0.3", "i1", "i3", "i5", "i10", "i15", "i30", "i100"
-|"j0.3", "j1", "j3", "j5", "j10", "j15", "j30", "j100"|];
+|"e0.3", "e1", "e3", "e5", "e10", "e15", "e30", "e100"|];
 
-compound_concentration_indicators = ["" | i in 1..max(compound_concentrations)]; 
-
+compound_concentration_indicators = ["" | i in 1..8]; 
 
 %%% Combinations %%%
 combinations = 	0;
@@ -52,8 +50,11 @@ combination_concentrations = 0;
 
 %%% Controls %%%
 num_controls = 4;
-control_replicates = [16,8,8,8];
-control_concentrations = [1,1,1,1];
+control_replicates = [8,4,4,4];
+%control_replicates = [16,16,16,16,16];
+control_concentrations = [1 | i in 1..num_controls];
 control_names = ["pos","neg","blank","dmso"];
-control_concentration_names =  array2d(1..num_controls, 1..1,["cont\(i)-conc\(1)" | i in 1..num_controls]);    
+
+control_concentration_names =  array2d(1..num_controls, 1..max(control_concentrations),["comp\(floor(i/max(control_concentrations)))-conc\((i mod max(control_concentrations)) + 1)" | i in 1..num_controls*max(control_concentrations)]);  
   
+    

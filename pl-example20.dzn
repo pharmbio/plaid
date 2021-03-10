@@ -1,6 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Description: 1 plate divided horizontally (top part and lower part have the same layout).
 %% 2021/Jan/13: satisfiable. It generates 1 plate in aprox. 45sec 
+%% 2021/Mar/04: satisfiable. It generates 1 plate in aprox. 1m 9sec 
+
 
 %% Plate dimentions: (this is a 1536-well plate)
 num_rows = 16; %% height
