@@ -186,7 +186,7 @@ constraint forall(b in 0..size_empty_edge-1) (forall(i in Plates, j in Rows, k i
 % constraint global_cardinality(array1d(1..numplates*numcols*numrows, plates),[ i | i in 1..compound_ids]++[i | i in compound_ids+1..experiments], [(floor((i-1)/(compounds*max_compound_concentrations))<compound_replicates[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) /\ ((floor((i-1))) mod max_compound_concentrations) < compound_concentrations[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1] | i in 1..compound_ids]++[1|i in compound_ids+1..experiments]);
 
 
-constraint global_cardinality(array1d(1..numplates*numcols*numrows, plates),[0]++[ i | i in 1..compound_ids]++[i | i in compound_ids+1..experiments]++[ experiments+i | i in 1..num_controls*max_control_concentrations],[emptywells]++[(floor((i-1)/(compounds*max_compound_concentrations))<compound_replicates[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) /\ ((floor((i-1))) mod max_compound_concentrations) < compound_concentrations[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1] | i in 1..compound_ids]++[1|i in compound_ids+1..experiments]++[control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1]) | i in 1..num_controls*max_control_concentrations]);
+constraint global_cardinality(plates,[0]++[ i | i in 1..compound_ids]++[i | i in compound_ids+1..experiments]++[ experiments+i | i in 1..num_controls*max_control_concentrations],[emptywells]++[(floor((i-1)/(compounds*max_compound_concentrations))<compound_replicates[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) /\ ((floor((i-1))) mod max_compound_concentrations) < compound_concentrations[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1] | i in 1..compound_ids]++[1|i in compound_ids+1..experiments]++[control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1]) | i in 1..num_controls*max_control_concentrations]);
 
 %% Experiments that do not exists are not located in any plate, row, or column.
 constraint forall(i in 1..compound_ids)(((floor((i-1)/(compounds*max_compound_concentrations))<compound_replicates[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) /\ ((floor((i-1))) mod max_compound_concentrations) < compound_concentrations[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) == false <-> experiment_plate[i] = 0);
@@ -199,9 +199,19 @@ constraint forall(i in 1..compound_ids)(((floor((i-1)/(compounds*max_compound_co
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Channelling constraints: an experiment/compound is located at a given plate
 
-constraint forall(l in 1..experiments, i in Plates)(count_eq([plates[i,j,k] | j in Rows, k in Columns],l,(experiment_plate[l] == i)));
+% constraint forall(l in 1..experiments, i in Plates)(count_eq(plates[i,..,..],l,(experiment_plate[l] == i)));
+% constraint forall(l in 1..experiments)(count_eq(plates,l,(experiment_plate[l] != 0)));
 
-constraint forall(l in 1..experiments)(count_eq([plates[i,j,k] | i in Plates, j in Rows, k in Columns],l,(experiment_plate[l] != 0)));
+% constraint forall(l in 1..experiments, j in Rows)(count_eq(plates[..,j,..],l,(experiment_row[l] == j)));
+% constraint forall(l in 1..experiments)(count_eq(plates,l,(experiment_row[l] != 0)));
+
+% constraint forall(l in 1..experiments, k in Columns)(count_eq(plates[..,..,k],l,(experiment_column[l] == k)));
+% constraint forall(l in 1..experiments)(count_eq(plates,l,(experiment_column[l] != 0)));
+
+constraint forall(l in 1..experiments)(
+  plates[experiment_plate[l],experiment_row[l],experiment_column[l]] = l \/ 
+  exists(v in [experiment_plate[l],experiment_row[l],experiment_column[l]])(v == 0)
+);
 
 
 
@@ -213,18 +223,20 @@ constraint forall(l in 1..experiments)(count_eq([plates[i,j,k] | i in Plates, j 
 
 %% There might be a stronger version of these constraints...
 % constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)((experiment_row[l] == j) <- (plates[i,j,k] == l));
-constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)(
-%   (plates[i,j,k] == l) -> (experiment_row[l] == j)
-  plates[i,j,k] in 1..experiments -> experiment_row[plates[i,j,k]] = j
-);
+% constraint forall(i in Plates, j in Rows, k in Columns)(
+% %   (plates[i,j,k] == l) -> (experiment_row[l] == j)
+%   plates[i,j,k] in 1..experiments -> experiment_row[plates[i,j,k]] = j
+% );
 
 % constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)((experiment_column[l] == k) <- (plates[i,j,k] == l));
-constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)(
-%   (plates[i,j,k] == l) -> (experiment_column[l] == k)
-  plates[i,j,k] in 1..experiments -> experiment_column[plates[i,j,k]] = k
-);
+% constraint forall(i in Plates, j in Rows, k in Columns)(
+% %   (plates[i,j,k] == l) -> (experiment_column[l] == k)
+%   plates[i,j,k] in 1..experiments -> experiment_column[plates[i,j,k]] = k
+% );
 
-constraint forall(l in 1..experiments, j in Rows)(count_eq([plates[i,j,k] | i in Plates, k in Columns],l,(experiment_row[l] == j)));
+
+
+% constraint forall(l in 1..experiments, j in Rows)(count_eq([plates[i,j,k] | i in Plates, k in Columns],l,(experiment_row[l] == j)));
 
 %constraint forall(l in 1..experiments, j in Rows)(experiment_row[l] != j <-> count_eq([plates[experiment_plate[l],j,k] | k in Columns],l,0));
 
@@ -232,7 +244,7 @@ constraint forall(l in 1..experiments, j in Rows)(count_eq([plates[i,j,k] | i in
 
 %constraint forall(l in 1..experiments, k in Columns)(count_eq([plates[experiment_plate[l],j,k] | j in Rows],l,(experiment_column[l] == k)));
 
-constraint forall(l in 1..experiments, k in Columns)(count_eq([plates[i,j,k] | i in Plates, j in Rows],l,(experiment_column[l] == k)));
+% constraint forall(l in 1..experiments, k in Columns)(count_eq([plates[i,j,k] | i in Plates, j in Rows],l,(experiment_column[l] == k)));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% A compound with all concentrations must appear on a single plate
