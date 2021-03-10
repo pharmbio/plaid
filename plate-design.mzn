@@ -13,7 +13,7 @@
 
 
 include "globals.mzn";
-include "gecode.mzn";
+% include "gecode.mzn";
 
 
 %%%% Input Data  %%%%
@@ -205,14 +205,22 @@ constraint forall(l in 1..experiments, i in Plates)(count_eq([plates[i,j,k] | j 
 
 
 %% For experiments that do not exist = plate 0 (redundant)
-constraint forall(l in 1..experiments)(count_eq(array1d(1..numplates*numcols*numrows, plates),l,0) <-> (experiment_plate[l] == 0));
-constraint forall(l in 1..experiments)(count_eq(array1d(1..numplates*numcols*numrows, plates),l,0) <-> (experiment_row[l] == 0));
-constraint forall(l in 1..experiments)(count_eq(array1d(1..numplates*numcols*numrows, plates),l,0) <-> (experiment_column[l] == 0));
+% constraint forall(l in 1..experiments)(count_eq(plates,l,0) <-> (experiment_plate[l] == 0));
+% constraint forall(l in 1..experiments)(count_eq(plates,l,0) <-> (experiment_row[l] == 0));
+% constraint forall(l in 1..experiments)(count_eq(plates,l,0) <-> (experiment_column[l] == 0));
 
 %% There might be a stronger version of these constraints...
-constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)((experiment_row[l] == j) <- (plates[i,j,k] == l));
+% constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)((experiment_row[l] == j) <- (plates[i,j,k] == l));
+constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)(
+%   (plates[i,j,k] == l) -> (experiment_row[l] == j)
+  plates[i,j,k] in 1..experiments -> experiment_row[plates[i,j,k]] = j
+);
 
-constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)((experiment_column[l] == k) <- (plates[i,j,k] == l));
+% constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)((experiment_column[l] == k) <- (plates[i,j,k] == l));
+constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)(
+%   (plates[i,j,k] == l) -> (experiment_column[l] == k)
+  plates[i,j,k] in 1..experiments -> experiment_column[plates[i,j,k]] = k
+);
 
 constraint forall(l in 1..experiments, j in Rows)(count_eq([plates[i,j,k] | i in Plates, k in Columns],l,(experiment_row[l] == j)));
 
@@ -527,9 +535,9 @@ forall(i in Plates)(plates[i,numrows,numcols] == experiments+c ->
 
 %solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(plates, random, indomain_max)]) satisfy; 
 
-solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(experiment_row, first_fail, indomain_random), int_search(plates, first_fail, indomain_random)]) satisfy; 
+% solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(experiment_row, first_fail, indomain_random), int_search(plates, first_fail, indomain_random)]) satisfy; 
 
-%solve satisfy;
+solve satisfy;
 
 
 
