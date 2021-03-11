@@ -475,7 +475,7 @@ constraint global_cardinality_low_up(experiment_plate,[ i | i in Plates],[ min_c
 int: at_least_compounds = min(compound_concentrations)*floor(sum(compound_replicates)/numplates);
 int: at_most_compounds = max_compound_concentrations*ceil(sum(compound_replicates)/numplates);
 
-constraint global_cardinality_low_up([experiment_plate[i] | i in 1..compound_ids] ,[ i | i in Plates],[ at_least_compounds | i in Plates],[ at_most_compounds | i in Plates]);
+constraint global_cardinality_low_up(experiment_plate[1..compound_ids] ,[ i | i in Plates],[ at_least_compounds | i in Plates],[ at_most_compounds | i in Plates]);
 
 
 
