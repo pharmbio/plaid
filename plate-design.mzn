@@ -213,6 +213,11 @@ constraint forall(l in 1..experiments)(
   exists(v in [experiment_plate[l],experiment_row[l],experiment_column[l]])(v == 0)
 );
 
+constraint forall(l in 1..experiments)(
+  (experiment_plate[l] = 0 <-> experiment_row[l] = 0) /\
+  (experiment_row[l] = 0 <-> experiment_column[l] = 0)
+);
+
 
 
 %% For experiments that do not exist = plate 0 (redundant)
@@ -345,9 +350,16 @@ constraint global_cardinality(experiment_column, [k | k in Columns], [numplates*
 
 %% Implied constraint: how many experiments can there be in a row? Per plate
 % I think this still works...
-constraint forall(i in Plates, j in Rows) (sum([ experiment_row[l] == j /\ experiment_plate[l] == i| l in 1..experiments])<= numcols-among([plates[i,j,k] | k in Columns], ({0} union experiments+1..experiments+num_controls*max_control_concentrations)));
+constraint forall(i in Plates, j in Rows) (
+  let{
+    var int: exprInRow;
+    constraint exprInRow = among(plates[i,j,..], 1..experiments)::domain; 
+    %sum([experiment_row[l] == j /\ experiment_plate[l] == i| l in 1..experiments]);
+  } in exprInRow <= numcols-among([plates[i,j,k] | k in Columns], ({0} union experiments+1..experiments+num_controls*max_control_concentrations)));
 
-constraint forall(i in Plates, k in Columns) (sum([ experiment_column[l] == k /\ experiment_plate[l] == i| l in 1..experiments])<= numrows-among([plates[i,j,k] | j in Rows], ({0} union experiments+1..experiments+num_controls*max_control_concentrations)));
+constraint forall(i in Plates, k in Columns) (
+% sum([ experiment_column[l] == k /\ experiment_plate[l] == i| l in 1..experiments])
+(among(plates[i,..,k], 1..experiments)::domain) <= numrows-among([plates[i,j,k] | j in Rows], ({0} union experiments+1..experiments+num_controls*max_control_concentrations)));
 
 
 %% Implied constraint:
@@ -464,8 +476,8 @@ array [Plates,Vertical] of var 0..ceil(inner_plate_size/2): ul_half_plates;
 %array [Plates,Horizontal] of var 0..ceil(inner_plate_size/2): lr_half_plates;
 
 %%% Counting the number of experiments in the upper and lower half-plates
-constraint forall(i in Plates) (among(ul_half_plates[i,upper],[plates[i,j,k] | j in 1..floor(numrows/2), k in Columns], 1..experiments));
-constraint forall(i in Plates) (among(ul_half_plates[i,lower],[plates[i,j,k] | j in floor(numrows/2)+1..numrows, k in Columns], 1..experiments));
+constraint forall(i in Plates) (among(ul_half_plates[i,upper], plates[i,1..floor(numrows/2),..], 1..experiments));
+constraint forall(i in Plates) (among(ul_half_plates[i,lower], plates[i,floor(numrows/2)+1..numrows,..], 1..experiments));
 
 constraint forall(i in Plates) (sum(e in 1..experiments)(experiment_plate[e] == i /\ experiment_row[e] <= floor(numrows/2)) == ul_half_plates[i,upper]);
 constraint forall(i in Plates) (sum(e in 1..experiments)(experiment_plate[e] == i /\ experiment_row[e] > floor(numrows/2)) == ul_half_plates[i,lower]);
