@@ -289,7 +289,20 @@ alldifferent([experiment_row[r*compounds*max_compound_concentrations+(l-1)*max_c
 % ))) endif; 
 
 
+%%% testing
 
+% Split concentrations between upper and lower halves of the plate
+
+constraint if concentrations_on_different_rows then (forall(l in 1..compounds) (forall(r in 0..(compound_replicates[l]-1)) (
+ceil(compound_concentrations[l]/2) >= among([experiment_row[r*compounds*max_compound_concentrations+(l-1)*max_compound_concentrations+i]| i in 1..compound_concentrations[l]], 1..floor(numrows/2))
+))) endif; 
+
+constraint if concentrations_on_different_rows then (forall(l in 1..compounds) (forall(r in 0..(compound_replicates[l]-1)) (
+ceil(compound_concentrations[l]/2) >= among([experiment_row[r*compounds*max_compound_concentrations+(l-1)*max_compound_concentrations+i]| i in 1..compound_concentrations[l]], floor(numrows/2)+1..numrows)
+))) endif; 
+
+
+%%%%%%
 constraint if concentrations_on_different_columns then (forall(l in 1..compounds) (forall(r in 0..(compound_replicates[l]-1)) (nvalue(min(compound_concentrations[l],numcols-2*size_empty_edge), [experiment_column[r*compounds*max_compound_concentrations+(l-1)*max_compound_concentrations+i]| i in 1..compound_concentrations[l]])))) endif; 
 
 constraint if concentrations_on_different_columns then (forall(l in 1..compounds) (forall(r in 0..(compound_replicates[l]-1)) ( 
@@ -460,8 +473,8 @@ constraint forall(i in Plates) (among(ul_half_plates[i,lower],[plates[i,j,k] | j
 constraint forall(i in Plates) (sum(e in 1..experiments)(experiment_plate[e] == i /\ experiment_row[e] <= floor(numrows/2)) == ul_half_plates[i,upper]);
 constraint forall(i in Plates) (sum(e in 1..experiments)(experiment_plate[e] == i /\ experiment_row[e] > floor(numrows/2)) == ul_half_plates[i,lower]);
 
-constraint (sum(e in 1..experiments)(experiment_row[e] <= floor(numrows/2)) == sum(i in Plates)(ul_half_plates[i,upper]));
-constraint (sum(e in 1..experiments)(experiment_row[e] > floor(numrows/2)) == sum(i in Plates)(ul_half_plates[i,lower]));
+constraint (sum(e in 1..experiments)(experiment_row[e] in 1..floor(numrows/2)) == sum(i in Plates)(ul_half_plates[i,upper]));
+constraint (sum(e in 1..experiments)(experiment_row[e] in floor(numrows/2)+1..numrows) == sum(i in Plates)(ul_half_plates[i,lower]));
 
 %% The following constraints should be redundant when using the two constraints above.
 %% CHECK LATER!
@@ -664,18 +677,20 @@ constraint forall(i in Plates, j in 2..numrows-1)(plates[i,j,numcols] > experime
            
 %%%% Find a solution! %%%%
 
-array [0..numplates,1..experiments] of var {0} union Rows: crazy_idea;
+array [Plates,1..experiments] of var {0} union Rows: crazy_idea;
 
-constraint forall(l in 1..experiments)(crazy_idea[experiment_plate[l],l]==experiment_row[l]);
+constraint forall(l in 1..experiments)((experiment_plate[l] > 0) -> (crazy_idea[experiment_plate[l],l] = experiment_row[l]));
 
-constraint forall(i in {0} union Plates, l in 1..experiments)(experiment_plate[l] != i -> crazy_idea[i,l] = 0);
+constraint forall(i in Plates, l in 1..experiments)((experiment_plate[l] != i) -> (crazy_idea[i,l] = 0));
 
 %solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(plates, random, indomain_max)]) satisfy; 
 
 %% Best for Gecode
 %solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(experiment_row, first_fail, indomain_random), int_search(plates, first_fail, indomain_random)]) satisfy; 
 
-solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(crazy_idea, first_fail, indomain_random), int_search(plates, first_fail, indomain_random)]) satisfy; 
+solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(crazy_idea, first_fail, indomain_random), int_search(plates, first_fail, indomain_random)]) 
+     :: restart_geometric(1.5,100)
+     satisfy; 
 
 
 %% Chuffed
