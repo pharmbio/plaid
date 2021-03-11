@@ -16,12 +16,12 @@ allow_empty_wells = true;
 size_empty_edge = 1;
 
 % New and used!
-concentrations_on_different_rows = true;
-concentrations_on_different_columns = true;
+concentrations_on_different_rows = false;
+concentrations_on_different_columns = false;
 
 % New and unused! (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
 replicates_on_different_plates = false;
-replicates_on_same_plate = true;
+replicates_on_same_plate = false;
 
 %%% Compounds %%%
 compounds = 288; %% number of drugs/compounds

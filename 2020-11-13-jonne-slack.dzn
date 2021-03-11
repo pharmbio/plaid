@@ -1,6 +1,7 @@
 %%% Taken from Slack
 %% It produces 1 plate with 2 vertical cell lines (the left side is equal to the right side of the plate
 %% 2020/Nov/16: Finishes in aprox 4s 688msec
+%% 2021/Mar/11: it takes about ??
 
 num_rows = 16; %% height
 num_cols = 24; %% width

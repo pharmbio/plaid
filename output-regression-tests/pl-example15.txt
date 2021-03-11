@@ -1,0 +1,52 @@
+1 plates
+Plate 1:
+  .   .   .   .   .   .   .   .   .   .
+  .  15   -   6  12   +   2   x   -   .
+  .   x   ~  10   1   8  14   ~   +   .
+  .   -  16   +   x   +  11   7   4   .
+  .   x   9   ~  13   ~   5   3   -   .
+  .   .   .   .   .   .   .   .   .   .
+Compound's plate:
+[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+Experiment's row:
+[3, 2, 5, 4, 5, 2, 4, 3, 5, 3, 4, 2, 5, 3, 2, 4]
+Experiment's column:
+[5, 7, 8, 9, 7, 4, 8, 6, 3, 4, 7, 5, 5, 7, 2, 3]
+Controls per half plates:
+[2, 2, 2, 2, 2, 2, 2, 2]
+Compounds per half plates:
+[8, 8]
+plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
+plate_1,B02,comp2,3,comp2_3
+plate_1,B03,neg,cont2-conc1,neg_cont2-conc1
+plate_1,B04,comp2,1,comp2_1
+plate_1,B05,comp1,5,comp1_5
+plate_1,B06,pos,cont1-conc1,pos_cont1-conc1
+plate_1,B07,comp1,1,comp1_1
+plate_1,B08,blank,cont3-conc1,blank_cont3-conc1
+plate_1,B09,neg,cont2-conc1,neg_cont2-conc1
+plate_1,C02,blank,cont3-conc1,blank_cont3-conc1
+plate_1,C03,dmso,cont4-conc1,dmso_cont4-conc1
+plate_1,C04,comp1,1,comp1_1
+plate_1,C05,comp1,0.3,comp1_0.3
+plate_1,C06,comp2,5,comp2_5
+plate_1,C07,comp2,1,comp2_1
+plate_1,C08,dmso,cont4-conc1,dmso_cont4-conc1
+plate_1,C09,pos,cont1-conc1,pos_cont1-conc1
+plate_1,D02,neg,cont2-conc1,neg_cont2-conc1
+plate_1,D03,comp2,5,comp2_5
+plate_1,D04,pos,cont1-conc1,pos_cont1-conc1
+plate_1,D05,blank,cont3-conc1,blank_cont3-conc1
+plate_1,D06,pos,cont1-conc1,pos_cont1-conc1
+plate_1,D07,comp1,3,comp1_3
+plate_1,D08,comp2,3,comp2_3
+plate_1,D09,comp1,5,comp1_5
+plate_1,E02,blank,cont3-conc1,blank_cont3-conc1
+plate_1,E03,comp1,0.3,comp1_0.3
+plate_1,E04,dmso,cont4-conc1,dmso_cont4-conc1
+plate_1,E05,comp2,0.3,comp2_0.3
+plate_1,E06,dmso,cont4-conc1,dmso_cont4-conc1
+plate_1,E07,comp2,0.3,comp2_0.3
+plate_1,E08,comp1,3,comp1_3
+plate_1,E09,neg,cont2-conc1,neg_cont2-conc1
+----------

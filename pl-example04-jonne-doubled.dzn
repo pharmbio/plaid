@@ -3,7 +3,8 @@
 %% It produces 2 plates
 %
 %% 2020/Nov/20: It takes about 2min 33sec
-%% 2021/Jan/18: It takes about 1min 4sec
+%% 2021/Jan/18: It takes about 1min  4sec
+%% 2021/Mar/10: It takes about 1min 13sec
 
 %% Plate dimentions: (this is a 384-well plate)
 num_rows = 16; %% height

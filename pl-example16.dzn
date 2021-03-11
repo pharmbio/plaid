@@ -2,7 +2,7 @@
 %% It produces 1 plate with 2 vertical cell lines (the left side is equal to the right side of the plate
 %% 2020/Nov/27: Finishes in aprox 4s 688msec
 %% 2020/12/04: ???
-
+%% BUG! Fix model for odd number of rows
 num_rows = 9; %% height
 num_cols = 24; %% width
 
