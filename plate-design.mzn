@@ -227,7 +227,7 @@ constraint forall(l in 1..experiments)(
 
 
 %% Gustav
-=======
+%=======
 
 %constraint forall(l in 1..experiments)(
  % count_eq(array1d(1..numplates*numcols*numrows, plates),l,0) <-> (experiment_plate[l] = 0 /\ experiment_row[l] = 0 /\ experiment_column[l] = 0)
