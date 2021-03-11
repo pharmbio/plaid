@@ -198,37 +198,13 @@ constraint forall(i in 1..compound_ids)(((floor((i-1)/(compounds*max_compound_co
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Channelling constraints: an experiment/compound is located at a given plate
 
-% constraint forall(l in 1..experiments, i in Plates)(count_eq(plates[i,..,..],l,(experiment_plate[l] == i)));
-% constraint forall(l in 1..experiments)(count_eq(plates,l,(experiment_plate[l] != 0)));
+constraint forall(l in 1..experiments, i in Plates)(count_eq([plates[i,j,k] | j in Rows, k in Columns],l,(experiment_plate[l] == i)));
 
-% constraint forall(l in 1..experiments, j in Rows)(count_eq(plates[..,j,..],l,(experiment_row[l] == j)));
-% constraint forall(l in 1..experiments)(count_eq(plates,l,(experiment_row[l] != 0)));
-
-% constraint forall(l in 1..experiments, k in Columns)(count_eq(plates[..,..,k],l,(experiment_column[l] == k)));
-% constraint forall(l in 1..experiments)(count_eq(plates,l,(experiment_column[l] != 0)));
-
-constraint forall(l in 1..experiments)(
-  plates[experiment_plate[l],experiment_row[l],experiment_column[l]] = l \/ 
-  exists(v in [experiment_plate[l],experiment_row[l],experiment_column[l]])(v == 0)
-);
-
-constraint forall(l in 1..experiments)(
-  (experiment_plate[l] = 0 <-> experiment_row[l] = 0) /\
-  (experiment_row[l] = 0 <-> experiment_column[l] = 0)
-);
+constraint forall(l in 1..experiments)(count_eq([plates[i,j,k] | i in Plates, j in Rows, k in Columns],l,(experiment_plate[l] != 0)));
 
 
 
 %% For experiments that do not exist = plate 0 (redundant)
-
-% constraint forall(l in 1..experiments)(count_eq(plates,l,0) <-> (experiment_plate[l] == 0));
-% constraint forall(l in 1..experiments)(count_eq(plates,l,0) <-> (experiment_row[l] == 0));
-% constraint forall(l in 1..experiments)(count_eq(plates,l,0) <-> (experiment_column[l] == 0));
-
-
-%% Gustav
-=======
-
 %constraint forall(l in 1..experiments)(
  % count_eq(array1d(1..numplates*numcols*numrows, plates),l,0) <-> (experiment_plate[l] = 0 /\ experiment_row[l] = 0 /\ experiment_column[l] = 0)
 %);
@@ -241,37 +217,17 @@ constraint forall(l in 1..experiments)(
 
 
 %% There might be a stronger version of these constraints...
-
-% constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)((experiment_row[l] == j) <- (plates[i,j,k] == l));
-% constraint forall(i in Plates, j in Rows, k in Columns)(
-% %   (plates[i,j,k] == l) -> (experiment_row[l] == j)
-%   plates[i,j,k] in 1..experiments -> experiment_row[plates[i,j,k]] = j
-% );
-
-% constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)((experiment_column[l] == k) <- (plates[i,j,k] == l));
-% constraint forall(i in Plates, j in Rows, k in Columns)(
-% %   (plates[i,j,k] == l) -> (experiment_column[l] == k)
-%   plates[i,j,k] in 1..experiments -> experiment_column[plates[i,j,k]] = k
-% );
-
-
-%constraint forall(i in Plates, j in Rows, k in Columns)(plates[i,j,k] in 1..experiments -> experiment_row[plates[i,j,k]] = j);
-
-%% Gustav: Not needed with the channelling above?
-%=======
 %constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)((experiment_row[l] == j) <- (plates[i,j,k] == l));
 
 constraint forall(l in 1..experiments, i in Plates)(count_eq([plates[i,j,k] | j in Rows, k in Columns],l,(experiment_plate[l] == i)));
 
 %constraint forall(i in Plates, j in Rows, k in Columns)(plates[i,j,k] in 1..experiments -> experiment_row[plates[i,j,k]] = j);
 
-
 %constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)((experiment_column[l] == k) <- (plates[i,j,k] == l));
 
 %constraint forall(i in Plates, j in Rows, k in Columns)((experiment_column[plates[i,j,k]] = k) <- (plates[i,j,k] in 1..experiments));
 
-%% Gustav: Not needed with the channelling above?
-%constraint forall(l in 1..experiments, j in Rows)(count_eq([plates[i,j,k] | i in Plates, k in Columns],l,(experiment_row[l] == j)));
+constraint forall(l in 1..experiments, j in Rows)(count_eq([plates[i,j,k] | i in Plates, k in Columns],l,(experiment_row[l] == j)));
 
 %constraint forall(l in 1..experiments, j in Rows)(experiment_row[l] != j <-> count_eq([plates[experiment_plate[l],j,k] | k in Columns],l,0));
 
@@ -279,7 +235,7 @@ constraint forall(l in 1..experiments, i in Plates)(count_eq([plates[i,j,k] | j 
 
 %constraint forall(l in 1..experiments, k in Columns)(count_eq([plates[experiment_plate[l],j,k] | j in Rows],l,(experiment_column[l] == k)));
 
-% constraint forall(l in 1..experiments, k in Columns)(count_eq([plates[i,j,k] | i in Plates, j in Rows],l,(experiment_column[l] == k)));
+constraint forall(l in 1..experiments, k in Columns)(count_eq([plates[i,j,k] | i in Plates, j in Rows],l,(experiment_column[l] == k)));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% A compound with all concentrations must appear on a single plate
@@ -391,13 +347,21 @@ constraint global_cardinality(experiment_column, [k | k in Columns], [numplates*
 
 %% Implied constraint: how many experiments can there be in a row? Per plate
 % I think this still works...
-constraint forall(i in Plates, j in Rows) (
-  let{
-    var int: exprInRow;
-    constraint exprInRow = among(plates[i,j,..], 1..experiments)::domain; 
-    %sum([experiment_row[l] == j /\ experiment_plate[l] == i| l in 1..experiments]);
-  } in exprInRow <= numcols-among([plates[i,j,k] | k in Columns], ({0} union experiments+1..experiments+num_controls*max_control_concentrations)));
+constraint forall(i in Plates, j in Rows) (sum([ experiment_row[l] == j /\ experiment_plate[l] == i| l in 1..experiments])<= numcols-among(plates[i,j,..], ({0} union experiments+1..experiments+num_controls*max_control_concentrations)));
 
+%% Below suggested by Gustav. It improves flattening but worsens the solving time
+% constraint forall(i in Plates, j in Rows) (
+%   let{
+%     var int: exprInRow;
+%     constraint exprInRow = among(plates[i,j,..], 1..experiments)::domain; 
+%     %sum([experiment_row[l] == j /\ experiment_plate[l] == i| l in 1..experiments]);
+%   } in exprInRow <= numcols-among([plates[i,j,k] | k in Columns], ({0} union experiments+1..experiments+num_controls*max_control_concentrations)));
+  
+
+%% Replaced by constraint below (suggested by Gustav)
+%constraint forall(i in Plates, k in Columns) (sum([ experiment_column[l] == k /\ experiment_plate[l] == i| l in 1..experiments])<= numrows-among(plates[i,..,k], ({0} union experiments+1..experiments+num_controls*max_control_concentrations)));
+
+%% Gustav:
 constraint forall(i in Plates, k in Columns) (
 % sum([ experiment_column[l] == k /\ experiment_plate[l] == i| l in 1..experiments])
 (among(plates[i,..,k], 1..experiments)::domain) <= numrows-among([plates[i,j,k] | j in Rows], ({0} union experiments+1..experiments+num_controls*max_control_concentrations)));
@@ -517,8 +481,8 @@ array [Plates,Vertical] of var 0..ceil(inner_plate_size/2): ul_half_plates;
 %array [Plates,Horizontal] of var 0..ceil(inner_plate_size/2): lr_half_plates;
 
 %%% Counting the number of experiments in the upper and lower half-plates
-constraint forall(i in Plates) (among(ul_half_plates[i,upper], plates[i,1..floor(numrows/2),..], 1..experiments));
-constraint forall(i in Plates) (among(ul_half_plates[i,lower], plates[i,floor(numrows/2)+1..numrows,..], 1..experiments));
+constraint forall(i in Plates) (among(ul_half_plates[i,upper],plates[i,1..floor(numrows/2),..], 1..experiments));
+constraint forall(i in Plates) (among(ul_half_plates[i,lower],plates[i,floor(numrows/2)+1..numrows,..], 1..experiments));
 
 constraint forall(i in Plates) (sum(e in 1..experiments)(experiment_plate[e] == i /\ experiment_row[e] <= floor(numrows/2)) == ul_half_plates[i,upper]);
 constraint forall(i in Plates) (sum(e in 1..experiments)(experiment_plate[e] == i /\ experiment_row[e] > floor(numrows/2)) == ul_half_plates[i,lower]);

@@ -1,104 +1,104 @@
 2 plates
 Plate 1:
   .   .   .   .   .   .   .   .   .   .   .   .
-  .   x   +   ~   -   x   +   ~   +   1   -   .
-  .   ~   -   x   +   ~   -   x   -   x   +   .
+  .   x   ~   -   x   -   x   ~   +   -   +   .
+  .   -   +   2   +   ~   +   -   x   ~   x   .
   .   .   .   .   .   .   .   .   .   .   .   .
 
  Plate 2:
   .   .   .   .   .   .   .   .   .   .   .   .
-  .   x   -   x   -   x   ~   +   ~   2   +   .
-  .   +   ~   +   ~   +   -   x   -   x   -   .
+  .   -   +   1   +   ~   x   ~   +   -   x   .
+  .   x   ~   -   x   -   +   -   x   ~   +   .
   .   .   .   .   .   .   .   .   .   .   .   .
 Compound's plate:
-[1, 2]
+[2, 1]
 Experiment's row:
-[2, 2]
+[2, 3]
 Experiment's column:
-[10, 10]
+[4, 4]
 Controls per half plates:
-[3, 2, 2, 2, 2, 3, 3, 2, 2, 2, 3, 2, 3, 3, 2, 2]
+[2, 3, 3, 2, 3, 2, 2, 2, 3, 2, 2, 2, 2, 3, 3, 2]
 Compounds per half plates:
-[1, 0, 1, 0]
+[0, 1, 1, 0]
 plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
 plate_1,B02,blank,cont3-conc1,blank_cont3-conc1
 plate_1,F02,blank,cont3-conc1,blank_cont3-conc1
-plate_1,B03,pos,cont1-conc1,pos_cont1-conc1
-plate_1,F03,pos,cont1-conc1,pos_cont1-conc1
-plate_1,B04,dmso,cont4-conc1,dmso_cont4-conc1
-plate_1,F04,dmso,cont4-conc1,dmso_cont4-conc1
-plate_1,B05,neg,cont2-conc1,neg_cont2-conc1
-plate_1,F05,neg,cont2-conc1,neg_cont2-conc1
-plate_1,B06,blank,cont3-conc1,blank_cont3-conc1
-plate_1,F06,blank,cont3-conc1,blank_cont3-conc1
-plate_1,B07,pos,cont1-conc1,pos_cont1-conc1
-plate_1,F07,pos,cont1-conc1,pos_cont1-conc1
+plate_1,B03,dmso,cont4-conc1,dmso_cont4-conc1
+plate_1,F03,dmso,cont4-conc1,dmso_cont4-conc1
+plate_1,B04,neg,cont2-conc1,neg_cont2-conc1
+plate_1,F04,neg,cont2-conc1,neg_cont2-conc1
+plate_1,B05,blank,cont3-conc1,blank_cont3-conc1
+plate_1,F05,blank,cont3-conc1,blank_cont3-conc1
+plate_1,B06,neg,cont2-conc1,neg_cont2-conc1
+plate_1,F06,neg,cont2-conc1,neg_cont2-conc1
+plate_1,B07,blank,cont3-conc1,blank_cont3-conc1
+plate_1,F07,blank,cont3-conc1,blank_cont3-conc1
 plate_1,B08,dmso,cont4-conc1,dmso_cont4-conc1
 plate_1,F08,dmso,cont4-conc1,dmso_cont4-conc1
 plate_1,B09,pos,cont1-conc1,pos_cont1-conc1
 plate_1,F09,pos,cont1-conc1,pos_cont1-conc1
-plate_1,B10,BPA,comp1-conc1,BPA_comp1-conc1
-plate_1,F10,BPA,comp1-conc1,BPA_comp1-conc1
-plate_1,B11,neg,cont2-conc1,neg_cont2-conc1
-plate_1,F11,neg,cont2-conc1,neg_cont2-conc1
-plate_1,C02,dmso,cont4-conc1,dmso_cont4-conc1
-plate_1,G02,dmso,cont4-conc1,dmso_cont4-conc1
-plate_1,C03,neg,cont2-conc1,neg_cont2-conc1
-plate_1,G03,neg,cont2-conc1,neg_cont2-conc1
-plate_1,C04,blank,cont3-conc1,blank_cont3-conc1
-plate_1,G04,blank,cont3-conc1,blank_cont3-conc1
+plate_1,B10,neg,cont2-conc1,neg_cont2-conc1
+plate_1,F10,neg,cont2-conc1,neg_cont2-conc1
+plate_1,B11,pos,cont1-conc1,pos_cont1-conc1
+plate_1,F11,pos,cont1-conc1,pos_cont1-conc1
+plate_1,C02,neg,cont2-conc1,neg_cont2-conc1
+plate_1,G02,neg,cont2-conc1,neg_cont2-conc1
+plate_1,C03,pos,cont1-conc1,pos_cont1-conc1
+plate_1,G03,pos,cont1-conc1,pos_cont1-conc1
+plate_1,C04,BPA+H,comb-conc1,BPA+H_comb-conc1
+plate_1,G04,BPA+H,comb-conc1,BPA+H_comb-conc1
 plate_1,C05,pos,cont1-conc1,pos_cont1-conc1
 plate_1,G05,pos,cont1-conc1,pos_cont1-conc1
 plate_1,C06,dmso,cont4-conc1,dmso_cont4-conc1
 plate_1,G06,dmso,cont4-conc1,dmso_cont4-conc1
-plate_1,C07,neg,cont2-conc1,neg_cont2-conc1
-plate_1,G07,neg,cont2-conc1,neg_cont2-conc1
-plate_1,C08,blank,cont3-conc1,blank_cont3-conc1
-plate_1,G08,blank,cont3-conc1,blank_cont3-conc1
-plate_1,C09,neg,cont2-conc1,neg_cont2-conc1
-plate_1,G09,neg,cont2-conc1,neg_cont2-conc1
-plate_1,C10,blank,cont3-conc1,blank_cont3-conc1
-plate_1,G10,blank,cont3-conc1,blank_cont3-conc1
-plate_1,C11,pos,cont1-conc1,pos_cont1-conc1
-plate_1,G11,pos,cont1-conc1,pos_cont1-conc1
-plate_2,B02,blank,cont3-conc1,blank_cont3-conc1
-plate_2,F02,blank,cont3-conc1,blank_cont3-conc1
-plate_2,B03,neg,cont2-conc1,neg_cont2-conc1
-plate_2,F03,neg,cont2-conc1,neg_cont2-conc1
-plate_2,B04,blank,cont3-conc1,blank_cont3-conc1
-plate_2,F04,blank,cont3-conc1,blank_cont3-conc1
-plate_2,B05,neg,cont2-conc1,neg_cont2-conc1
-plate_2,F05,neg,cont2-conc1,neg_cont2-conc1
-plate_2,B06,blank,cont3-conc1,blank_cont3-conc1
-plate_2,F06,blank,cont3-conc1,blank_cont3-conc1
-plate_2,B07,dmso,cont4-conc1,dmso_cont4-conc1
-plate_2,F07,dmso,cont4-conc1,dmso_cont4-conc1
-plate_2,B08,pos,cont1-conc1,pos_cont1-conc1
-plate_2,F08,pos,cont1-conc1,pos_cont1-conc1
-plate_2,B09,dmso,cont4-conc1,dmso_cont4-conc1
-plate_2,F09,dmso,cont4-conc1,dmso_cont4-conc1
-plate_2,B10,BPA+H,comb-conc1,BPA+H_comb-conc1
-plate_2,F10,BPA+H,comb-conc1,BPA+H_comb-conc1
-plate_2,B11,pos,cont1-conc1,pos_cont1-conc1
-plate_2,F11,pos,cont1-conc1,pos_cont1-conc1
-plate_2,C02,pos,cont1-conc1,pos_cont1-conc1
-plate_2,G02,pos,cont1-conc1,pos_cont1-conc1
+plate_1,C07,pos,cont1-conc1,pos_cont1-conc1
+plate_1,G07,pos,cont1-conc1,pos_cont1-conc1
+plate_1,C08,neg,cont2-conc1,neg_cont2-conc1
+plate_1,G08,neg,cont2-conc1,neg_cont2-conc1
+plate_1,C09,blank,cont3-conc1,blank_cont3-conc1
+plate_1,G09,blank,cont3-conc1,blank_cont3-conc1
+plate_1,C10,dmso,cont4-conc1,dmso_cont4-conc1
+plate_1,G10,dmso,cont4-conc1,dmso_cont4-conc1
+plate_1,C11,blank,cont3-conc1,blank_cont3-conc1
+plate_1,G11,blank,cont3-conc1,blank_cont3-conc1
+plate_2,B02,neg,cont2-conc1,neg_cont2-conc1
+plate_2,F02,neg,cont2-conc1,neg_cont2-conc1
+plate_2,B03,pos,cont1-conc1,pos_cont1-conc1
+plate_2,F03,pos,cont1-conc1,pos_cont1-conc1
+plate_2,B04,BPA,comp1-conc1,BPA_comp1-conc1
+plate_2,F04,BPA,comp1-conc1,BPA_comp1-conc1
+plate_2,B05,pos,cont1-conc1,pos_cont1-conc1
+plate_2,F05,pos,cont1-conc1,pos_cont1-conc1
+plate_2,B06,dmso,cont4-conc1,dmso_cont4-conc1
+plate_2,F06,dmso,cont4-conc1,dmso_cont4-conc1
+plate_2,B07,blank,cont3-conc1,blank_cont3-conc1
+plate_2,F07,blank,cont3-conc1,blank_cont3-conc1
+plate_2,B08,dmso,cont4-conc1,dmso_cont4-conc1
+plate_2,F08,dmso,cont4-conc1,dmso_cont4-conc1
+plate_2,B09,pos,cont1-conc1,pos_cont1-conc1
+plate_2,F09,pos,cont1-conc1,pos_cont1-conc1
+plate_2,B10,neg,cont2-conc1,neg_cont2-conc1
+plate_2,F10,neg,cont2-conc1,neg_cont2-conc1
+plate_2,B11,blank,cont3-conc1,blank_cont3-conc1
+plate_2,F11,blank,cont3-conc1,blank_cont3-conc1
+plate_2,C02,blank,cont3-conc1,blank_cont3-conc1
+plate_2,G02,blank,cont3-conc1,blank_cont3-conc1
 plate_2,C03,dmso,cont4-conc1,dmso_cont4-conc1
 plate_2,G03,dmso,cont4-conc1,dmso_cont4-conc1
-plate_2,C04,pos,cont1-conc1,pos_cont1-conc1
-plate_2,G04,pos,cont1-conc1,pos_cont1-conc1
-plate_2,C05,dmso,cont4-conc1,dmso_cont4-conc1
-plate_2,G05,dmso,cont4-conc1,dmso_cont4-conc1
-plate_2,C06,pos,cont1-conc1,pos_cont1-conc1
-plate_2,G06,pos,cont1-conc1,pos_cont1-conc1
-plate_2,C07,neg,cont2-conc1,neg_cont2-conc1
-plate_2,G07,neg,cont2-conc1,neg_cont2-conc1
-plate_2,C08,blank,cont3-conc1,blank_cont3-conc1
-plate_2,G08,blank,cont3-conc1,blank_cont3-conc1
-plate_2,C09,neg,cont2-conc1,neg_cont2-conc1
-plate_2,G09,neg,cont2-conc1,neg_cont2-conc1
-plate_2,C10,blank,cont3-conc1,blank_cont3-conc1
-plate_2,G10,blank,cont3-conc1,blank_cont3-conc1
-plate_2,C11,neg,cont2-conc1,neg_cont2-conc1
-plate_2,G11,neg,cont2-conc1,neg_cont2-conc1
+plate_2,C04,neg,cont2-conc1,neg_cont2-conc1
+plate_2,G04,neg,cont2-conc1,neg_cont2-conc1
+plate_2,C05,blank,cont3-conc1,blank_cont3-conc1
+plate_2,G05,blank,cont3-conc1,blank_cont3-conc1
+plate_2,C06,neg,cont2-conc1,neg_cont2-conc1
+plate_2,G06,neg,cont2-conc1,neg_cont2-conc1
+plate_2,C07,pos,cont1-conc1,pos_cont1-conc1
+plate_2,G07,pos,cont1-conc1,pos_cont1-conc1
+plate_2,C08,neg,cont2-conc1,neg_cont2-conc1
+plate_2,G08,neg,cont2-conc1,neg_cont2-conc1
+plate_2,C09,blank,cont3-conc1,blank_cont3-conc1
+plate_2,G09,blank,cont3-conc1,blank_cont3-conc1
+plate_2,C10,dmso,cont4-conc1,dmso_cont4-conc1
+plate_2,G10,dmso,cont4-conc1,dmso_cont4-conc1
+plate_2,C11,pos,cont1-conc1,pos_cont1-conc1
+plate_2,G11,pos,cont1-conc1,pos_cont1-conc1
 ----------

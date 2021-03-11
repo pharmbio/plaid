@@ -4,6 +4,7 @@
 % Same as pl-example04-jonne-doubled BUT with a different plate size to test optional empty edge
 %%% 2021/Jan/13: It takes about 3min
 %%% 2021/Mar/04: It takes about 1min 12s
+%%% 2021/Mar/11: It takes about 26s 758msec
 
 %% Plate dimentions: (this is a 384-well plate)
 num_rows = 18; %% height
