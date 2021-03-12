@@ -198,7 +198,7 @@ constraint forall(i in 1..compound_ids)(((floor((i-1)/(compounds*max_compound_co
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Channelling constraints: an experiment/compound is located at a given plate
 
-constraint forall(l in 1..experiments, i in Plates)(count_eq([plates[i,j,k] | j in Rows, k in Columns],l,(experiment_plate[l] == i)));
+constraint forall(l in 1..experiments, i in Plates)(count_eq(plates[i,..,..],l,(experiment_plate[l] == i)));
 
 % constraint forall(l in 1..experiments, i in Plates)(
 %   (plates[i,experiment_row[l],experiment_column[l]] = l)::domain
@@ -212,7 +212,7 @@ constraint forall(l in 1..experiments, i in Plates)(count_eq([plates[i,j,k] | j 
 %   (experiment_row[l] = 0 <-> experiment_column[l] = 0)
 % );
 
-constraint forall(l in 1..experiments)(count_eq([plates[i,j,k] | i in Plates, j in Rows, k in Columns],l,(experiment_plate[l] != 0)));
+constraint forall(l in 1..experiments)(count_eq(plates, l, (experiment_plate[l] != 0)));
 
 
 
