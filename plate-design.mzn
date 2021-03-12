@@ -13,7 +13,7 @@
 
 
 include "globals.mzn";
-include "gecode.mzn";
+% include "gecode.mzn";
 %include "chuffed.mzn";
  
 
@@ -212,6 +212,13 @@ constraint forall(l in 1..experiments)(
   exists(v in [experiment_plate[l],experiment_row[l],experiment_column[l]])(v == 0)
 );
 
+% constraint forall(l in 1..experiments, i in Plates)(
+%   (plates[i,experiment_row[l],experiment_column[l]] = l)::domain
+%   \/
+%   experiment_plate[l] != i 
+% %   exists(v in [experiment_plate[l],experiment_row[l],experiment_column[l]])(v == 0)
+% );
+
 constraint forall(l in 1..experiments)(
   (experiment_plate[l] = 0 <-> experiment_row[l] = 0) /\
   (experiment_row[l] = 0 <-> experiment_column[l] = 0)
@@ -261,7 +268,7 @@ constraint forall(l in 1..experiments)(
 %=======
 %constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)((experiment_row[l] == j) <- (plates[i,j,k] == l));
 
-constraint forall(l in 1..experiments, i in Plates)(count_eq([plates[i,j,k] | j in Rows, k in Columns],l,(experiment_plate[l] == i)));
+constraint forall(l in 1..experiments, i in Plates)(count_eq(plates[i,..,..],l,(experiment_plate[l] == i)));
 
 %constraint forall(i in Plates, j in Rows, k in Columns)(plates[i,j,k] in 1..experiments -> experiment_row[plates[i,j,k]] = j);
 
@@ -271,15 +278,16 @@ constraint forall(l in 1..experiments, i in Plates)(count_eq([plates[i,j,k] | j 
 %constraint forall(i in Plates, j in Rows, k in Columns)((experiment_column[plates[i,j,k]] = k) <- (plates[i,j,k] in 1..experiments));
 
 %% Gustav: Not needed with the channelling above?
-%constraint forall(l in 1..experiments, j in Rows)(count_eq([plates[i,j,k] | i in Plates, k in Columns],l,(experiment_row[l] == j)));
+constraint forall(l in 1..experiments, j in Rows)(count_eq(plates[..,j,..], l, (experiment_row[l] == j)));
+% constraint forall(l in 1..experiments, j in Rows)(forall(x in array1d(plates[..,j,..]))(experiment_row[l] != j -> x != l));
 
 %constraint forall(l in 1..experiments, j in Rows)(experiment_row[l] != j <-> count_eq([plates[experiment_plate[l],j,k] | k in Columns],l,0));
 
 %constraint forall(l in 1..experiments, k in Columns)(experiment_column[l] == k <-> count_eq([plates[experiment_plate[l],j,k] | j in Rows],l,1));
 
-%constraint forall(l in 1..experiments, k in Columns)(count_eq([plates[experiment_plate[l],j,k] | j in Rows],l,(experiment_column[l] == k)));
+% constraint forall(l in 1..experiments, k in Columns)(count_eq([plates[experiment_plate[l],j,k] | j in Rows],l,(experiment_column[l] == k)));
 
-% constraint forall(l in 1..experiments, k in Columns)(count_eq([plates[i,j,k] | i in Plates, j in Rows],l,(experiment_column[l] == k)));
+constraint forall(l in 1..experiments, k in Columns)(count_eq(plates[..,..,k],l,(experiment_column[l] == k)));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% A compound with all concentrations must appear on a single plate
