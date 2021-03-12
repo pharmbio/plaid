@@ -1,310 +1,310 @@
 1 plates
 Plate 1:
   .   .   .   .   .   .   .   .   .   .   .   .
-  .   *  96   #  82   >  98  78  56   1  34   .
-  .   $   ~  97  27   +   x  20  70  63  16   .
-  . 109 101  40  33  64  76   -  61  54   2   .
-  . 105  59  99  74 103 100 104  48   9   4   .
-  . 107 102   & 108 106 109  84  79  22  69   .
-  .  37 109  49  12  18  68   @  45  41   <   .
-  .   6  38  80  46   8  73  15 109  28  58   .
-  . 102 109   -   7  32  23  60  42   $  71   .
-  . 101  43  17  52  47  21  62 100  96 109   .
-  .  50 106 109  44  99  25 107 108  39  19   .
-  . 104  29   <  97  26   >   x  66 105  51   .
-  .  14   #  65  35  77  30  10 109  72 103   .
-  .   @   *  75   &  57  98   5   ~  67  11   .
-  .  53   3  31  55  83   +  24  13  36  81   .
+  . 107   $  23  21  11   8   >  72  17   x   .
+  .  54   1  61  47  82  56 105  37  97  98   .
+  .  58 109  42  80  19  76  33  50 109  63   .
+  . 100   * 102  49 101 106   @  26  43  65   .
+  .  12  15   #  77  81  75  67 108   +  44   .
+  . 109   -  64   3  70  99 104 109  36  30   .
+  .  96 103   6  73  16  84   &   ~  13   <   .
+  . 107  40  53  27  74   @  14 109  62  18   .
+  .  34  24  25   9  59  52  38  32  68  55   .
+  .   <   ~  45   $ 109 101  28  99   7  83   .
+  .  46 104 100 105 108   >  96   -  51  22   .
+  . 102  66  97   #  48 109  57   4  78  10   .
+  . 103  35  31   5  69  71   2  29  39  60   .
+  .   + 106   &   x  98  20   * 109  79  41   .
   .   .   .   .   .   .   .   .   .   .   .   .
 Compound's plate:
 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 Experiment's row:
-[2, 4, 15, 5, 14, 8, 9, 8, 5, 13, 14, 7, 15, 13, 8, 3, 10, 7, 11, 3, 10, 6, 9, 15, 11, 12, 3, 8, 12, 13, 15, 9, 4, 2, 13, 15, 7, 8, 11, 4, 7, 9, 10, 11, 7, 8, 10, 5, 7, 11, 12, 10, 15, 4, 15, 2, 14, 8, 5, 9, 4, 10, 3, 4, 13, 12, 14, 7, 6, 3, 9, 13, 8, 5, 14, 4, 13, 2, 6, 8, 15, 2, 15, 6]
+[3, 14, 7, 13, 14, 8, 11, 2, 10, 13, 2, 6, 8, 9, 6, 8, 2, 9, 4, 15, 2, 12, 2, 10, 10, 5, 9, 11, 14, 7, 14, 10, 4, 10, 14, 7, 3, 10, 14, 9, 15, 4, 5, 6, 11, 12, 3, 13, 5, 4, 12, 10, 9, 3, 10, 3, 13, 4, 10, 14, 3, 9, 4, 7, 5, 13, 6, 10, 14, 7, 14, 2, 8, 9, 6, 4, 6, 13, 15, 4, 6, 3, 11, 8]
 Experiment's column:
-[10, 11, 3, 11, 8, 2, 5, 6, 10, 8, 11, 5, 9, 2, 8, 11, 4, 6, 11, 8, 7, 10, 7, 8, 7, 6, 5, 10, 3, 7, 4, 6, 5, 11, 5, 10, 2, 3, 10, 4, 10, 9, 3, 5, 9, 5, 6, 9, 4, 2, 11, 5, 2, 10, 5, 9, 6, 11, 3, 8, 9, 8, 10, 6, 4, 9, 10, 7, 11, 9, 11, 10, 7, 5, 4, 7, 6, 8, 9, 4, 11, 5, 6, 8]
+[3, 8, 5, 9, 5, 4, 10, 7, 5, 11, 6, 2, 10, 8, 3, 6, 10, 11, 6, 7, 5, 11, 4, 3, 4, 9, 5, 8, 9, 11, 4, 9, 8, 2, 3, 10, 9, 8, 10, 3, 11, 4, 10, 11, 4, 2, 5, 6, 5, 9, 10, 7, 4, 2, 11, 7, 8, 2, 6, 11, 4, 10, 11, 4, 11, 3, 8, 10, 6, 6, 7, 9, 5, 6, 7, 7, 5, 10, 10, 5, 6, 6, 11, 7]
 Controls per half plates:
 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 0, 0]
 Compounds per half plates:
 [42, 42]
 plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
-plate_1,B02,[sorbitol],6.45 uM,[sorbitol]_6.45 uM
-plate_1,B14,[sorbitol],6.45 uM,[sorbitol]_6.45 uM
-plate_1,B03,[II],12 uM,[II]_12 uM
-plate_1,B15,[II],12 uM,[II]_12 uM
-plate_1,B04,[sorbitol],12 uM,[sorbitol]_12 uM
-plate_1,B16,[sorbitol],12 uM,[sorbitol]_12 uM
-plate_1,B05,(1)(2)(3),1 uM,(1)(2)(3)_1 uM
-plate_1,B17,(1)(2)(3),1 uM,(1)(2)(3)_1 uM
-plate_1,B06,[II],1 uM,[II]_1 uM
-plate_1,B18,[II],1 uM,[II]_1 uM
-plate_1,B07,[III],6.45 uM,[III]_6.45 uM
-plate_1,B19,[III],6.45 uM,[III]_6.45 uM
-plate_1,B08,(1)(3)(M),12 uM,(1)(3)(M)_12 uM
-plate_1,B20,(1)(3)(M),12 uM,(1)(3)(M)_12 uM
-plate_1,B09,(1)(3)(M),6.45 uM,(1)(3)(M)_6.45 uM
-plate_1,B21,(1)(3)(M),6.45 uM,(1)(3)(M)_6.45 uM
-plate_1,B10,(1)(M)(M),1 uM,(1)(M)(M)_1 uM
-plate_1,B22,(1)(M)(M),1 uM,(1)(M)(M)_1 uM
-plate_1,B11,(1)(3)(M),1 uM,(1)(3)(M)_1 uM
-plate_1,B23,(1)(3)(M),1 uM,(1)(3)(M)_1 uM
-plate_1,C02,[II],6.45 uM,[II]_6.45 uM
-plate_1,C14,[II],6.45 uM,[II]_6.45 uM
-plate_1,C03,[sorbitol],1 uM,[sorbitol]_1 uM
-plate_1,C15,[sorbitol],1 uM,[sorbitol]_1 uM
-plate_1,C04,[III],1 uM,[III]_1 uM
-plate_1,C16,[III],1 uM,[III]_1 uM
-plate_1,C05,(2)(M)(M),12 uM,(2)(M)(M)_12 uM
-plate_1,C17,(2)(M)(M),12 uM,(2)(M)(M)_12 uM
-plate_1,C06,[dmso],1 uM,[dmso]_1 uM
-plate_1,C18,[dmso],1 uM,[dmso]_1 uM
-plate_1,C07,[dmso],12 uM,[dmso]_12 uM
-plate_1,C19,[dmso],12 uM,[dmso]_12 uM
-plate_1,C08,(1)(2)(3),6.45 uM,(1)(2)(3)_6.45 uM
-plate_1,C20,(1)(2)(3),6.45 uM,(1)(2)(3)_6.45 uM
-plate_1,C09,(3)(M)(M),1 uM,(3)(M)(M)_1 uM
-plate_1,C21,(3)(M)(M),1 uM,(3)(M)(M)_1 uM
-plate_1,C10,(1)(2)(3),12 uM,(1)(2)(3)_12 uM
-plate_1,C22,(1)(2)(3),12 uM,(1)(2)(3)_12 uM
-plate_1,C11,(2)(3)(M),1 uM,(2)(3)(M)_1 uM
-plate_1,C23,(2)(3)(M),1 uM,(2)(3)(M)_1 uM
-plate_1,D02,[Mctrl],blank,[Mctrl]_blank
-plate_1,D14,[Mctrl],blank,[Mctrl]_blank
-plate_1,D03,[IV],6.45 uM,[IV]_6.45 uM
-plate_1,D15,[IV],6.45 uM,[IV]_6.45 uM
-plate_1,D04,(1)(2)(3),1 uM,(1)(2)(3)_1 uM
-plate_1,D16,(1)(2)(3),1 uM,(1)(2)(3)_1 uM
-plate_1,D05,(1)(2)(M),12 uM,(1)(2)(M)_12 uM
-plate_1,D17,(1)(2)(M),12 uM,(1)(2)(M)_12 uM
-plate_1,D06,(1)(M)(M),1 uM,(1)(M)(M)_1 uM
-plate_1,D18,(1)(M)(M),1 uM,(1)(M)(M)_1 uM
+plate_1,B02,[VI],6.45 uM,[VI]_6.45 uM
+plate_1,B14,[VI],6.45 uM,[VI]_6.45 uM
+plate_1,B03,[II],6.45 uM,[II]_6.45 uM
+plate_1,B15,[II],6.45 uM,[II]_6.45 uM
+plate_1,B04,(1)(M)(M),6.45 uM,(1)(M)(M)_6.45 uM
+plate_1,B16,(1)(M)(M),6.45 uM,(1)(M)(M)_6.45 uM
+plate_1,B05,(1)(2)(3),12 uM,(1)(2)(3)_12 uM
+plate_1,B17,(1)(2)(3),12 uM,(1)(2)(3)_12 uM
+plate_1,B06,(1)(2)(M),6.45 uM,(1)(2)(M)_6.45 uM
+plate_1,B18,(1)(2)(M),6.45 uM,(1)(2)(M)_6.45 uM
+plate_1,B07,(3)(M)(M),6.45 uM,(3)(M)(M)_6.45 uM
+plate_1,B19,(3)(M)(M),6.45 uM,(3)(M)(M)_6.45 uM
+plate_1,B08,[II],1 uM,[II]_1 uM
+plate_1,B20,[II],1 uM,[II]_1 uM
+plate_1,B09,(3)(M)(M),12 uM,(3)(M)(M)_12 uM
+plate_1,B21,(3)(M)(M),12 uM,(3)(M)(M)_12 uM
+plate_1,B10,(2)(3)(M),6.45 uM,(2)(3)(M)_6.45 uM
+plate_1,B22,(2)(3)(M),6.45 uM,(2)(3)(M)_6.45 uM
+plate_1,B11,[dmso],12 uM,[dmso]_12 uM
+plate_1,B23,[dmso],12 uM,[dmso]_12 uM
+plate_1,C02,(1)(2)(M),12 uM,(1)(2)(M)_12 uM
+plate_1,C14,(1)(2)(M),12 uM,(1)(2)(M)_12 uM
+plate_1,C03,(1)(M)(M),1 uM,(1)(M)(M)_1 uM
+plate_1,C15,(1)(M)(M),1 uM,(1)(M)(M)_1 uM
+plate_1,C04,(1)(2)(3),1 uM,(1)(2)(3)_1 uM
+plate_1,C16,(1)(2)(3),1 uM,(1)(2)(3)_1 uM
+plate_1,C05,(2)(M)(M),6.45 uM,(2)(M)(M)_6.45 uM
+plate_1,C17,(2)(M)(M),6.45 uM,(2)(M)(M)_6.45 uM
+plate_1,C06,(1)(2)(3),1 uM,(1)(2)(3)_1 uM
+plate_1,C18,(1)(2)(3),1 uM,(1)(2)(3)_1 uM
+plate_1,C07,(1)(3)(M),6.45 uM,(1)(3)(M)_6.45 uM
+plate_1,C19,(1)(3)(M),6.45 uM,(1)(3)(M)_6.45 uM
+plate_1,C08,[V],12 uM,[V]_12 uM
+plate_1,C20,[V],12 uM,[V]_12 uM
+plate_1,C09,(2)(3)(M),1 uM,(2)(3)(M)_1 uM
+plate_1,C21,(2)(3)(M),1 uM,(2)(3)(M)_1 uM
+plate_1,C10,[III],1 uM,[III]_1 uM
+plate_1,C22,[III],1 uM,[III]_1 uM
+plate_1,C11,[III],6.45 uM,[III]_6.45 uM
+plate_1,C23,[III],6.45 uM,[III]_6.45 uM
+plate_1,D02,(2)(3)(M),1 uM,(2)(3)(M)_1 uM
+plate_1,D14,(2)(3)(M),1 uM,(2)(3)(M)_1 uM
+plate_1,D03,[Mctrl],blank,[Mctrl]_blank
+plate_1,D15,[Mctrl],blank,[Mctrl]_blank
+plate_1,D04,(1)(2)(3),12 uM,(1)(2)(3)_12 uM
+plate_1,D16,(1)(2)(3),12 uM,(1)(2)(3)_12 uM
+plate_1,D05,(2)(3)(M),6.45 uM,(2)(3)(M)_6.45 uM
+plate_1,D17,(2)(3)(M),6.45 uM,(2)(3)(M)_6.45 uM
+plate_1,D06,(1)(2)(3),1 uM,(1)(2)(3)_1 uM
+plate_1,D18,(1)(2)(3),1 uM,(1)(2)(3)_1 uM
 plate_1,D07,(1)(3)(M),1 uM,(1)(3)(M)_1 uM
 plate_1,D19,(1)(3)(M),1 uM,(1)(3)(M)_1 uM
-plate_1,D08,[dmso],6.45 uM,[dmso]_6.45 uM
-plate_1,D20,[dmso],6.45 uM,[dmso]_6.45 uM
-plate_1,D09,(1)(2)(3),1 uM,(1)(2)(3)_1 uM
-plate_1,D21,(1)(2)(3),1 uM,(1)(2)(3)_1 uM
-plate_1,D10,(1)(2)(M),12 uM,(1)(2)(M)_12 uM
-plate_1,D22,(1)(2)(M),12 uM,(1)(2)(M)_12 uM
-plate_1,D11,(1)(M)(M),6.45 uM,(1)(M)(M)_6.45 uM
-plate_1,D23,(1)(M)(M),6.45 uM,(1)(M)(M)_6.45 uM
-plate_1,E02,[V],12 uM,[V]_12 uM
-plate_1,E14,[V],12 uM,[V]_12 uM
-plate_1,E03,(2)(3)(M),6.45 uM,(2)(3)(M)_6.45 uM
-plate_1,E15,(2)(3)(M),6.45 uM,(2)(3)(M)_6.45 uM
-plate_1,E04,[III],12 uM,[III]_12 uM
-plate_1,E16,[III],12 uM,[III]_12 uM
-plate_1,E05,(1)(2)(M),6.45 uM,(1)(2)(M)_6.45 uM
-plate_1,E17,(1)(2)(M),6.45 uM,(1)(2)(M)_6.45 uM
-plate_1,E06,[V],1 uM,[V]_1 uM
-plate_1,E18,[V],1 uM,[V]_1 uM
-plate_1,E07,[IV],1 uM,[IV]_1 uM
-plate_1,E19,[IV],1 uM,[IV]_1 uM
-plate_1,E08,[V],6.45 uM,[V]_6.45 uM
-plate_1,E20,[V],6.45 uM,[V]_6.45 uM
-plate_1,E09,(2)(M)(M),12 uM,(2)(M)(M)_12 uM
-plate_1,E21,(2)(M)(M),12 uM,(2)(M)(M)_12 uM
-plate_1,E10,(3)(M)(M),12 uM,(3)(M)(M)_12 uM
-plate_1,E22,(3)(M)(M),12 uM,(3)(M)(M)_12 uM
-plate_1,E11,(2)(M)(M),1 uM,(2)(M)(M)_1 uM
-plate_1,E23,(2)(M)(M),1 uM,(2)(M)(M)_1 uM
-plate_1,F02,[VI],6.45 uM,[VI]_6.45 uM
-plate_1,F14,[VI],6.45 uM,[VI]_6.45 uM
-plate_1,F03,[IV],12 uM,[IV]_12 uM
-plate_1,F15,[IV],12 uM,[IV]_12 uM
-plate_1,F04,[I],1 uM,[I]_1 uM
-plate_1,F16,[I],1 uM,[I]_1 uM
-plate_1,F05,[VI],12 uM,[VI]_12 uM
-plate_1,F17,[VI],12 uM,[VI]_12 uM
-plate_1,F06,[VI],1 uM,[VI]_1 uM
-plate_1,F18,[VI],1 uM,[VI]_1 uM
-plate_1,F07,[Mctrl],blank,[Mctrl]_blank
-plate_1,F19,[Mctrl],blank,[Mctrl]_blank
-plate_1,F08,(1)(2)(3),12 uM,(1)(2)(3)_12 uM
-plate_1,F20,(1)(2)(3),12 uM,(1)(2)(3)_12 uM
-plate_1,F09,(2)(3)(M),1 uM,(2)(3)(M)_1 uM
-plate_1,F21,(2)(3)(M),1 uM,(2)(3)(M)_1 uM
-plate_1,F10,(1)(M)(M),1 uM,(1)(M)(M)_1 uM
-plate_1,F22,(1)(M)(M),1 uM,(1)(M)(M)_1 uM
-plate_1,F11,(2)(M)(M),12 uM,(2)(M)(M)_12 uM
-plate_1,F23,(2)(M)(M),12 uM,(2)(M)(M)_12 uM
-plate_1,G02,(2)(3)(M),1 uM,(2)(3)(M)_1 uM
-plate_1,G14,(2)(3)(M),1 uM,(2)(3)(M)_1 uM
-plate_1,G03,[Mctrl],blank,[Mctrl]_blank
-plate_1,G15,[Mctrl],blank,[Mctrl]_blank
-plate_1,G04,(3)(M)(M),1 uM,(3)(M)(M)_1 uM
-plate_1,G16,(3)(M)(M),1 uM,(3)(M)(M)_1 uM
-plate_1,G05,(1)(2)(M),12 uM,(1)(2)(M)_12 uM
-plate_1,G17,(1)(2)(M),12 uM,(1)(2)(M)_12 uM
-plate_1,G06,(2)(3)(M),12 uM,(2)(3)(M)_12 uM
-plate_1,G18,(2)(3)(M),12 uM,(2)(3)(M)_12 uM
-plate_1,G07,(2)(M)(M),6.45 uM,(2)(M)(M)_6.45 uM
-plate_1,G19,(2)(M)(M),6.45 uM,(2)(M)(M)_6.45 uM
-plate_1,G08,[I],6.45 uM,[I]_6.45 uM
-plate_1,G20,[I],6.45 uM,[I]_6.45 uM
-plate_1,G09,(1)(M)(M),12 uM,(1)(M)(M)_12 uM
-plate_1,G21,(1)(M)(M),12 uM,(1)(M)(M)_12 uM
-plate_1,G10,(1)(2)(3),6.45 uM,(1)(2)(3)_6.45 uM
-plate_1,G22,(1)(2)(3),6.45 uM,(1)(2)(3)_6.45 uM
-plate_1,G11,[I],12 uM,[I]_12 uM
-plate_1,G23,[I],12 uM,[I]_12 uM
-plate_1,H02,(2)(M)(M),12 uM,(2)(M)(M)_12 uM
-plate_1,H14,(2)(M)(M),12 uM,(2)(M)(M)_12 uM
-plate_1,H03,(2)(3)(M),6.45 uM,(2)(3)(M)_6.45 uM
-plate_1,H15,(2)(3)(M),6.45 uM,(2)(3)(M)_6.45 uM
-plate_1,H04,(2)(3)(M),6.45 uM,(2)(3)(M)_6.45 uM
-plate_1,H16,(2)(3)(M),6.45 uM,(2)(3)(M)_6.45 uM
-plate_1,H05,(2)(M)(M),1 uM,(2)(M)(M)_1 uM
-plate_1,H17,(2)(M)(M),1 uM,(2)(M)(M)_1 uM
-plate_1,H06,(3)(M)(M),6.45 uM,(3)(M)(M)_6.45 uM
-plate_1,H18,(3)(M)(M),6.45 uM,(3)(M)(M)_6.45 uM
-plate_1,H07,(1)(2)(M),1 uM,(1)(2)(M)_1 uM
-plate_1,H19,(1)(2)(M),1 uM,(1)(2)(M)_1 uM
-plate_1,H08,(1)(3)(M),12 uM,(1)(3)(M)_12 uM
-plate_1,H20,(1)(3)(M),12 uM,(1)(3)(M)_12 uM
-plate_1,H09,[Mctrl],blank,[Mctrl]_blank
-plate_1,H21,[Mctrl],blank,[Mctrl]_blank
-plate_1,H10,(3)(M)(M),1 uM,(3)(M)(M)_1 uM
-plate_1,H22,(3)(M)(M),1 uM,(3)(M)(M)_1 uM
-plate_1,H11,(2)(3)(M),1 uM,(2)(3)(M)_1 uM
-plate_1,H23,(2)(3)(M),1 uM,(2)(3)(M)_1 uM
-plate_1,I02,[IV],12 uM,[IV]_12 uM
-plate_1,I14,[IV],12 uM,[IV]_12 uM
-plate_1,I03,[Mctrl],blank,[Mctrl]_blank
-plate_1,I15,[Mctrl],blank,[Mctrl]_blank
-plate_1,I04,[dmso],6.45 uM,[dmso]_6.45 uM
-plate_1,I16,[dmso],6.45 uM,[dmso]_6.45 uM
-plate_1,I05,(3)(M)(M),1 uM,(3)(M)(M)_1 uM
-plate_1,I17,(3)(M)(M),1 uM,(3)(M)(M)_1 uM
+plate_1,D08,(1)(2)(M),12 uM,(1)(2)(M)_12 uM
+plate_1,D20,(1)(2)(M),12 uM,(1)(2)(M)_12 uM
+plate_1,D09,(3)(M)(M),6.45 uM,(3)(M)(M)_6.45 uM
+plate_1,D21,(3)(M)(M),6.45 uM,(3)(M)(M)_6.45 uM
+plate_1,D10,[Mctrl],blank,[Mctrl]_blank
+plate_1,D22,[Mctrl],blank,[Mctrl]_blank
+plate_1,D11,(1)(2)(3),12 uM,(1)(2)(3)_12 uM
+plate_1,D23,(1)(2)(3),12 uM,(1)(2)(3)_12 uM
+plate_1,E02,[IV],1 uM,[IV]_1 uM
+plate_1,E14,[IV],1 uM,[IV]_1 uM
+plate_1,E03,[sorbitol],6.45 uM,[sorbitol]_6.45 uM
+plate_1,E15,[sorbitol],6.45 uM,[sorbitol]_6.45 uM
+plate_1,E04,[IV],12 uM,[IV]_12 uM
+plate_1,E16,[IV],12 uM,[IV]_12 uM
+plate_1,E05,(3)(M)(M),1 uM,(3)(M)(M)_1 uM
+plate_1,E17,(3)(M)(M),1 uM,(3)(M)(M)_1 uM
+plate_1,E06,[IV],6.45 uM,[IV]_6.45 uM
+plate_1,E18,[IV],6.45 uM,[IV]_6.45 uM
+plate_1,E07,[VI],1 uM,[VI]_1 uM
+plate_1,E19,[VI],1 uM,[VI]_1 uM
+plate_1,E08,[I],6.45 uM,[I]_6.45 uM
+plate_1,E20,[I],6.45 uM,[I]_6.45 uM
+plate_1,E09,(2)(M)(M),6.45 uM,(2)(M)(M)_6.45 uM
+plate_1,E21,(2)(M)(M),6.45 uM,(2)(M)(M)_6.45 uM
+plate_1,E10,(1)(M)(M),1 uM,(1)(M)(M)_1 uM
+plate_1,E22,(1)(M)(M),1 uM,(1)(M)(M)_1 uM
+plate_1,E11,(1)(M)(M),6.45 uM,(1)(M)(M)_6.45 uM
+plate_1,E23,(1)(M)(M),6.45 uM,(1)(M)(M)_6.45 uM
+plate_1,F02,(1)(2)(M),12 uM,(1)(2)(M)_12 uM
+plate_1,F14,(1)(2)(M),12 uM,(1)(2)(M)_12 uM
+plate_1,F03,(1)(3)(M),12 uM,(1)(3)(M)_12 uM
+plate_1,F15,(1)(3)(M),12 uM,(1)(3)(M)_12 uM
+plate_1,F04,[sorbitol],12 uM,[sorbitol]_12 uM
+plate_1,F16,[sorbitol],12 uM,[sorbitol]_12 uM
+plate_1,F05,(1)(3)(M),6.45 uM,(1)(3)(M)_6.45 uM
+plate_1,F17,(1)(3)(M),6.45 uM,(1)(3)(M)_6.45 uM
+plate_1,F06,(2)(3)(M),12 uM,(2)(3)(M)_12 uM
+plate_1,F18,(2)(3)(M),12 uM,(2)(3)(M)_12 uM
+plate_1,F07,(1)(2)(M),12 uM,(1)(2)(M)_12 uM
+plate_1,F19,(1)(2)(M),12 uM,(1)(2)(M)_12 uM
+plate_1,F08,(2)(M)(M),1 uM,(2)(M)(M)_1 uM
+plate_1,F20,(2)(M)(M),1 uM,(2)(M)(M)_1 uM
+plate_1,F09,[VI],12 uM,[VI]_12 uM
+plate_1,F21,[VI],12 uM,[VI]_12 uM
+plate_1,F10,[dmso],1 uM,[dmso]_1 uM
+plate_1,F22,[dmso],1 uM,[dmso]_1 uM
+plate_1,F11,(1)(M)(M),6.45 uM,(1)(M)(M)_6.45 uM
+plate_1,F23,(1)(M)(M),6.45 uM,(1)(M)(M)_6.45 uM
+plate_1,G02,[Mctrl],blank,[Mctrl]_blank
+plate_1,G14,[Mctrl],blank,[Mctrl]_blank
+plate_1,G03,[dmso],6.45 uM,[dmso]_6.45 uM
+plate_1,G15,[dmso],6.45 uM,[dmso]_6.45 uM
+plate_1,G04,(1)(M)(M),1 uM,(1)(M)(M)_1 uM
+plate_1,G16,(1)(M)(M),1 uM,(1)(M)(M)_1 uM
+plate_1,G05,(1)(M)(M),12 uM,(1)(M)(M)_12 uM
+plate_1,G17,(1)(M)(M),12 uM,(1)(M)(M)_12 uM
+plate_1,G06,(3)(M)(M),1 uM,(3)(M)(M)_1 uM
+plate_1,G18,(3)(M)(M),1 uM,(3)(M)(M)_1 uM
+plate_1,G07,[III],12 uM,[III]_12 uM
+plate_1,G19,[III],12 uM,[III]_12 uM
+plate_1,G08,[V],6.45 uM,[V]_6.45 uM
+plate_1,G20,[V],6.45 uM,[V]_6.45 uM
+plate_1,G09,[Mctrl],blank,[Mctrl]_blank
+plate_1,G21,[Mctrl],blank,[Mctrl]_blank
+plate_1,G10,(1)(3)(M),12 uM,(1)(3)(M)_12 uM
+plate_1,G22,(1)(3)(M),12 uM,(1)(3)(M)_12 uM
+plate_1,G11,(3)(M)(M),12 uM,(3)(M)(M)_12 uM
+plate_1,G23,(3)(M)(M),12 uM,(3)(M)(M)_12 uM
+plate_1,H02,[II],12 uM,[II]_12 uM
+plate_1,H14,[II],12 uM,[II]_12 uM
+plate_1,H03,[V],1 uM,[V]_1 uM
+plate_1,H15,[V],1 uM,[V]_1 uM
+plate_1,H04,(2)(M)(M),12 uM,(2)(M)(M)_12 uM
+plate_1,H16,(2)(M)(M),12 uM,(2)(M)(M)_12 uM
+plate_1,H05,(1)(2)(M),1 uM,(1)(2)(M)_1 uM
+plate_1,H17,(1)(2)(M),1 uM,(1)(2)(M)_1 uM
+plate_1,H06,(2)(3)(M),1 uM,(2)(3)(M)_1 uM
+plate_1,H18,(2)(3)(M),1 uM,(2)(3)(M)_1 uM
+plate_1,H07,(1)(2)(3),12 uM,(1)(2)(3)_12 uM
+plate_1,H19,(1)(2)(3),12 uM,(1)(2)(3)_12 uM
+plate_1,H08,[I],1 uM,[I]_1 uM
+plate_1,H20,[I],1 uM,[I]_1 uM
+plate_1,H09,[sorbitol],1 uM,[sorbitol]_1 uM
+plate_1,H21,[sorbitol],1 uM,[sorbitol]_1 uM
+plate_1,H10,(1)(3)(M),1 uM,(1)(3)(M)_1 uM
+plate_1,H22,(1)(3)(M),1 uM,(1)(3)(M)_1 uM
+plate_1,H11,[I],12 uM,[I]_12 uM
+plate_1,H23,[I],12 uM,[I]_12 uM
+plate_1,I02,[VI],6.45 uM,[VI]_6.45 uM
+plate_1,I14,[VI],6.45 uM,[VI]_6.45 uM
+plate_1,I03,(1)(2)(3),1 uM,(1)(2)(3)_1 uM
+plate_1,I15,(1)(2)(3),1 uM,(1)(2)(3)_1 uM
+plate_1,I04,(1)(2)(M),6.45 uM,(1)(2)(M)_6.45 uM
+plate_1,I16,(1)(2)(M),6.45 uM,(1)(2)(M)_6.45 uM
+plate_1,I05,(2)(M)(M),12 uM,(2)(M)(M)_12 uM
+plate_1,I17,(2)(M)(M),12 uM,(2)(M)(M)_12 uM
 plate_1,I06,(1)(2)(M),6.45 uM,(1)(2)(M)_6.45 uM
 plate_1,I18,(1)(2)(M),6.45 uM,(1)(2)(M)_6.45 uM
-plate_1,I07,(1)(M)(M),6.45 uM,(1)(M)(M)_6.45 uM
-plate_1,I19,(1)(M)(M),6.45 uM,(1)(M)(M)_6.45 uM
-plate_1,I08,(2)(3)(M),12 uM,(2)(3)(M)_12 uM
-plate_1,I20,(2)(3)(M),12 uM,(2)(3)(M)_12 uM
-plate_1,I09,(1)(2)(3),12 uM,(1)(2)(3)_12 uM
-plate_1,I21,(1)(2)(3),12 uM,(1)(2)(3)_12 uM
-plate_1,I10,[II],6.45 uM,[II]_6.45 uM
-plate_1,I22,[II],6.45 uM,[II]_6.45 uM
-plate_1,I11,(3)(M)(M),6.45 uM,(3)(M)(M)_6.45 uM
-plate_1,I23,(3)(M)(M),6.45 uM,(3)(M)(M)_6.45 uM
-plate_1,J02,[IV],6.45 uM,[IV]_6.45 uM
-plate_1,J14,[IV],6.45 uM,[IV]_6.45 uM
-plate_1,J03,(1)(M)(M),1 uM,(1)(M)(M)_1 uM
-plate_1,J15,(1)(M)(M),1 uM,(1)(M)(M)_1 uM
-plate_1,J04,(2)(3)(M),6.45 uM,(2)(3)(M)_6.45 uM
-plate_1,J16,(2)(3)(M),6.45 uM,(2)(3)(M)_6.45 uM
-plate_1,J05,(1)(2)(M),1 uM,(1)(2)(M)_1 uM
-plate_1,J17,(1)(2)(M),1 uM,(1)(2)(M)_1 uM
-plate_1,J06,(2)(M)(M),6.45 uM,(2)(M)(M)_6.45 uM
-plate_1,J18,(2)(M)(M),6.45 uM,(2)(M)(M)_6.45 uM
-plate_1,J07,(1)(2)(3),12 uM,(1)(2)(3)_12 uM
-plate_1,J19,(1)(2)(3),12 uM,(1)(2)(3)_12 uM
-plate_1,J08,(1)(2)(3),6.45 uM,(1)(2)(3)_6.45 uM
-plate_1,J20,(1)(2)(3),6.45 uM,(1)(2)(3)_6.45 uM
-plate_1,J09,[IV],1 uM,[IV]_1 uM
-plate_1,J21,[IV],1 uM,[IV]_1 uM
-plate_1,J10,[II],12 uM,[II]_12 uM
-plate_1,J22,[II],12 uM,[II]_12 uM
-plate_1,J11,[Mctrl],blank,[Mctrl]_blank
-plate_1,J23,[Mctrl],blank,[Mctrl]_blank
-plate_1,K02,(3)(M)(M),6.45 uM,(3)(M)(M)_6.45 uM
-plate_1,K14,(3)(M)(M),6.45 uM,(3)(M)(M)_6.45 uM
-plate_1,K03,[VI],1 uM,[VI]_1 uM
-plate_1,K15,[VI],1 uM,[VI]_1 uM
-plate_1,K04,[Mctrl],blank,[Mctrl]_blank
-plate_1,K16,[Mctrl],blank,[Mctrl]_blank
-plate_1,K05,(1)(M)(M),6.45 uM,(1)(M)(M)_6.45 uM
-plate_1,K17,(1)(M)(M),6.45 uM,(1)(M)(M)_6.45 uM
-plate_1,K06,[III],12 uM,[III]_12 uM
-plate_1,K18,[III],12 uM,[III]_12 uM
-plate_1,K07,(2)(M)(M),1 uM,(2)(M)(M)_1 uM
-plate_1,K19,(2)(M)(M),1 uM,(2)(M)(M)_1 uM
-plate_1,K08,[VI],6.45 uM,[VI]_6.45 uM
-plate_1,K20,[VI],6.45 uM,[VI]_6.45 uM
-plate_1,K09,[VI],12 uM,[VI]_12 uM
-plate_1,K21,[VI],12 uM,[VI]_12 uM
-plate_1,K10,(2)(3)(M),12 uM,(2)(3)(M)_12 uM
-plate_1,K22,(2)(3)(M),12 uM,(2)(3)(M)_12 uM
-plate_1,K11,(1)(2)(3),1 uM,(1)(2)(3)_1 uM
-plate_1,K23,(1)(2)(3),1 uM,(1)(2)(3)_1 uM
-plate_1,L02,[V],6.45 uM,[V]_6.45 uM
-plate_1,L14,[V],6.45 uM,[V]_6.45 uM
-plate_1,L03,(3)(M)(M),6.45 uM,(3)(M)(M)_6.45 uM
-plate_1,L15,(3)(M)(M),6.45 uM,(3)(M)(M)_6.45 uM
-plate_1,L04,[I],12 uM,[I]_12 uM
-plate_1,L16,[I],12 uM,[I]_12 uM
-plate_1,L05,[III],1 uM,[III]_1 uM
-plate_1,L17,[III],1 uM,[III]_1 uM
-plate_1,L06,(2)(M)(M),6.45 uM,(2)(M)(M)_6.45 uM
-plate_1,L18,(2)(M)(M),6.45 uM,(2)(M)(M)_6.45 uM
+plate_1,I07,[I],6.45 uM,[I]_6.45 uM
+plate_1,I19,[I],6.45 uM,[I]_6.45 uM
+plate_1,I08,(1)(3)(M),6.45 uM,(1)(3)(M)_6.45 uM
+plate_1,I20,(1)(3)(M),6.45 uM,(1)(3)(M)_6.45 uM
+plate_1,I09,[Mctrl],blank,[Mctrl]_blank
+plate_1,I21,[Mctrl],blank,[Mctrl]_blank
+plate_1,I10,(1)(2)(3),6.45 uM,(1)(2)(3)_6.45 uM
+plate_1,I22,(1)(2)(3),6.45 uM,(1)(2)(3)_6.45 uM
+plate_1,I11,(2)(3)(M),12 uM,(2)(3)(M)_12 uM
+plate_1,I23,(2)(3)(M),12 uM,(2)(3)(M)_12 uM
+plate_1,J02,(1)(3)(M),1 uM,(1)(3)(M)_1 uM
+plate_1,J14,(1)(3)(M),1 uM,(1)(3)(M)_1 uM
+plate_1,J03,(1)(M)(M),12 uM,(1)(M)(M)_12 uM
+plate_1,J15,(1)(M)(M),12 uM,(1)(M)(M)_12 uM
+plate_1,J04,(2)(M)(M),1 uM,(2)(M)(M)_1 uM
+plate_1,J16,(2)(M)(M),1 uM,(2)(M)(M)_1 uM
+plate_1,J05,(3)(M)(M),12 uM,(3)(M)(M)_12 uM
+plate_1,J17,(3)(M)(M),12 uM,(3)(M)(M)_12 uM
+plate_1,J06,(2)(3)(M),6.45 uM,(2)(3)(M)_6.45 uM
+plate_1,J18,(2)(3)(M),6.45 uM,(2)(3)(M)_6.45 uM
+plate_1,J07,(1)(2)(M),1 uM,(1)(2)(M)_1 uM
+plate_1,J19,(1)(2)(M),1 uM,(1)(2)(M)_1 uM
+plate_1,J08,(2)(3)(M),6.45 uM,(2)(3)(M)_6.45 uM
+plate_1,J20,(2)(3)(M),6.45 uM,(2)(3)(M)_6.45 uM
+plate_1,J09,(1)(2)(M),6.45 uM,(1)(2)(M)_6.45 uM
+plate_1,J21,(1)(2)(M),6.45 uM,(1)(2)(M)_6.45 uM
+plate_1,J10,(2)(M)(M),6.45 uM,(2)(M)(M)_6.45 uM
+plate_1,J22,(2)(M)(M),6.45 uM,(2)(M)(M)_6.45 uM
+plate_1,J11,(1)(3)(M),1 uM,(1)(3)(M)_1 uM
+plate_1,J23,(1)(3)(M),1 uM,(1)(3)(M)_1 uM
+plate_1,K02,[I],12 uM,[I]_12 uM
+plate_1,K14,[I],12 uM,[I]_12 uM
+plate_1,K03,[sorbitol],1 uM,[sorbitol]_1 uM
+plate_1,K15,[sorbitol],1 uM,[sorbitol]_1 uM
+plate_1,K04,(1)(M)(M),12 uM,(1)(M)(M)_12 uM
+plate_1,K16,(1)(M)(M),12 uM,(1)(M)(M)_12 uM
+plate_1,K05,[II],6.45 uM,[II]_6.45 uM
+plate_1,K17,[II],6.45 uM,[II]_6.45 uM
+plate_1,K06,[Mctrl],blank,[Mctrl]_blank
+plate_1,K18,[Mctrl],blank,[Mctrl]_blank
+plate_1,K07,[IV],6.45 uM,[IV]_6.45 uM
+plate_1,K19,[IV],6.45 uM,[IV]_6.45 uM
+plate_1,K08,(3)(M)(M),1 uM,(3)(M)(M)_1 uM
+plate_1,K20,(3)(M)(M),1 uM,(3)(M)(M)_1 uM
+plate_1,K09,[III],12 uM,[III]_12 uM
+plate_1,K21,[III],12 uM,[III]_12 uM
+plate_1,K10,(3)(M)(M),1 uM,(3)(M)(M)_1 uM
+plate_1,K22,(3)(M)(M),1 uM,(3)(M)(M)_1 uM
+plate_1,K11,(1)(2)(3),6.45 uM,(1)(2)(3)_6.45 uM
+plate_1,K23,(1)(2)(3),6.45 uM,(1)(2)(3)_6.45 uM
+plate_1,L02,(2)(M)(M),1 uM,(2)(M)(M)_1 uM
+plate_1,L14,(2)(M)(M),1 uM,(2)(M)(M)_1 uM
+plate_1,L03,[V],6.45 uM,[V]_6.45 uM
+plate_1,L15,[V],6.45 uM,[V]_6.45 uM
+plate_1,L04,[IV],1 uM,[IV]_1 uM
+plate_1,L16,[IV],1 uM,[IV]_1 uM
+plate_1,L05,[V],12 uM,[V]_12 uM
+plate_1,L17,[V],12 uM,[V]_12 uM
+plate_1,L06,[VI],12 uM,[VI]_12 uM
+plate_1,L18,[VI],12 uM,[VI]_12 uM
 plate_1,L07,[II],1 uM,[II]_1 uM
 plate_1,L19,[II],1 uM,[II]_1 uM
-plate_1,L08,[dmso],12 uM,[dmso]_12 uM
-plate_1,L20,[dmso],12 uM,[dmso]_12 uM
-plate_1,L09,(1)(M)(M),12 uM,(1)(M)(M)_12 uM
-plate_1,L21,(1)(M)(M),12 uM,(1)(M)(M)_12 uM
-plate_1,L10,[V],12 uM,[V]_12 uM
-plate_1,L22,[V],12 uM,[V]_12 uM
-plate_1,L11,(3)(M)(M),12 uM,(3)(M)(M)_12 uM
-plate_1,L23,(3)(M)(M),12 uM,(3)(M)(M)_12 uM
-plate_1,M02,(1)(3)(M),6.45 uM,(1)(3)(M)_6.45 uM
-plate_1,M14,(1)(3)(M),6.45 uM,(1)(3)(M)_6.45 uM
-plate_1,M03,[sorbitol],12 uM,[sorbitol]_12 uM
-plate_1,M15,[sorbitol],12 uM,[sorbitol]_12 uM
-plate_1,M04,(1)(M)(M),6.45 uM,(1)(M)(M)_6.45 uM
-plate_1,M16,(1)(M)(M),6.45 uM,(1)(M)(M)_6.45 uM
-plate_1,M05,(1)(3)(M),6.45 uM,(1)(3)(M)_6.45 uM
-plate_1,M17,(1)(3)(M),6.45 uM,(1)(3)(M)_6.45 uM
-plate_1,M06,(1)(3)(M),6.45 uM,(1)(3)(M)_6.45 uM
-plate_1,M18,(1)(3)(M),6.45 uM,(1)(3)(M)_6.45 uM
-plate_1,M07,(3)(M)(M),12 uM,(3)(M)(M)_12 uM
-plate_1,M19,(3)(M)(M),12 uM,(3)(M)(M)_12 uM
-plate_1,M08,(1)(2)(M),1 uM,(1)(2)(M)_1 uM
-plate_1,M20,(1)(2)(M),1 uM,(1)(2)(M)_1 uM
-plate_1,M09,[Mctrl],blank,[Mctrl]_blank
-plate_1,M21,[Mctrl],blank,[Mctrl]_blank
-plate_1,M10,(3)(M)(M),12 uM,(3)(M)(M)_12 uM
-plate_1,M22,(3)(M)(M),12 uM,(3)(M)(M)_12 uM
-plate_1,M11,[V],1 uM,[V]_1 uM
-plate_1,M23,[V],1 uM,[V]_1 uM
-plate_1,N02,[I],6.45 uM,[I]_6.45 uM
-plate_1,N14,[I],6.45 uM,[I]_6.45 uM
-plate_1,N03,[sorbitol],6.45 uM,[sorbitol]_6.45 uM
-plate_1,N15,[sorbitol],6.45 uM,[sorbitol]_6.45 uM
-plate_1,N04,(1)(2)(M),12 uM,(1)(2)(M)_12 uM
-plate_1,N16,(1)(2)(M),12 uM,(1)(2)(M)_12 uM
-plate_1,N05,[I],1 uM,[I]_1 uM
-plate_1,N17,[I],1 uM,[I]_1 uM
-plate_1,N06,(1)(3)(M),12 uM,(1)(3)(M)_12 uM
-plate_1,N18,(1)(3)(M),12 uM,(1)(3)(M)_12 uM
-plate_1,N07,[III],6.45 uM,[III]_6.45 uM
-plate_1,N19,[III],6.45 uM,[III]_6.45 uM
-plate_1,N08,(2)(M)(M),6.45 uM,(2)(M)(M)_6.45 uM
-plate_1,N20,(2)(M)(M),6.45 uM,(2)(M)(M)_6.45 uM
-plate_1,N09,[sorbitol],1 uM,[sorbitol]_1 uM
-plate_1,N21,[sorbitol],1 uM,[sorbitol]_1 uM
-plate_1,N10,(2)(M)(M),1 uM,(2)(M)(M)_1 uM
-plate_1,N22,(2)(M)(M),1 uM,(2)(M)(M)_1 uM
-plate_1,N11,(1)(2)(M),6.45 uM,(1)(2)(M)_6.45 uM
-plate_1,N23,(1)(2)(M),6.45 uM,(1)(2)(M)_6.45 uM
-plate_1,O02,(1)(2)(M),6.45 uM,(1)(2)(M)_6.45 uM
-plate_1,O14,(1)(2)(M),6.45 uM,(1)(2)(M)_6.45 uM
-plate_1,O03,(1)(M)(M),12 uM,(1)(M)(M)_12 uM
-plate_1,O15,(1)(M)(M),12 uM,(1)(M)(M)_12 uM
-plate_1,O04,(1)(2)(M),1 uM,(1)(2)(M)_1 uM
-plate_1,O16,(1)(2)(M),1 uM,(1)(2)(M)_1 uM
-plate_1,O05,(1)(3)(M),1 uM,(1)(3)(M)_1 uM
-plate_1,O17,(1)(3)(M),1 uM,(1)(3)(M)_1 uM
-plate_1,O06,(1)(2)(3),6.45 uM,(1)(2)(3)_6.45 uM
-plate_1,O18,(1)(2)(3),6.45 uM,(1)(2)(3)_6.45 uM
-plate_1,O07,[dmso],1 uM,[dmso]_1 uM
-plate_1,O19,[dmso],1 uM,[dmso]_1 uM
-plate_1,O08,(1)(M)(M),12 uM,(1)(M)(M)_12 uM
-plate_1,O20,(1)(M)(M),12 uM,(1)(M)(M)_12 uM
-plate_1,O09,(1)(3)(M),1 uM,(1)(3)(M)_1 uM
-plate_1,O21,(1)(3)(M),1 uM,(1)(3)(M)_1 uM
-plate_1,O10,(1)(3)(M),12 uM,(1)(3)(M)_12 uM
-plate_1,O22,(1)(3)(M),12 uM,(1)(3)(M)_12 uM
-plate_1,O11,(2)(3)(M),12 uM,(2)(3)(M)_12 uM
-plate_1,O23,(2)(3)(M),12 uM,(2)(3)(M)_12 uM
+plate_1,L08,[II],12 uM,[II]_12 uM
+plate_1,L20,[II],12 uM,[II]_12 uM
+plate_1,L09,[dmso],6.45 uM,[dmso]_6.45 uM
+plate_1,L21,[dmso],6.45 uM,[dmso]_6.45 uM
+plate_1,L10,(3)(M)(M),12 uM,(3)(M)(M)_12 uM
+plate_1,L22,(3)(M)(M),12 uM,(3)(M)(M)_12 uM
+plate_1,L11,(1)(M)(M),1 uM,(1)(M)(M)_1 uM
+plate_1,L23,(1)(M)(M),1 uM,(1)(M)(M)_1 uM
+plate_1,M02,[IV],12 uM,[IV]_12 uM
+plate_1,M14,[IV],12 uM,[IV]_12 uM
+plate_1,M03,(1)(M)(M),12 uM,(1)(M)(M)_12 uM
+plate_1,M15,(1)(M)(M),12 uM,(1)(M)(M)_12 uM
+plate_1,M04,[III],1 uM,[III]_1 uM
+plate_1,M16,[III],1 uM,[III]_1 uM
+plate_1,M05,[sorbitol],12 uM,[sorbitol]_12 uM
+plate_1,M17,[sorbitol],12 uM,[sorbitol]_12 uM
+plate_1,M06,(2)(M)(M),12 uM,(2)(M)(M)_12 uM
+plate_1,M18,(2)(M)(M),12 uM,(2)(M)(M)_12 uM
+plate_1,M07,[Mctrl],blank,[Mctrl]_blank
+plate_1,M19,[Mctrl],blank,[Mctrl]_blank
+plate_1,M08,(1)(3)(M),12 uM,(1)(3)(M)_12 uM
+plate_1,M20,(1)(3)(M),12 uM,(1)(3)(M)_12 uM
+plate_1,M09,(2)(M)(M),1 uM,(2)(M)(M)_1 uM
+plate_1,M21,(2)(M)(M),1 uM,(2)(M)(M)_1 uM
+plate_1,M10,(1)(3)(M),12 uM,(1)(3)(M)_12 uM
+plate_1,M22,(1)(3)(M),12 uM,(1)(3)(M)_12 uM
+plate_1,M11,(1)(2)(M),1 uM,(1)(2)(M)_1 uM
+plate_1,M23,(1)(2)(M),1 uM,(1)(2)(M)_1 uM
+plate_1,N02,[V],1 uM,[V]_1 uM
+plate_1,N14,[V],1 uM,[V]_1 uM
+plate_1,N03,(1)(3)(M),6.45 uM,(1)(3)(M)_6.45 uM
+plate_1,N15,(1)(3)(M),6.45 uM,(1)(3)(M)_6.45 uM
+plate_1,N04,(1)(2)(M),1 uM,(1)(2)(M)_1 uM
+plate_1,N16,(1)(2)(M),1 uM,(1)(2)(M)_1 uM
+plate_1,N05,(2)(M)(M),6.45 uM,(2)(M)(M)_6.45 uM
+plate_1,N17,(2)(M)(M),6.45 uM,(2)(M)(M)_6.45 uM
+plate_1,N06,(2)(M)(M),12 uM,(2)(M)(M)_12 uM
+plate_1,N18,(2)(M)(M),12 uM,(2)(M)(M)_12 uM
+plate_1,N07,(3)(M)(M),6.45 uM,(3)(M)(M)_6.45 uM
+plate_1,N19,(3)(M)(M),6.45 uM,(3)(M)(M)_6.45 uM
+plate_1,N08,(1)(M)(M),6.45 uM,(1)(M)(M)_6.45 uM
+plate_1,N20,(1)(M)(M),6.45 uM,(1)(M)(M)_6.45 uM
+plate_1,N09,(3)(M)(M),6.45 uM,(3)(M)(M)_6.45 uM
+plate_1,N21,(3)(M)(M),6.45 uM,(3)(M)(M)_6.45 uM
+plate_1,N10,(2)(3)(M),12 uM,(2)(3)(M)_12 uM
+plate_1,N22,(2)(3)(M),12 uM,(2)(3)(M)_12 uM
+plate_1,N11,(2)(3)(M),12 uM,(2)(3)(M)_12 uM
+plate_1,N23,(2)(3)(M),12 uM,(2)(3)(M)_12 uM
+plate_1,O02,[dmso],1 uM,[dmso]_1 uM
+plate_1,O14,[dmso],1 uM,[dmso]_1 uM
+plate_1,O03,[VI],1 uM,[VI]_1 uM
+plate_1,O15,[VI],1 uM,[VI]_1 uM
+plate_1,O04,[I],1 uM,[I]_1 uM
+plate_1,O16,[I],1 uM,[I]_1 uM
+plate_1,O05,[dmso],12 uM,[dmso]_12 uM
+plate_1,O17,[dmso],12 uM,[dmso]_12 uM
+plate_1,O06,[III],6.45 uM,[III]_6.45 uM
+plate_1,O18,[III],6.45 uM,[III]_6.45 uM
+plate_1,O07,(1)(2)(3),6.45 uM,(1)(2)(3)_6.45 uM
+plate_1,O19,(1)(2)(3),6.45 uM,(1)(2)(3)_6.45 uM
+plate_1,O08,[sorbitol],6.45 uM,[sorbitol]_6.45 uM
+plate_1,O20,[sorbitol],6.45 uM,[sorbitol]_6.45 uM
+plate_1,O09,[Mctrl],blank,[Mctrl]_blank
+plate_1,O21,[Mctrl],blank,[Mctrl]_blank
+plate_1,O10,(2)(3)(M),1 uM,(2)(3)(M)_1 uM
+plate_1,O22,(2)(3)(M),1 uM,(2)(3)(M)_1 uM
+plate_1,O11,(1)(2)(3),6.45 uM,(1)(2)(3)_6.45 uM
+plate_1,O23,(1)(2)(3),6.45 uM,(1)(2)(3)_6.45 uM
 ----------
