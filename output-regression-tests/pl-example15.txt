@@ -1,21 +1,5 @@
 1 plates
-Plate 1:
-  .   .   .   .   .   .   .   .   .   .
-  .  14   x   -   6   -   ~   3   9   .
-  .   +   ~  16   x   4  10   +   7   .
-  .   1  12   8   ~   +   ~  13   x   .
-  .   +   x  11   -   5   2   -  15   .
-  .   .   .   .   .   .   .   .   .   .
-Compound's plate:
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-Experiment's row:
-[4, 5, 2, 3, 5, 2, 3, 4, 2, 3, 5, 4, 4, 2, 5, 3]
-Experiment's column:
-[2, 7, 8, 6, 6, 5, 9, 4, 9, 7, 4, 3, 8, 2, 9, 4]
-Controls per half plates:
-[2, 2, 2, 2, 2, 2, 2, 2]
-Compounds per half plates:
-[8, 8]
+
 plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
 plate_1,B02,comp2,1,comp2_1
 plate_1,B03,blank,cont3-conc1,blank_cont3-conc1

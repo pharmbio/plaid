@@ -1,35 +1,5 @@
 2 plates
-warning: there are 36 empty wells. Consider using them as controls.
 
-Plate 1:
-  .   .   .   .   .   .   .   .   .   .   .   .
-  .   .   .   #   ~   #   ~   #   @   .   .   .
-  .   *   +   @   +   @   +   &   *   .   .   .
-  .   .   .   x   &   x   -   ~   -   .   .   .
-  .   #   *   #   .   @   +   @   +   *   ~   .
-  .   ~   x   .   .   &   -   *   &   .   2   .
-  .   .   .   &   -   x   .   x   -   .   .   .
-  .   .   .   .   .   .   .   .   .   .   .   .
-
- Plate 2:
-  .   .   .   .   .   .   .   .   .   .   .   .
-  .   .   .   4   3   #   .   +   @   .   .   .
-  .   -   .   ~   &   ~   &   *   #   +   @   .
-  .   x   &   .   x   *   +   -   .   ~   -   .
-  .   ~   #   @   &   #   x   #   @   .   x   .
-  .   *   +   x   *   -   @   ~   *   .   .   .
-  .   .   .   -   &   .   +   1   .   .   .   .
-  .   .   .   .   .   .   .   .   .   .   .   .
-Compound's plate:
-[2, 1, 2, 2]
-Experiment's row:
-[7, 6, 2, 2]
-Experiment's column:
-[8, 11, 5, 4]
-Controls per half plates:
-[3, 2, 2, 3, 2, 3, 2, 3, 2, 3, 3, 2, 3, 2, 3, 2, 3, 3, 2, 3, 2, 2, 3, 2, 2, 2, 3, 2, 3, 3, 2, 3]
-Compounds per half plates:
-[0, 1, 2, 1]
 plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
 plate_1,B04,blank,cont6-conc1,blank_cont6-conc1
 plate_1,B05,neg,cont4-conc1,neg_cont4-conc1

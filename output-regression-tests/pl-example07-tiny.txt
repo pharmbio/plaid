@@ -1,37 +1,5 @@
 4 plates
-Plate 1:
-  .   .   .   .   .   .
-  .   +   7  15  19   .
-  .  20   x   8  16   .
-  .   .   .   .   .   .
 
- Plate 2:
-  .   .   .   .   .   .
-  .  14  18   +   -   .
-  .   +   ~  17  13   .
-  .   .   .   .   .   .
-
- Plate 3:
-  .   .   .   .   .   .
-  .  10   2   3   +   .
-  .   4   +   9   1   .
-  .   .   .   .   .   .
-
- Plate 4:
-  .   .   .   .   .   .
-  .  12   x   ~   6   .
-  .   +   -   5  11   .
-  .   .   .   .   .   .
-Compound's plate:
-[3, 3, 3, 3, 4, 4, 1, 1, 3, 3, 4, 4, 2, 2, 1, 1, 2, 2, 1, 1]
-Experiment's row:
-[3, 2, 2, 3, 3, 2, 2, 3, 3, 2, 3, 2, 3, 2, 2, 3, 3, 2, 2, 3]
-Experiment's column:
-[5, 3, 4, 2, 4, 5, 3, 4, 4, 2, 5, 2, 5, 2, 4, 5, 4, 3, 5, 2]
-Controls per half plates:
-[1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0]
-Compounds per half plates:
-[3, 3, 2, 2, 3, 3, 2, 2]
 plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
 plate_1,B02,pos,cont1-conc1,pos_cont1-conc1
 plate_1,B03,comp4,comp4-conc2,comp4_comp4-conc2

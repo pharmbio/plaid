@@ -59,7 +59,7 @@ array[1..num_controls] of string: control_names;
 
 %%% Testing %%%
 
-bool: testing = true;
+bool: testing = false;
 bool: balance_controls_inside_plate = true;
 
 %% Plate size / number of wells
@@ -702,13 +702,18 @@ constraint forall(i in Plates, l in 1..experiments)((experiment_plate[l] != i) -
 %% Best for Gecode
 %solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(experiment_row, first_fail, indomain_random), int_search(plates, first_fail, indomain_random)]) satisfy; 
 
-solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(crazy_idea, first_fail, indomain_random), int_search(plates, first_fail, indomain_random)]) 
+solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(crazy_idea, first_fail, indomain_random), 
+int_search(plates, first_fail, indomain_random)]) 
      :: restart_geometric(1.5,100)
+     %:: restart_linear(1000)
+     %:: restart_constant(10*experiments)
      satisfy; 
 
 
 %% Chuffed
-%%solve::seq_search([int_search(experiment_plate, random_order, indomain_min), int_search(experiment_row, random_order, indomain_min), int_search(plates, random_order, indomain_max)]) satisfy; 
+% solve::seq_search([int_search(experiment_plate, random_order, indomain_min), int_search(experiment_row, random_order, indomain_min), int_search(plates, random_order, indomain_max)]) 
+%      :: restart_geometric(1.5,100)
+%      satisfy; 
 
 
 %solve::seq_search([int_search(experiment_plate, random_order, indomain_min), priority_search(experiment_plate,[int_search([experiment_row[i]],input_order,indomain_split_random)| i in 1..experiments],smallest,complete)]) satisfy;
@@ -736,42 +741,42 @@ solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), in
 
 output [if testing then "\(numplates) plates\n" else "" endif];
 
-output [if (inner_emptywells>0) then "warning: there are \(inner_emptywells) empty wells. Consider using them as controls.\n\n" else "" endif];
+% output [if (inner_emptywells>0) then "warning: there are \(inner_emptywells) empty wells. Consider using them as controls.\n\n" else "" endif];
 
-output ["Plate 1:\n"];
+% output ["Plate 1:\n"];
          
-%%TODO: change output so symbols are not hardcoded
-output [if fix(plates[i,j,k]) == 0 then "  ." 
-        elseif fix(plates[i,j,k]) == (experiments+1)  then "  +" %% Positive controls
-        elseif fix(plates[i,j,k]) == (experiments+2)  then "  -" %% Negative controls
-        elseif fix(plates[i,j,k]) == (experiments+3)  then "  x" %% Blank controls
-        elseif fix(plates[i,j,k]) == (experiments+4)  then "  ~" %% DMSO controls
-        elseif fix(plates[i,j,k]) == (experiments+5)  then "  *" %% other
-        elseif fix(plates[i,j,k]) == (experiments+6)  then "  #" %% other
-        elseif fix(plates[i,j,k]) == (experiments+7)  then "  &" %% other
-        elseif fix(plates[i,j,k]) == (experiments+8)  then "  @" %% other
-        elseif fix(plates[i,j,k]) == (experiments+9)  then "  <" %% other
-        elseif fix(plates[i,j,k]) == (experiments+10) then "  >" %% other
-        elseif fix(plates[i,j,k]) == (experiments+11) then "  $" %% other
-        else show_int(3,plates[i,j,k]) endif ++
-        %% Adding lines and headings %%
-        if j== numrows /\ k == numcols /\ i<numplates then "\n\n Plate \(i+1):\n" 
-        elseif k == numcols then "\n" else " " endif |
-        i in Plates, j in Rows, k in Columns];        
+% %%TODO: change output so symbols are not hardcoded
+% output [if fix(plates[i,j,k]) == 0 then "  ." 
+%         elseif fix(plates[i,j,k]) == (experiments+1)  then "  +" %% Positive controls
+%         elseif fix(plates[i,j,k]) == (experiments+2)  then "  -" %% Negative controls
+%         elseif fix(plates[i,j,k]) == (experiments+3)  then "  x" %% Blank controls
+%         elseif fix(plates[i,j,k]) == (experiments+4)  then "  ~" %% DMSO controls
+%         elseif fix(plates[i,j,k]) == (experiments+5)  then "  *" %% other
+%         elseif fix(plates[i,j,k]) == (experiments+6)  then "  #" %% other
+%         elseif fix(plates[i,j,k]) == (experiments+7)  then "  &" %% other
+%         elseif fix(plates[i,j,k]) == (experiments+8)  then "  @" %% other
+%         elseif fix(plates[i,j,k]) == (experiments+9)  then "  <" %% other
+%         elseif fix(plates[i,j,k]) == (experiments+10) then "  >" %% other
+%         elseif fix(plates[i,j,k]) == (experiments+11) then "  $" %% other
+%         else show_int(3,plates[i,j,k]) endif ++
+%         %% Adding lines and headings %%
+%         if j== numrows /\ k == numcols /\ i<numplates then "\n\n Plate \(i+1):\n" 
+%         elseif k == numcols then "\n" else " " endif |
+%         i in Plates, j in Rows, k in Columns];        
          
-output ["Compound's plate:\n", show(experiment_plate)];
+% output ["Compound's plate:\n", show(experiment_plate)];
 
-%output ["Compound's plate:\n", show(compound_concentration_names)];    
+% %output ["Compound's plate:\n", show(compound_concentration_names)];    
      
- output ["\nExperiment's row:\n", show(experiment_row)];
+%  output ["\nExperiment's row:\n", show(experiment_row)];
 
- output ["\nExperiment's column:\n", show(experiment_column)];
+%  output ["\nExperiment's column:\n", show(experiment_column)];
 
-% output ["\nControls per row:\n", show(controls_in_row)];
+% % output ["\nControls per row:\n", show(controls_in_row)];
 
-output ["\nControls per half plates:\n", show(controls_ul_plates)];
+% output ["\nControls per half plates:\n", show(controls_ul_plates)];
 
-output ["\nCompounds per half plates:\n", show(ul_half_plates)];
+% output ["\nCompounds per half plates:\n", show(ul_half_plates)];
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% CSV Ouput %%%
