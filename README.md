@@ -46,6 +46,8 @@ highly customizable.
 * [Installation and Usage](#installation)
   - [Using the MiniZinc IDE](#minizinc-ide)
   - [Using the command line](#command-line)
+* [Contact](#contact)
+* [Citation](#citation)
 * [References](#references)
 
 
@@ -81,7 +83,35 @@ configuration editor...".
 ### Using the command line
 TODO: add more info here
 
+```bash
 $ minizinc --solver Gecode plate-design.mzn pl-example01.dzn
+```
+
+<a name="contact"></a>
+## Contact
+
+This project is coordinated by
+[Maria Andreina Francisco Rodriguez](https://katalog.uu.se/profile?id=N11-1772)
+([@andreina-francisco](https://github.com/andreina-francisco)) and
+[Ola Spjuth](https://katalog.uu.se/empinfo/?id=N2-878)
+([@olas](https://github.com/olas)) and it is part of the research work
+at the
+[Pharmaceutical Bioinformatics Research Group](https://farmbio.uu.se/research/pharmaceutical-bioinformatics/),
+Department of Pharmaceutical Biosciences, Uppsala University, Sweden. 
+
+
+Got ideas for improvement? We would love to hear about your suggestions!
+
+<a name="citation"></a>
+## Citation
+
+Our ModRef2020 extended abstract can be used to cite this project.
+
+"M. A. Francisco Rodríguez, and O. Spjuth. *A Constraint Programming Approach to Microplate Layout Design* In: J. Espasa and N.
+Dang (editors), Proceedings of ModRef 2020, the 19th International
+Workshop on Constraint Modelling and Reformulation, held at CP 2020, September 2020."
+
+
 
 <a name="references"></a>
 ## References

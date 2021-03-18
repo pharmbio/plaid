@@ -2,8 +2,9 @@
 %% Description: Very small test.
 %% Produces 4 plates.
 %% 2021/Jan/15: it takes about 299msec
+%% 2021/Mar/11: it takes about 608msec
 
-%% Plate dimentions: (this is a 96-well plate)
+%% Plate dimentions: (this is a 24-well plate)
 num_rows = 4; %% height
 num_cols = 6; %% width
 
