@@ -9,7 +9,7 @@
 %
 % Authors: Maria Andreina FRANCISCO RODRIGUEZ (maria.andreina.francisco@farmbio.uu.se)
 % Version: 1.0
-% Last Revision: March 2021
+% Last Revision: April 2021
 
 
 include "globals.mzn";
@@ -59,7 +59,8 @@ array[1..num_controls] of string: control_names;
 
 %%% Testing %%%
 
-bool: testing = false;
+bool: testing = true;
+bool: debugging = false;
 bool: balance_controls_inside_plate = true;
 
 %% Plate size / number of wells
@@ -95,6 +96,7 @@ constraint assert(numrows > 0,"Invalid datafile: Number of rows should be larger
 constraint assert(numcols > 0,"Invalid datafile: Number of columns should be larger than zero.");
 constraint assert(compounds==0 \/ min(compound_replicates) > 0,"Invalid datafile: Number of replicates should be larger than zero.");
 constraint assert(compounds==0 \/ min(compound_concentrations) > 0,"Invalid datafile: Number of concentrations should be larger than zero.");
+constraint assert((replicates_on_different_plates /\ replicates_on_same_plate) == false,"Invalid datafile: replicates cannot be both on the same plate and on different plates");
 
 
 
@@ -373,14 +375,16 @@ constraint forall(i in Plates, k in Columns) (
 %%KEEP%% constraint global_cardinality_low_up_closed(experiment_column, [i | i in 2..numcols-1], [0| i in 2..numcols-1], [numplates*(numrows-2)| i in 2..numcols-1]);                                         
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Different compound replicas must appear on different plates (if possible!)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Different compound replicas must appear on different plates (if possible)
 int: min_plates = min(numplates,replicates);
 
+constraint if replicates_on_different_plates then forall(l in 1..compounds) (nvalue(min(numplates,compound_replicates[l]), [experiment_plate[(l-1)*max_compound_concentrations + i*compounds*max_compound_concentrations + 1] | i in 0..(compound_replicates[l]-1)])) endif; 
 
-%% FIX ME! (twice)
-%% MODIFIED!
-constraint forall(l in 1..compounds) (nvalue(min(numplates,compound_replicates[l]), [experiment_plate[(l-1)*max_compound_concentrations + i*compounds*max_compound_concentrations + 1] | i in 0..(compound_replicates[l]-1)])); 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Different compound replicas must appear on the same plate
+constraint if replicates_on_same_plate then forall(l in 1..compounds) (all_equal([experiment_plate[(l-1)*max_compound_concentrations + i*compounds*max_compound_concentrations + 1] | i in 0..(compound_replicates[l]-1)])) endif;
 
 
 %% Different combination replicas must appear on different plates (if possible!)
@@ -739,46 +743,46 @@ int_search(plates, first_fail, indomain_random)])
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % %%% Pretty printing %%%
 
-output [if testing then "\(numplates) plates\n" else "" endif];
+output [if testing \/ debugging then "\(numplates) plates\n" else "" endif];
 
-% output [if (inner_emptywells>0) then "warning: there are \(inner_emptywells) empty wells. Consider using them as controls.\n\n" else "" endif];
+output [if (inner_emptywells>0) then "warning: there are \(inner_emptywells) empty wells. Consider using them as controls.\n\n" else "" endif];
 
-% output ["Plate 1:\n"];
+output [if debugging then "Plate 1:\n" else "" endif];
          
-% %%TODO: change output so symbols are not hardcoded
-% output [if fix(plates[i,j,k]) == 0 then "  ." 
-%         elseif fix(plates[i,j,k]) == (experiments+1)  then "  +" %% Positive controls
-%         elseif fix(plates[i,j,k]) == (experiments+2)  then "  -" %% Negative controls
-%         elseif fix(plates[i,j,k]) == (experiments+3)  then "  x" %% Blank controls
-%         elseif fix(plates[i,j,k]) == (experiments+4)  then "  ~" %% DMSO controls
-%         elseif fix(plates[i,j,k]) == (experiments+5)  then "  *" %% other
-%         elseif fix(plates[i,j,k]) == (experiments+6)  then "  #" %% other
-%         elseif fix(plates[i,j,k]) == (experiments+7)  then "  &" %% other
-%         elseif fix(plates[i,j,k]) == (experiments+8)  then "  @" %% other
-%         elseif fix(plates[i,j,k]) == (experiments+9)  then "  <" %% other
-%         elseif fix(plates[i,j,k]) == (experiments+10) then "  >" %% other
-%         elseif fix(plates[i,j,k]) == (experiments+11) then "  $" %% other
-%         else show_int(3,plates[i,j,k]) endif ++
-%         %% Adding lines and headings %%
-%         if j== numrows /\ k == numcols /\ i<numplates then "\n\n Plate \(i+1):\n" 
-%         elseif k == numcols then "\n" else " " endif |
-%         i in Plates, j in Rows, k in Columns];        
+%%TODO: change output so symbols are not hardcoded
+output [if debugging then if fix(plates[i,j,k]) == 0 then "  ." 
+        elseif fix(plates[i,j,k]) == (experiments+1)  then "  +" %% Positive controls
+        elseif fix(plates[i,j,k]) == (experiments+2)  then "  -" %% Negative controls
+        elseif fix(plates[i,j,k]) == (experiments+3)  then "  x" %% Blank controls
+        elseif fix(plates[i,j,k]) == (experiments+4)  then "  ~" %% DMSO controls
+        elseif fix(plates[i,j,k]) == (experiments+5)  then "  *" %% other
+        elseif fix(plates[i,j,k]) == (experiments+6)  then "  #" %% other
+        elseif fix(plates[i,j,k]) == (experiments+7)  then "  &" %% other
+        elseif fix(plates[i,j,k]) == (experiments+8)  then "  @" %% other
+        elseif fix(plates[i,j,k]) == (experiments+9)  then "  <" %% other
+        elseif fix(plates[i,j,k]) == (experiments+10) then "  >" %% other
+        elseif fix(plates[i,j,k]) == (experiments+11) then "  $" %% other
+        else show_int(3,plates[i,j,k]) endif ++
+        %% Adding lines and headings %%
+        if j== numrows /\ k == numcols /\ i<numplates then "\n\n Plate \(i+1):\n" 
+        elseif k == numcols then "\n" else " " endif else "" endif|
+        i in Plates, j in Rows, k in Columns];        
          
-% output ["Compound's plate:\n", show(experiment_plate)];
+%output ["Compound's plate:\n", show(experiment_plate)];
 
-% %output ["Compound's plate:\n", show(compound_concentration_names)];    
+%output ["Compound's plate:\n", show(compound_concentration_names)];    
      
-%  output ["\nExperiment's row:\n", show(experiment_row)];
+ %output ["\nExperiment's row:\n", show(experiment_row)];
 
-%  output ["\nExperiment's column:\n", show(experiment_column)];
+ %output ["\nExperiment's column:\n", show(experiment_column)];
 
-% % output ["\nControls per row:\n", show(controls_in_row)];
+% output ["\nControls per row:\n", show(controls_in_row)];
 
-% output ["\nControls per half plates:\n", show(controls_ul_plates)];
+%output ["\nControls per half plates:\n", show(controls_ul_plates)];
 
-% output ["\nCompounds per half plates:\n", show(ul_half_plates)];
+%output ["\nCompounds per half plates:\n", show(ul_half_plates)];
 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% CSV Ouput %%%
 
 array[int] of string: letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
