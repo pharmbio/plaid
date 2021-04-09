@@ -4,6 +4,7 @@
 %% It produces 2 plates
 %
 %% 2021/Jan/18: It takes about 2min 33sec (twice the time of pl-example04)
+%% 2021/Apr/09: It takes about 1min 20sec (more than twice the time of pl-example04)
 
 %% Plate dimentions: (this is a 384-well plate)
 num_rows = 16; %% height
