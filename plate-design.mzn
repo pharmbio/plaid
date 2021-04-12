@@ -59,7 +59,7 @@ array[1..num_controls] of string: control_names;
 
 %%% Testing %%%
 
-bool: testing = true;
+bool: testing = false;
 bool: debugging = false;
 bool: balance_controls_inside_plate = true;
 
