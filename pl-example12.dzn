@@ -21,21 +21,21 @@ replicates_on_same_plate = false;
 
 
 %%% Compounds %%%
-compounds = 1; %% number of drugs/compounds
-compound_replicates	 = [1];
-compound_concentrations	 = [1]; 
+compounds = 2; %% number of drugs/compounds
+compound_replicates	 = [1,1];
+compound_concentrations	 = [1,1]; 
 
-compound_concentration_names = [|"comp1-conc1"|];
+compound_concentration_names = [|"comp1-conc1"|"comb-conc1"|];
 compound_concentration_indicators = [""]; 
 
-compound_names = ["BPA"]; 
+compound_names = ["BPA","BPA+H"]; 
 
 
 %%% Combinations %%%
-combinations 	= 1;
-combination_concentrations = 1;
-combination_names = ["BPA+H"];  
-combination_concentration_names = ["comb-conc\(i)" | i in 1..combination_concentrations];
+combinations 	= 0;
+combination_concentrations = 0;
+combination_names = [];  
+combination_concentration_names = [];
 
 
 %% Controls %%
