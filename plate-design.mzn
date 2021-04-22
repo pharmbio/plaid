@@ -63,12 +63,12 @@ array[1..num_controls] of string: control_names;
 bool: testing = true;
 bool: debugging = true;
 bool: balance_controls_inside_plate = true;
+bool: interconnected_plates = false;
+bool: temp_bool = true; %Make things bad! Check these ones!
 
-bool: temp_bool = true;
+bool: ok_bool = true; %This ones actually help a lot!
 
-bool: ok_bool = true;
-
-bool: fixing_bool = true;
+bool: fixing_bool = true; %%Not too bad
 
 %% Plate size / number of wells
 
@@ -683,11 +683,11 @@ constraint forall(i in Plates)(ul_half_plates[i,upper] + ul_half_plates[i,lower]
 %%->constraint (sum(r in floor(numrows/2)+1..numrows)(controls_in_row[r]) == sum(i in Plates, d in 1..num_controls*max_control_concentrations)(controls_ul_plates[i,lower,d]) + count([plates[i,j,k] | i in Plates, j in floor(numrows/2)+1..numrows, k in Columns], 0));
 
 
-%%% Controls per row %%%
- 
-constraint if temp_bool then forall(j in 1+size_empty_edge..numrows-size_empty_edge) (controls_in_row[j] <= ceil((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/(numrows-2*size_empty_edge)) + 2*size_empty_edge*numplates) endif;
+%%% Controls per row across plates%%%
 
-constraint forall(j in 1+size_empty_edge..numrows-size_empty_edge) (controls_in_row[j] >= floor((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/(numrows-2*size_empty_edge)) + 2*size_empty_edge*numplates);
+constraint if temp_bool /\ interconnected_plates then forall(j in 1+size_empty_edge..numrows-size_empty_edge) (controls_in_row[j] <= ceil((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/(numrows-2*size_empty_edge)) + 2*size_empty_edge*numplates) endif;
+
+constraint if temp_bool /\ interconnected_plates then forall(j in 1+size_empty_edge..numrows-size_empty_edge) (controls_in_row[j] >= floor((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/(numrows-2*size_empty_edge)) + 2*size_empty_edge*numplates) endif;
 
 %%% Controls per row per plate %%%
 
@@ -700,11 +700,12 @@ constraint forall(i in Plates, j in 1+size_empty_edge..numrows-size_empty_edge) 
 
 constraint forall(i in Plates, j in 1+size_empty_edge..numrows-size_empty_edge) (controls_in_plate_row[i,j] <= ((controls_in_row[j]+numplates-1)div numplates));
 
-%%% Controls per column %%%
- 
-constraint if temp_bool then forall(j in 1+size_empty_edge..numcols-size_empty_edge) (controls_in_column[j] <= ceil((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/(numcols-2*size_empty_edge)) + 2*size_empty_edge*numplates) endif;
 
-constraint if temp_bool then forall(j in 1+size_empty_edge..numcols-size_empty_edge) (controls_in_column[j] >= floor((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/(numcols-2*size_empty_edge)) + 2*size_empty_edge*numplates) endif;
+%%% Controls per column across plates%%%
+ 
+constraint if temp_bool /\ interconnected_plates then forall(j in 1+size_empty_edge..numcols-size_empty_edge) (controls_in_column[j] <= ceil((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/(numcols-2*size_empty_edge)) + 2*size_empty_edge*numplates) endif;
+
+constraint if temp_bool /\ interconnected_plates then forall(j in 1+size_empty_edge..numcols-size_empty_edge) (controls_in_column[j] >= floor((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/(numcols-2*size_empty_edge)) + 2*size_empty_edge*numplates) endif;
 
 
 %%% Attempting to balance controls inside each row
@@ -727,13 +728,13 @@ constraint forall(j in Rows, h in Horizontal) (controls_in_half_row[j,h] == sum(
 
 %constraint forall(j in 1+size_empty_edge..numrows-size_empty_edge) ( ceil((ceil((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/(numcols-2*size_empty_edge)) + 2*size_empty_edge*numplates)/2) >= controls_in_half_row[j,right]);
 
-constraint if temp_bool then forall(j in 1+size_empty_edge..numrows-size_empty_edge) ( floor((floor((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/(numrows-2*size_empty_edge)) + 2*size_empty_edge*numplates)/2) <= controls_in_half_row[j,left]) endif;
+constraint if temp_bool /\ interconnected_plates then forall(j in 1+size_empty_edge..numrows-size_empty_edge) ( floor((floor((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/(numrows-2*size_empty_edge)) + 2*size_empty_edge*numplates)/2) <= controls_in_half_row[j,left]) endif;
 
-constraint if temp_bool then forall(j in 1+size_empty_edge..numrows-size_empty_edge) ( floor((floor((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/(numrows-2*size_empty_edge)) + 2*size_empty_edge*numplates)/2) <= controls_in_half_row[j,right]) endif;
+constraint if temp_bool /\ interconnected_plates then forall(j in 1+size_empty_edge..numrows-size_empty_edge) ( floor((floor((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/(numrows-2*size_empty_edge)) + 2*size_empty_edge*numplates)/2) <= controls_in_half_row[j,right]) endif;
 
-constraint if temp_bool then forall(j in Rows, h in Horizontal) ( (controls_in_row[j] div 2) <= controls_in_half_row[j,h] ) endif;
+constraint if temp_bool /\ interconnected_plates then forall(j in Rows, h in Horizontal) ( (controls_in_row[j] div 2) <= controls_in_half_row[j,h] ) endif;
 
-constraint if temp_bool then forall(j in Rows) (controls_in_row[j] == (controls_in_half_row[j,left] + controls_in_half_row[j,right])) endif;
+constraint if temp_bool /\ interconnected_plates then forall(j in Rows) (controls_in_row[j] == (controls_in_half_row[j,left] + controls_in_half_row[j,right])) endif;
 
 
 constraint if temp_bool then forall(i in Plates, h in Horizontal, j in 1+size_empty_edge..numrows-size_empty_edge) ( floor(floor((floor((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/numplates)/(numrows-2*size_empty_edge))/2) + size_empty_edge) <= controls_in_half_row_plate[i,j,h]) endif;
@@ -760,11 +761,11 @@ constraint forall(k in Columns) ( among(controls_in_half_column[k,lower],[plates
 
 %constraint forall(j in 1+size_empty_edge..numrows-size_empty_edge) ( ceil((ceil((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/(numcols-2*size_empty_edge)) + 2*size_empty_edge*numplates)/2) >= controls_in_half_row[j,right]);
 
-constraint if temp_bool then forall(k in 1+size_empty_edge..numcols-size_empty_edge) ( floor((floor((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/(numcols-2*size_empty_edge)) + 2*size_empty_edge*numplates)/2) <= controls_in_half_column[k,upper]) endif;
+constraint if temp_bool /\ interconnected_plates then forall(k in 1+size_empty_edge..numcols-size_empty_edge) ( floor((floor((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/(numcols-2*size_empty_edge)) + 2*size_empty_edge*numplates)/2) <= controls_in_half_column[k,upper]) endif;
 
-constraint if temp_bool then forall(k in 1+size_empty_edge..numcols-size_empty_edge) ( floor((floor((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/(numcols-2*size_empty_edge)) + 2*size_empty_edge*numplates)/2) <= controls_in_half_column[k,lower]) endif;
+constraint if temp_bool /\ interconnected_plates then forall(k in 1+size_empty_edge..numcols-size_empty_edge) ( floor((floor((sum(l in 1..num_controls)(control_replicates[l]*control_concentrations[l])+inner_emptywells)/(numcols-2*size_empty_edge)) + 2*size_empty_edge*numplates)/2) <= controls_in_half_column[k,lower]) endif;
 
-constraint if temp_bool then forall(k in Columns) (controls_in_column[k] == (controls_in_half_column[k,upper] + controls_in_half_column[k,lower])) endif;
+constraint if temp_bool /\ interconnected_plates then forall(k in Columns) (controls_in_column[k] == (controls_in_half_column[k,upper] + controls_in_half_column[k,lower])) endif;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Distributing controls
