@@ -14,7 +14,7 @@ for (( i=0; i<$len; i++ ))
 do
     echo "Testing file ${myUnitTests[${i}]}.dzn"
     echo "Expecting ${myUnitTestsResults[${i}]}"
-    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn ${myUnitTests[${i}]}.dzn > ${myUnitTests[${i}]}.txt
+    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn ${myUnitTests[${i}]}.dzn -p 6 -r  $RANDOM > ${myUnitTests[${i}]}.txt
 
     read -r line < ${myUnitTests[${i}]}.txt
 
@@ -22,18 +22,19 @@ do
 
     if [[ $line == ${myUnitTestsResults[${i}]} || $1 == "assert" ]]
     then
-	echo "We are happy with the number of plates in ${myUnitTests[${i}]}.txt"
+	echo "We are happy with the number of plates in ${myUnitTests[${i}]}.txt :-)"
     else
-	echo "The number of plates in ${myUnitTests[${i}]}.dzn changed!!!!!!!!!!"
+	echo "ERROR: The number of plates in ${myUnitTests[${i}]}.dzn changed!!!!!!!!!!"
+	break
     fi   
 
 	
-    if cmp "${myUnitTests[${i}]}.txt" "./output-regression-tests/${myUnitTests[${i}]}.txt";
-    then
-	echo ":-)"
-    else
-	echo "Check ${myUnitTests[${i}]}.dzn! Something changed!!!!!!!!!!"
-    fi
+#    if cmp "${myUnitTests[${i}]}.txt" "./output-regression-tests/${myUnitTests[${i}]}.txt";
+ #   then
+#	echo ":-)"
+ #   else
+#	echo "Check ${myUnitTests[${i}]}.dzn! Something changed!!!!!!!!!!"
+ #   fi
 
     echo ""
     
