@@ -1,6 +1,7 @@
 %%% Small test 	%%%
 %% Produces 1 plate.
 %% 2020/12/04: It takes about 1s 8 msec
+%% 2021/Apr/23: It takes about 2m 9s (with interconnected_plates = false)
 
 %% Plate dimentions: (this is a 96-well plate)
 num_rows = 8; %% height
