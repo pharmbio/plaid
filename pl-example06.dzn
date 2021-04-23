@@ -24,22 +24,22 @@ replicates_on_same_plate = false;
 
 
 %%% Compounds %%%
-compounds = 1; %% number of drugs/compounds
-compound_concentrations	 = [1]; 
-compound_replicates	 = [2];
+compounds = 1+1; %% number of drugs/compounds
+compound_concentrations	 = [1,1]; 
+compound_replicates	 = [2,2];
 
-compound_concentration_names = [|"comp-conc\(1)"|];
+compound_concentration_names = [|"comp-conc1"|"comb-conc1"|];
 compound_concentration_indicators = [""]; 
-compound_names = ["BPA"]; 
+compound_names = ["BPA","BPA+H"]; 
 
 
 %%% Combinations %%%
-combinations 	= 1;
-combination_concentrations = 1;
+combinations 	= 0;
+combination_concentrations = 0;
 
-combination_names = ["BPA+H"]; 
+combination_names = []; 
   
-combination_concentration_names = ["comb-conc\(i)" | i in 1..combination_concentrations];
+combination_concentration_names = [];
 
 
 %% Controls %%

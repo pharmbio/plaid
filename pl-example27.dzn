@@ -1,7 +1,7 @@
 %%% Exp_DoseResponse conditions	%%%
 %% Description: similar to pl-example01, but produces 3 of those plates (instead of 4)
 %% Produces 3 plates.
-%% 2021/Mar/09: It takes about ??
+%% 2021/Apr/22: It takes about 19s 329msec (with interconnected_plates = false)
 
 %% Plate dimentions: (this is a 96-well plate)
 num_rows = 8; %% height

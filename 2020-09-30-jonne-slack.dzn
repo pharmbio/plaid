@@ -1,5 +1,6 @@
 %%% Taken from a Slack conversation
 %% 2021/Jan/13: satisfiable. It generates 1 plate in aprox. 1m
+%% 2021/Apr/23: It takes about 1m 29s (with interconnected_plates = false)
 
 %% Plate dimentions: (this is a 384-well plate)
 num_rows = 16; %% height
