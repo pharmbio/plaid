@@ -14,7 +14,7 @@ for (( i=0; i<$len; i++ ))
 do
     echo "Testing file ${myUnitTests[${i}]}.dzn"
     echo "Expecting ${myUnitTestsResults[${i}]}"
-    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn ${myUnitTests[${i}]}.dzn -p 6 -r $RANDOM -t 1800000 > ${myUnitTests[${i}]}.txt
+    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn ${myUnitTests[${i}]}.dzn > ${myUnitTests[${i}]}.txt
 
     read -r line < ${myUnitTests[${i}]}.txt
 
