@@ -9,7 +9,7 @@
 %
 % Authors: Maria Andreina FRANCISCO RODRIGUEZ (maria.andreina.francisco@farmbio.uu.se)
 % Version: 1.0
-% Last Revision: April 2021
+% Last Revision: June 2021
 
 
 include "globals.mzn";
@@ -59,15 +59,15 @@ array[1..num_controls] of string: control_names;
 
 %%% Potentially new parameters
 bool: balance_controls_inside_plate = true;
-bool: interconnected_plates = (numplates<2); %Makes the problem much harder by connecting the plates
-int: control_slack = 0; %Makes the problem harder/easier by constraining how equally should we distribute controls
+bool: interconnected_plates = (numplates==1); %Makes the problem much harder by connecting the plates
+int: control_slack = 1; %Makes the problem harder/easier by constraining how equally should we distribute controls
 bool: spread_controls = true; %Makes the problem harder when there are many controls
 
 
 %%% Testing %%%
 
-bool: testing = true;
-bool: debugging = true;
+bool: testing = false;
+bool: debugging = false;
 
 bool: temp_bool = true; 
 
@@ -128,7 +128,7 @@ constraint assert(min(compound_concentrations++[0]) <= inner_plate_size, "Invali
 %% max is used to avoid division-by-zero errors
 int: numplates = max(ceil(total_wells/inner_plate_size),1);         
               
-force_spread_controls = true;%(9*sum([control_concentrations[i]*control_replicates[i] | i in 1..num_controls]) < inner_plate_size*numplates);
+force_spread_controls = false;%(9*sum([control_concentrations[i]*control_replicates[i] | i in 1..num_controls]) < inner_plate_size*numplates);
 
 %% Detecting some unsatisfiable cases.
 %% Conditions E01 and E02 need to be updated or the model needs to be more flexible.                                                                      
