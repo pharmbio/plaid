@@ -56,18 +56,20 @@ int: max_control_concentrations = max(control_concentrations++[0]);
 array[1..num_controls,1..max_control_concentrations] of string: control_concentration_names;
 array[1..num_controls] of string: control_names;
 
+int: total_controls = sum([control_concentrations[i]*control_replicates[i] | i in 1..num_controls]);
 
 %%% Potentially new parameters
 bool: balance_controls_inside_plate = true;
 bool: interconnected_plates = (numplates==1); %Makes the problem much harder by connecting the plates
 int: control_slack = 1; %Makes the problem harder/easier by constraining how equally should we distribute controls
-bool: spread_controls = true; %Makes the problem harder when there are many controls
+%bool: spread_controls = false; %Makes the problem harder when there are many controls
+bool: spread_controls = (ceil(inner_plate_size/2)*numplates >= total_controls); %Makes the problem harder when there are many controls
 
 
 %%% Testing %%%
 
-bool: testing = false;
-bool: debugging = false;
+bool: testing = true;
+bool: debugging = true;
 
 bool: temp_bool = true; 
 
@@ -114,7 +116,7 @@ constraint assert((replicates_on_different_plates /\ replicates_on_same_plate) =
 
 
 %% Number of wells needed. Note that plates might not be full
-int: total_wells = sum([compound_concentrations[i]*compound_replicates[i] | i in 1..compounds]) + combinations*combination_concentrations*replicates + sum([control_concentrations[i]*control_replicates[i] | i in 1..num_controls]); 
+int: total_wells = sum([compound_concentrations[i]*compound_replicates[i] | i in 1..compounds]) + combinations*combination_concentrations*replicates + total_controls; 
 
 constraint assert(total_wells > 0, "Invalid datafile: the plates cannot be completely empty.");
 
@@ -128,7 +130,8 @@ constraint assert(min(compound_concentrations++[0]) <= inner_plate_size, "Invali
 %% max is used to avoid division-by-zero errors
 int: numplates = max(ceil(total_wells/inner_plate_size),1);         
               
-force_spread_controls = false;%(9*sum([control_concentrations[i]*control_replicates[i] | i in 1..num_controls]) < inner_plate_size*numplates);
+force_spread_controls = (ceil(inner_plate_size/9)*numplates >= total_controls) ;
+%force_spread_controls = false;
 
 %% Detecting some unsatisfiable cases.
 %% Conditions E01 and E02 need to be updated or the model needs to be more flexible.                                                                      
@@ -166,6 +169,7 @@ constraint assert(emptywells >= 0,"Model ERROR! Inner empty wells is negative. T
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Plates (our solution!!) %%%%%%%%%%%
 array [Plates,Rows,Columns] of var 0..(experiments+num_controls*max_control_concentrations): plates; 
+
 
 % 0 = empty wells
 % 1... compounds*compound_concentrations*replicates = compounds
@@ -844,25 +848,41 @@ constraint if temp_bool /\ interconnected_plates then forall(k in Columns) (cont
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %% Balancing each type of control per row
 
-constraint if fixing_bool \/ true then forall(i in Plates, j in Rows, c in 1..num_controls*max_control_concentrations) (count_eq(plates[i,j,..],experiments+c,controls_row_plates[i,j,c])) endif;
+constraint forall(i in Plates, j in Rows, c in 1..num_controls*max_control_concentrations) (count_eq(plates[i,j,..],experiments+c,controls_row_plates[i,j,c]));
 
-constraint if fixing_bool \/ true then forall(i in Plates, j in Rows) (count_eq(plates[i,j,..],0,controls_row_plates[i,j,0])) endif;
+constraint forall(i in Plates, j in Rows) (count_eq(plates[i,j,..],0,controls_row_plates[i,j,0]));
 
-constraint if fixing_bool \/ true then forall(i in Plates, j in Rows, c in 1..num_controls*max_control_concentrations) (controls_row_plates[i,j,c] <= ceil(max_controls_per_plate[c]/numrows)) endif;
+constraint forall(i in Plates, j in Rows, c in 1..num_controls*max_control_concentrations) (controls_row_plates[i,j,c] <= ceil(max_controls_per_plate[c]/numrows));
 
-constraint if fixing_bool \/ true then forall(i in Plates, j in Rows, c in 1..num_controls*max_control_concentrations) (controls_row_plates[i,j,c] >= floor(min_controls_per_plate[c]/numrows)) endif;
+constraint forall(i in Plates, j in Rows, c in 1..num_controls*max_control_concentrations) (controls_row_plates[i,j,c] >= floor(min_controls_per_plate[c]/numrows));
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %% Balancing each type of control per column
 
-constraint if fixing_bool \/ true then forall(i in Plates, k in Columns, c in 1..num_controls*max_control_concentrations) (count_eq(plates[i,..,k],experiments+c,controls_column_plates[i,k,c])) endif;
+constraint forall(i in Plates, k in Columns, c in 1..num_controls*max_control_concentrations) (count_eq(plates[i,..,k],experiments+c,controls_column_plates[i,k,c]));
 
-constraint if fixing_bool \/ true then forall(i in Plates, k in Columns) (count_eq(plates[i,..,k],0,controls_column_plates[i,k,0])) endif;
+constraint forall(i in Plates, k in Columns) (count_eq(plates[i,..,k],0,controls_column_plates[i,k,0]));
 
-constraint if fixing_bool \/ true then forall(i in Plates, k in Columns, c in 1..num_controls*max_control_concentrations) (controls_column_plates[i,k,c] <= ceil(max_controls_per_plate[c]/numcols)) endif;
+constraint forall(i in Plates, k in Columns, c in 1..num_controls*max_control_concentrations) (controls_column_plates[i,k,c] <= ceil(max_controls_per_plate[c]/numcols));
 
-constraint if fixing_bool \/ true  then forall(i in Plates, k in Columns, c in 1..num_controls*max_control_concentrations) (controls_column_plates[i,k,c] >= floor(min_controls_per_plate[c]/numcols)) endif;
+constraint forall(i in Plates, k in Columns, c in 1..num_controls*max_control_concentrations) (controls_column_plates[i,k,c] >= floor(min_controls_per_plate[c]/numcols));
+
+
+%% Implied all_different constraint
+%% Using alldifferent_except_0 seems to be faster than alldifferent_except... but it could be due to less propagation?
+% array [Plates,Rows,Columns] of var 0..experiments: exp_plates; 
+
+% constraint forall(i in Plates, j in Rows, k in Columns)((plates[i,j,k] <= experiments) -> (exp_plates[i,j,k] == plates[i,j,k]));
+
+% constraint forall(i in Plates, j in Rows, k in Columns)((plates[i,j,k] > experiments) -> (exp_plates[i,j,k] == 0));
+
+% constraint forall(i in Plates, j in Rows, k in Columns)((exp_plates[i,j,k] > 0) -> (exp_plates[i,j,k] == plates[i,j,k]));
+
+% constraint alldifferent_except_0(exp_plates):: domain;
+
+constraint alldifferent_except(plates, {0} union experiments+1..experiments+num_controls*max_control_concentrations):: domain;
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1075,7 +1095,7 @@ search_order)
 %[int_search(experiment_plate_row, first_fail, indomain_random)]++[int_search(plates[i,..,..], random, indomain_max) | i in Plates]) 
 %[int_search(plates[i,..,..], random, indomain_max) | i in Plates ]) 
 %      :: restart_geometric(1.1,1000)
-      :: restart_geometric(1.1,5*experiments)
+     % :: restart_geometric(1.1,5*experiments)
      %:: restart_linear(1000)
      %:: restart_constant(10*experiments)
      satisfy; 
