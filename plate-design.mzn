@@ -917,6 +917,8 @@ constraint if spread_controls then forall(i in Plates, j in 2..numrows-1, k in 2
             %plates[i,j+1,k+1] <= experiments
             ) endif;
 
+%% TODO: Add spread_controls contraint in borders!
+
 constraint if force_spread_controls then forall(i in Plates, j in 3..numrows-2, k in 3..numcols-2)(plates[i,j,k] > experiments -> 
             plates[i,j-2,k-2]!= plates[i,j,k] /\ 
             plates[i,j-2,k-1]  != plates[i,j,k] /\
@@ -1095,7 +1097,7 @@ search_order)
 %[int_search(experiment_plate_row, first_fail, indomain_random)]++[int_search(plates[i,..,..], random, indomain_max) | i in Plates]) 
 %[int_search(plates[i,..,..], random, indomain_max) | i in Plates ]) 
 %      :: restart_geometric(1.1,1000)
-     % :: restart_geometric(1.1,5*experiments)
+      :: restart_geometric(1.1,5*experiments)
      %:: restart_linear(1000)
      %:: restart_constant(10*experiments)
      satisfy; 
