@@ -170,7 +170,6 @@ constraint assert(emptywells >= 0,"Model ERROR! Inner empty wells is negative. T
 %%%% Plates (our solution!!) %%%%%%%%%%%
 array [Plates,Rows,Columns] of var 0..(experiments+num_controls*max_control_concentrations): plates; 
 
-
 % 0 = empty wells
 % 1... compounds*compound_concentrations*replicates = compounds
 % compounds*compound_concentrations*replicates+1 ... experiments = combinations
@@ -893,6 +892,45 @@ constraint alldifferent_except(plates, {0} union experiments+1..experiments+num_
 %% Implied constraint
 constraint forall(i in Plates, j in 1..numrows-1, k in 1..numcols-1) (alldifferent_except_0([plates[i,j,k],plates[i,j+1,k],plates[i,j,k+1],plates[i,j+1,k+1]])):: domain;
 
+array [Plates,Rows,Columns] of var 0..1: controls_layout; 
+
+constraint forall(i in Plates, j in Rows, k in Columns)(controls_layout[i,j,k] == ((plates[i,j,k] > experiments)) );
+
+constraint if spread_controls then forall(i in Plates, j in Rows)(regular(controls_layout[i,j,..], "(0|1)(0|01)*")::domain) endif;
+
+constraint if spread_controls then forall(i in Plates, k in Columns)(regular(controls_layout[i,..,k], "(0|1)(0|01)*")::domain) endif;
+
+%constraint if spread_controls then forall(i in Plates, j in Rows)(cost_regular(controls_layout[i,j,..], 2, 2, [|1,2|1,0|], 1, {1,2}, [|0,1|0,0|], controls_in_plate_row[i,j]))::domain endif;
+
+%constraint if spread_controls then forall(i in Plates, j in Rows)(cost_regular(controls_layout[i,j,..], 2, 2, [|1,2|1,0|], 1, {1,2}, [|1,0|1,0|], experiments_in_plate_row[i,j]))::domain endif;
+
+constraint if spread_controls then forall(i in Plates, j in Rows)(my_implied_cost(controls_in_plate_row[i,j],controls_layout[i,j,..])::domain) endif;
+
+constraint if spread_controls then forall(i in Plates, k in Columns)(my_implied_cost(controls_in_plate_column[i,k],controls_layout[i,..,k])::domain) endif;
+
+predicate my_implied_cost(var int:cost, array[int] of var int: x) = 
+  let {
+    int: L = length(x);
+    array[1..L] of var int: c_cost;
+  } in
+  c_cost[1] = x[1] /\
+  c_cost[2] <= 1 /\
+  c_cost[L] = cost /\
+  forall(i in 1..L-1)(x[i+1] = c_cost[i+1] - c_cost[i] ) /\
+  forall(i in 1..L-1)(c_cost[i+1] = x[i+1] + c_cost[i] ) /\
+  forall(i in 1..L-1)(c_cost[i] <= c_cost[i+1]) /\
+  forall(i in 2..L-1)(c_cost[i+1] <= 1 + c_cost[i-1]);
+
+
+%function array[int] of int: stupidcost(int: length, int: cost)
+
+%                        int: S,
+%                        array [int,int] of int: d,
+%                        int: q0,
+%                        set of int: F,
+%                        array [int,int] of int: c,
+%                        var int: C)                       
+                       
 %% TODO: relax this constraint when there are too many controls in the plate
 %% Strong version
 constraint forall(i in Plates, j in 2..numrows-1, k in 2..numcols-1)(plates[i,j,k] > experiments -> 
@@ -917,7 +955,53 @@ constraint if spread_controls then forall(i in Plates, j in 2..numrows-1, k in 2
             %plates[i,j+1,k+1] <= experiments
             ) endif;
 
+constraint if spread_controls then forall(i in Plates, j in 2..numrows-1)(plates[i,j,1] > experiments -> 
+            plates[i,j-1,1]   <= experiments /\
+            plates[i,j,2]   <= experiments /\
+            plates[i,j+1,1]   <= experiments
+            ) endif;
+
+constraint if spread_controls then forall(i in Plates, j in 2..numrows-1)(plates[i,j,numcols] > experiments -> 
+            plates[i,j-1,numcols]   <= experiments /\
+            plates[i,j,numcols-1]   <= experiments /\
+            plates[i,j+1,numcols]   <= experiments
+            ) endif;
+
+
+constraint if spread_controls then forall(i in Plates, k in 2..numcols-1)(plates[i,1,k] > experiments -> 
+            plates[i,1,k-1]   <= experiments /\
+            plates[i,1,k+1]   <= experiments /\
+            plates[i,2,k]   <= experiments
+            ) endif;               
+
+constraint if spread_controls then forall(i in Plates, k in 2..numcols-1)(plates[i,numrows,k] > experiments -> 
+            plates[i,numrows-1,k]   <= experiments /\
+            plates[i,numrows,k-1]   <= experiments /\
+            plates[i,numrows,k+1]   <= experiments
+            ) endif;               
+
+
+constraint if spread_controls then forall(i in Plates)(plates[i,1,1] > experiments -> 
+            plates[i,1,2]   <= experiments /\
+            plates[i,2,1]   <= experiments
+            ) endif;
+
+constraint if spread_controls then forall(i in Plates)(plates[i,1,numcols] > experiments -> 
+            plates[i,1,numcols-1]   <= experiments /\
+            plates[i,2,numcols]   <= experiments
+            ) endif;
+
+constraint if spread_controls then forall(i in Plates)(plates[i,numrows,1] > experiments -> 
+            plates[i,numrows-1,1]   <= experiments /\
+            plates[i,numrows,2]   <= experiments
+            ) endif;
+
+constraint if spread_controls then forall(i in Plates)(plates[i,numrows,numcols] > experiments -> 
+            plates[i,numrows-1,numcols]   <= experiments /\
+            plates[i,numrows,numcols-1]   <= experiments
+            ) endif;                                                                                                                                                                                                                                                                                                                                                            
 %% TODO: Add spread_controls contraint in borders!
+
 
 constraint if force_spread_controls then forall(i in Plates, j in 3..numrows-2, k in 3..numcols-2)(plates[i,j,k] > experiments -> 
             plates[i,j-2,k-2]!= plates[i,j,k] /\ 
@@ -1163,9 +1247,11 @@ output [if debugging then if fix(plates[i,j,k]) == 0  then "  ."
          
 output [if debugging then "Plate:" else "" endif, if debugging then show(plates) else "" endif];
 
-output [if debugging then "Compound's plate:\n" else "" endif, if debugging then show(experiment_plate) else "" endif];
+output [if debugging then "\nCompound's plate:\n" else "" endif, if debugging then show(experiment_plate) else "" endif];
 
-%output ["Compound's plate:\n", show(compound_concentration_names)];    
+output [if debugging then "\nSpread constrols:\n" else "" endif, if debugging then show(spread_controls) else "" endif];
+
+output [if debugging then "\nControls' layout:\n" else "" endif, if debugging then show(controls_layout) else "" endif];
 
 output [if debugging then "\nExperiment's row:\n" else "" endif, if debugging then show(experiment_row) else "" endif];
 
