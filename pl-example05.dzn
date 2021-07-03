@@ -1,6 +1,7 @@
 %%% Exp_DoseResponse conditions	%%%
 %% 2020/Nov/17: satisfiable. It generates 2 plates in 321 msec
-%% 2021/Apr/22: It takes about 280msec (with interconnected_plates = false)
+%% 2021/Apr/22: It takes about 280msec (with interconnected_plates = false) 
+%% 2021/Jul/03: It takes about 5m 54s (with interconnected_plates = false)
 
 %% Plate dimentions: (this is a 96-well plate)
 num_rows = 8; %% height

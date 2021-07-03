@@ -4,6 +4,7 @@
 %% 2021/Mar/10: It takes about 3m 22s
 %% 2021/Mar/11: It takes about 6s
 %% 2021/Apr/22: It takes about 1m 29s (with interconnected_plates = false)
+%% 2021/Jul/02: It takes about 3s 341msec (with interconnected_plates = false)
 
 %% Plate dimentions: (this is a 96-well plate)
 num_rows = 8; %% height

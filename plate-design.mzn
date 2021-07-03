@@ -624,6 +624,12 @@ constraint (sum(ul_half_plates[..,upper]) <= ceil(sum([compound_concentrations[i
 
 constraint (sum(ul_half_plates[..,lower]) <= ceil(sum([compound_concentrations[i]*compound_replicates[i] | i in 1..compounds])/2));
 
+%% HERE A experiment_plate
+
+
+constraint forall(i in Plates) ( ul_half_plates[i,upper] <= ((sum([ (experiment_plate[c] == i) | c in 1..experiments]) + 1) div 2));
+
+constraint forall(i in Plates) ( ul_half_plates[i,lower] <= ((sum([ (experiment_plate[c] == i) | c in 1..experiments]) + 1) div 2));
 
 
 %constraint forall(i in Plates)(sum(v in Vertical)(ul_half_plates[i,v])<=at_most);
@@ -892,7 +898,7 @@ constraint alldifferent_except(plates, {0} union experiments+1..experiments+num_
 %% Implied constraint
 constraint forall(i in Plates, j in 1..numrows-1, k in 1..numcols-1) (alldifferent_except_0([plates[i,j,k],plates[i,j+1,k],plates[i,j,k+1],plates[i,j+1,k+1]])):: domain;
 
-array [Plates,Rows,Columns] of var 0..1: controls_layout; 
+array [Plates,Rows,Columns] of var bool: controls_layout; 
 
 constraint forall(i in Plates, j in Rows, k in Columns)(controls_layout[i,j,k] == ((plates[i,j,k] > experiments)) );
 
@@ -1158,8 +1164,10 @@ constraint forall(i in Plates, l in 1..experiments)((experiment_plate[l] != i) -
 
 %array [1..numplates*2] of ann: search_order = [if (i mod 2)==1 then int_search(experiment_plate_row[(i+1)div 2,..], first_fail, indomain_random) else int_search(plates[i div 2,..,..], random, indomain_max) endif | i in 1..numplates*2];
  
-array [1..numplates*2] of ann: search_order = [if (i mod 2)==1 then int_search(experiment_plate_row[(i+1)div 2,..], first_fail, indomain_random) else int_search(plates[i div 2,..,..], random, indomain_max) endif | i in 1..numplates*2];
- 
+%array [1..numplates*2] of ann: search_order = [if (i mod 2)==1 then int_search(experiment_plate_row[(i+1)div 2,..], first_fail, indomain_random) else int_search(plates[i div 2,..,..], random, indomain_max) endif | i in 1..numplates*2];
+
+array [1..numplates*3] of ann: search_order = [if (i mod 3)==1 then int_search(experiment_plate_row[(i+2)div 3,..], first_fail, indomain_random) elseif (i mod 3) == 2 then bool_search(controls_layout[(i+1)div 3,..,..], random, indomain_max) else int_search(plates[i div 3,..,..], first_fail, indomain_random) endif | i in 1..numplates*3]; 
+
 %solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(plates, random, indomain_max)]) satisfy; 
 
 %% Best for Gecode
