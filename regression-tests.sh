@@ -13,7 +13,7 @@ myUnitTests=( 'pl-example01'
     'pl-example14'
     'pl-example15' 'pl-example17' 'pl-example18' 'pl-example19'
     'pl-example20' #'2020-09-30-jonne-slack'
-    '2020-10-08-jonne-slack' 'pl-example22' 'pl-example23' 'pl-example24' 'pl-example25' 'pl-example27' )
+    '2020-10-08-jonne-slack' 'pl-example22' 'pl-example23' 'pl-example24' 'pl-example25' 'pl-example27' 'pl-example28' 'pl-example29' )
 
 myUnitTestsResults=( '4 plates'
 		     '2 plates'
@@ -25,7 +25,7 @@ myUnitTestsResults=( '4 plates'
     '1 plates' '1 plates' '1 plates' '1 plates'
     '1 plates'
     #'1 plates' #'2020-09-30-jonne-slack'
-    '1 plates' '4 plates' '2 plates' '2 plates' '2 plates' '3 plates' )
+    '1 plates' '4 plates' '2 plates' '2 plates' '2 plates' '3 plates' '4 plates' '2 plates' )
 
 len=${#myUnitTests[@]}
 

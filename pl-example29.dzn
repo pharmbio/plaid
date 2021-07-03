@@ -3,6 +3,7 @@
 %% Produces 2 plates.
 %% 2021/Apr/09: It takes about 753msec
 %% 2021/Apr/22: It takes about 12s 726msec (with interconnected_plates = false)
+%% 2021/Jul/03: It takes about 6s 430msec (with interconnected_plates = false)
 
 %% Plate dimentions: (this is a 96-well plate)
 num_rows = 8; %% height
