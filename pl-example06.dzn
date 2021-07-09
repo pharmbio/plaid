@@ -1,6 +1,7 @@
 %%% Exp_DoseResponse conditions	%%%
 %% 2 plates
 %% 2020/Nov/17 It takes about 315 msec
+%% 2021/Jul/06 It takes about 4m 53s
 
 %% Plate dimentions: (this is a 96-well plate)
 num_rows = 8; %% height

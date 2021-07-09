@@ -35,6 +35,8 @@ do
     echo "Expecting ${myUnitTestsResults[${i}]}"
     /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn ${myUnitTests[${i}]}.dzn > ${myUnitTests[${i}]}.txt
 
+     #/Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode -p 8 -t 7200000 -r $RANDOM plate-design.mzn ${myUnitTests[${i}]}.dzn > ${myUnitTests[${i}]}.txt
+
     read -r line < ${myUnitTests[${i}]}.txt
 
     set -- ${myUnitTestsResults[${i}]} 
