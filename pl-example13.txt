@@ -1,4 +1,5 @@
 1 plates
+Spreading controls... [true, true, true, true] ... true
 Plate 1:
                   +       ~                    
           ~                               x    

@@ -63,7 +63,11 @@ bool: balance_controls_inside_plate = true;
 bool: interconnected_plates = (numplates==1); %Makes the problem much harder by connecting the plates
 int: control_slack = 1; %Makes the problem harder/easier by constraining how equally should we distribute controls
 %bool: spread_controls = false; %Makes the problem harder when there are many controls
+
 bool: spread_controls = (ceil(inner_plate_size/2)*numplates >= total_controls); %Makes the problem harder when there are many controls
+
+%% EPA
+array[1..num_controls*max_control_concentrations] of bool: spread_control = [ ceil(inner_plate_size/4)*numplates >= (control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1])) | i in 1..num_controls*max_control_concentrations];
 
 
 %%% Testing %%%
@@ -935,7 +939,8 @@ constraint alldifferent_except(plates, {0} union experiments+1..experiments+num_
 %% Controls of the same type are not located next to each other
 
 %% Implied constraint
-constraint forall(i in Plates, j in 1..numrows-1, k in 1..numcols-1) (alldifferent_except_0([plates[i,j,k],plates[i,j+1,k],plates[i,j,k+1],plates[i,j+1,k+1]])):: domain;
+%% TODO: RELAX for the case with too many replicates of the same control
+constraint if (min(spread_control++[1])>0) then forall(i in Plates, j in 1..numrows-1, k in 1..numcols-1) (alldifferent_except_0([plates[i,j,k],plates[i,j+1,k],plates[i,j,k+1],plates[i,j+1,k+1]])):: domain endif;
 
 array [Plates,Rows,Columns] of var bool: controls_layout; 
 
@@ -948,10 +953,6 @@ constraint if spread_controls then forall(i in Plates, k in Columns)(regular(con
 constraint if spread_controls then forall(i in Plates, j in Rows)(my_implied_cost(controls_only_in_plate_row[i,j],controls_layout[i,j,..])::domain) endif;
 
 constraint if spread_controls then forall(i in Plates, k in Columns)(my_implied_cost(controls_only_in_plate_column[i,k],controls_layout[i,..,k])::domain) endif;
-
-%constraint if spread_controls then forall(i in Plates, j in Rows)(my_implied_cost(controls_in_plate_row[i,j],controls_layout[i,j,..])::domain) endif;
-
-%constraint if spread_controls then forall(i in Plates, k in Columns)(my_implied_cost(controls_in_plate_column[i,k],controls_layout[i,..,k])::domain) endif;
 
 constraint forall(i in Plates) (sum_controls_ul_plates[i,upper] == sum(controls_layout[i,1..(numrows div 2),..]));
 constraint forall(i in Plates) (sum_controls_ul_plates[i,lower] == sum(controls_layout[i,(numrows div 2)+1..numrows,..]));
@@ -980,9 +981,11 @@ predicate my_implied_cost(var int:cost, array[int] of var int: x) =
 %                        array [int,int] of int: c,
 %                        var int: C)                       
                        
-%% TODO: relax this constraint when there are too many controls in the plate
+%% TODO: relax this constraint when there are too many controls of the same type in the plate (see pl-example21)
 %% Strong version
-constraint forall(i in Plates, j in 2..numrows-1, k in 2..numcols-1)(plates[i,j,k] > experiments -> 
+
+constraint forall(ctr in 1..num_controls*max_control_concentrations)( if spread_control[ctr] then 
+    forall(i in Plates, j in 2..numrows-1, k in 2..numcols-1)(plates[i,j,k] == experiments+ctr -> 
             plates[i,j-1,k-1]!= plates[i,j,k] /\ 
             plates[i,j-1,k]  != plates[i,j,k] /\
             plates[i,j-1,k+1]!= plates[i,j,k] /\
@@ -991,7 +994,14 @@ constraint forall(i in Plates, j in 2..numrows-1, k in 2..numcols-1)(plates[i,j,
             plates[i,j+1,k-1]!= plates[i,j,k] /\
             plates[i,j+1,k]  != plates[i,j,k] /\
             plates[i,j+1,k+1]!= plates[i,j,k]
-            );
+            ) 
+    else forall(i in Plates, j in 2..numrows-1, k in 2..numcols-1)(plates[i,j,k] == experiments+ctr -> 
+            plates[i,j-1,k]  != plates[i,j,k] /\
+            plates[i,j,k-1]  != plates[i,j,k] /\
+            plates[i,j,k+1]  != plates[i,j,k] /\
+            plates[i,j+1,k]  != plates[i,j,k]
+            )
+            endif );
 
 constraint if spread_controls then forall(i in Plates, j in 2..numrows-1, k in 2..numcols-1)(plates[i,j,k] > experiments -> 
             %plates[i,j-1,k-1] <= experiments /\ 
@@ -1271,6 +1281,8 @@ search_order)
 output [if testing \/ debugging then "\(numplates) plates\n" else "" endif];
 
 output [if debugging /\ (emptywells>0) then "warning: there are \(emptywells) empty wells. Consider using them as controls.\n\n" else "" endif];
+
+output [if debugging then "Spreading controls... \(spread_control) ... \(min(spread_control++[1])>0)\n" else "" endif];
 
 output [if debugging then "Plate 1:\n" else "" endif];
          
