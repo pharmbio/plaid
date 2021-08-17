@@ -15,11 +15,9 @@ horizontal_cell_lines	 = 2;
 size_empty_edge = 1;
 allow_empty_wells = false;
 
-% New and used!
 concentrations_on_different_rows = true;
 concentrations_on_different_columns = true;
 
-% New and unused! (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
 replicates_on_different_plates = false;
 replicates_on_same_plate = true;
 
