@@ -2,9 +2,11 @@
  
 echo "Hello, world!"
 
-echo "Remember to set testing = true in plate-design.mzn\n"
+## Remember to set testing = true
 
 myUnitTests=( 'pl-example01'
+	      'pl-example02'
+	      'pl-example03'
 	      'pl-example04-jonne-doubled'
 	      'pl-example05'
 	      'pl-example06' 'pl-example07-tiny' 'pl-example08-small' 'pl-example09' '2020-11-13-jonne-slack'
@@ -18,6 +20,8 @@ myUnitTests=( 'pl-example01'
 	    )
 
 myUnitTestsResults=( '4 plates'
+		     'MiniZinc: evaluation error:'
+		     'MiniZinc: evaluation error:'
 		     '2 plates'
 		     '2 plates'  #'pl-example05'
 		     '2 plates' '4 plates' '2 plates' '2 plates' '1 plates'
@@ -41,9 +45,9 @@ do
 
     SECONDS=0
     
-    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn ${myUnitTests[${i}]}.dzn > ${myUnitTests[${i}]}.txt
+    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn ${myUnitTests[${i}]}.dzn --cmdline-data "testing=true"  &> ${myUnitTests[${i}]}.txt
     
-     #/Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode -p 8 -t 7200000 -r $RANDOM plate-design.mzn ${myUnitTests[${i}]}.dzn > ${myUnitTests[${i}]}.txt
+     #/Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode -p 8 -t 7200000 -r $RANDOM plate-design.mzn ${myUnitTests[${i}]}.dzn  --cmdline-data testing=true > ${myUnitTests[${i}]}.txt
 
     echo "It took about $SECONDS sec."
     
