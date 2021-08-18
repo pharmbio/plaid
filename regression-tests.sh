@@ -52,24 +52,28 @@ do
     echo "It took about $SECONDS sec."
     
     read -r line < ${myUnitTests[${i}]}.txt
-
+    
     set -- ${myUnitTestsResults[${i}]} 
 
+    
+    # Check that we have the expected number of plates or expected error
+    
     if [[ $line == ${myUnitTestsResults[${i}]} || $1 == "assert" ]]
     then
-	echo "We are happy with the number of plates in ${myUnitTests[${i}]}.txt :-)\n"
+	echo "We are happy with the number of plates in ${myUnitTests[${i}]}.txt :-)"
     else
-	echo "ERROR: The number of plates in ${myUnitTests[${i}]}.dzn changed!!!!!!!!!!"
+	echo "ERROR: The number of plates in ${myUnitTests[${i}]}.dzn changed!!!!!!!!"
 	break
     fi   
 
-	
-#    if cmp "${myUnitTests[${i}]}.txt" "./output-regression-tests/${myUnitTests[${i}]}.txt";
- #   then
-#	echo ":-)"
- #   else
-#	echo "Check ${myUnitTests[${i}]}.dzn! Something changed!!!!!!!!!!"
- #   fi
+    # Compare that the solution is the same as before (so hopefully we haven't lost any solutions)
+    
+    if cmp "${myUnitTests[${i}]}.txt" "./output-regression-tests/${myUnitTests[${i}]}.txt";
+    then
+	echo "The solution has not changed :-)\n"
+    else
+	echo "WARNING: Check ${myUnitTests[${i}]}.dzn! Something changed!!!!!!!!\n"
+    fi
 
     
 done
