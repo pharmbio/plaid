@@ -17,7 +17,7 @@
 %
 % Authors: Maria Andreina FRANCISCO RODRIGUEZ (maria.andreina.francisco@farmbio.uu.se)
 % Version: 1.0
-% Last Revision: July 2021
+% Last Revision: August 2021
 %
 
 include "globals.mzn";
@@ -78,7 +78,7 @@ array[1..num_controls*max_control_concentrations] of bool: spread_control = [ ce
 
 %%% Testing %%%
 
-bool: testing = false;
+opt bool: testing;
 bool: debugging = false;
 
 
@@ -643,10 +643,9 @@ constraint (sum(ul_half_plates[..,lower]) <= ceil(sum([compound_concentrations[i
 %% HERE A experiment_plate
 
 
-constraint forall(i in Plates) ( ul_half_plates[i,upper] <= ((sum([ (experiment_plate[c] == i) | c in 1..experiments]) + 1) div 2));
-
-constraint forall(i in Plates) ( ul_half_plates[i,lower] <= ((sum([ (experiment_plate[c] == i) | c in 1..experiments]) + 1) div 2));
-
+constraint forall(i in Plates, v in Vertical) ( ul_half_plates[i,v] <= ((sum([ (experiment_plate[c] == i) | c in 1..experiments]) + 1) div 2));
+                                                                
+constraint forall(i in Plates, v in Vertical)(((floor(sum(compound_replicates)/numplates)-1)*min(compound_concentrations++[infinity]) + max_compound_concentrations) div 2 <= ul_half_plates[i,v]);  
 
 %constraint forall(i in Plates)(sum(v in Vertical)(ul_half_plates[i,v])<=at_most);
 %constraint forall(i in Plates)(sum(h in Horizontal)(lr_half_plates[i,h])<=at_most);
@@ -1218,18 +1217,23 @@ array [1..numplates*3] of ann: search_order = [if (i mod 3)==1 then int_search(e
 %int_search(experiment_plate_row[1,..], first_fail, indomain_random),int_search(plates[1,..,..], random, indomain_max)]++[ 
 %int_search(experiment_plate_row[2,..], first_fail, indomain_random),int_search(plates[2,..,..], random, indomain_max)])
 
-%int_search(plates, first_fail, indomain_random)]) 
-%int_search(plates[i,..,..], random, indomain_max) | i in Plates ]) 
+
 
 solve::seq_search([int_search(experiment_plate, first_fail, indomain_random)]++
 search_order)
+      :: restart_geometric(1.1,5*experiments)
+     satisfy ; 
+
+
+%solve::seq_search([int_search(experiment_plate, first_fail, indomain_random)]++
+%search_order)
 %[int_search(experiment_plate_row, first_fail, indomain_random)]++[int_search(plates[i,..,..], random, indomain_max) | i in Plates]) 
 %[int_search(plates[i,..,..], random, indomain_max) | i in Plates ]) 
 %      :: restart_geometric(1.1,1000)
-      :: restart_geometric(1.1,5*experiments)
+ %     :: if testing==true then restart_none else restart_geometric(1.1,5*experiments) endif
      %:: restart_linear(1000)
      %:: restart_constant(10*experiments)
-     satisfy; 
+  %   satisfy ; 
 
 
 
@@ -1252,10 +1256,6 @@ search_order)
 
 %solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(experiment_row, first_fail, indomain_random), int_search(plates, random, indomain_max)]) satisfy; 
 
-
-%solve::int_search(experiment_plate, first_fail, indomain_random) satisfy; 
-
-%solve::int_search(plates, random, indomain_max) satisfy; 
 
 
 
@@ -1338,7 +1338,7 @@ output [if debugging then "\nControls per plate per column:\n" else "" endif, if
 
 array[int] of string: letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
          
-output ["\nplateID,well,cmpdname,CONCuM,cmpdnum,VOLuL\n"];
+output ["plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL\n"];
 
 %%% TODO: FIX ME!!!!!! Problem when there are vertical/horizontal cell lines!
 output [if fix(plates[i,j,k]) > 0 then "plate_\(i)," ++   letters[size_empty_edge+j+(numrows+2*size_empty_edge)*(h-1)] ++ if (size_empty_edge+k+(2*size_empty_edge+numcols)*(v-1)) < 10 then "0" else "" endif ++ "\(size_empty_edge+k+(2*size_empty_edge+numcols)*(v-1))," ++ 
