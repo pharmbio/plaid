@@ -1204,6 +1204,7 @@ constraint forall(i in Plates, l in 1..experiments)((experiment_plate[l] != i) -
 
 array [1..numplates*3] of ann: search_order = [if (i mod 3)==1 then int_search(experiment_plate_row[(i+2)div 3,..], first_fail, indomain_random) elseif (i mod 3) == 2 then bool_search(controls_layout[(i+1)div 3,..,..], random, indomain_max) else int_search(plates[i div 3,..,..], first_fail, indomain_random) endif | i in 1..numplates*3]; 
 
+
 %solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(plates, random, indomain_max)]) satisfy; 
 
 %% Best for Gecode
@@ -1219,9 +1220,15 @@ array [1..numplates*3] of ann: search_order = [if (i mod 3)==1 then int_search(e
 
 
 
-solve::seq_search([int_search(experiment_plate, first_fail, indomain_random)]++
-search_order)
-      :: restart_geometric(1.1,5*experiments)
+%solve::seq_search([int_search(experiment_plate, first_fail, indomain_random)]++
+%search_order)
+%      :: restart_geometric(1.1,5*experiments)
+%     satisfy ; 
+
+%% Trying to use a more deterministic search strategy for testing
+solve:: if testing==true /\ false then seq_search([int_search(experiment_plate, first_fail, indomain_min)]++search_order) 
+        else seq_search([int_search(experiment_plate, first_fail, indomain_random)]++search_order)
+                :: restart_geometric(1.1,5*experiments) endif
      satisfy ; 
 
 
