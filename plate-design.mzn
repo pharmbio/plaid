@@ -17,7 +17,7 @@
 %
 % Authors: Maria Andreina FRANCISCO RODRIGUEZ (maria.andreina.francisco@farmbio.uu.se)
 % Version: 1.0
-% Last Revision: August 2021
+% Last Revision: September 2021
 %
 
 include "globals.mzn";
@@ -692,6 +692,8 @@ array [Plates,Vertical] of var int: sum_controls_ul_plates;
 
 array [Plates,Horizontal,1..num_controls*max_control_concentrations] of var int: controls_lr_plates;
 
+array [Plates,Vertical,Horizontal,1..num_controls*max_control_concentrations] of var int: controls_quarter_plates;
+
 array [Plates,Rows,{0} union 1..num_controls*max_control_concentrations] of var int: controls_row_plates;
 
 array [Plates,Columns,{0} union 1..num_controls*max_control_concentrations] of var int: controls_column_plates;
@@ -701,10 +703,39 @@ constraint forall(i in Plates)(global_cardinality([plates[i,j,k] | j in 1..floor
 
 constraint forall(i in Plates)(global_cardinality([plates[i,j,k] | j in floor(numrows/2)+1..numrows, k in Columns], [experiments+d | d in 1..num_controls*max_control_concentrations], [controls_ul_plates[i,lower,d] | d in 1..num_controls*max_control_concentrations]));
 
+
+%% Defining controls_quarter_plates variables
+constraint forall(i in Plates)(global_cardinality([plates[i,j,k] | j in 1..(numrows div 2), k in 1..(numcols div 2)], [experiments+d | d in 1..num_controls*max_control_concentrations], [controls_quarter_plates[i,upper,left,d] | d in 1..num_controls*max_control_concentrations]));
+
+constraint forall(i in Plates)(global_cardinality([plates[i,j,k] | j in 1..(numrows div 2), k in (numcols div 2)+1..numcols], [experiments+d | d in 1..num_controls*max_control_concentrations], [controls_quarter_plates[i,upper,right,d] | d in 1..num_controls*max_control_concentrations]));
+
+constraint forall(i in Plates)(global_cardinality([plates[i,j,k] | j in (numrows div 2)+1..numrows, k in 1..(numcols div 2)], [experiments+d | d in 1..num_controls*max_control_concentrations], [controls_quarter_plates[i,lower,left,d] | d in 1..num_controls*max_control_concentrations]));
+
+constraint forall(i in Plates)(global_cardinality([plates[i,j,k] | j in (numrows div 2)+1..numrows, k in (numcols div 2)+1..numcols], [experiments+d | d in 1..num_controls*max_control_concentrations], [controls_quarter_plates[i,lower,right,d] | d in 1..num_controls*max_control_concentrations]));
+
+
 constraint forall(i in Plates, v in Vertical, d in 1..num_controls*max_control_concentrations)(controls_ul_plates[i,v,d]<=ceil(max_controls_per_plate[d]/2));
 constraint forall(i in Plates, v in Vertical, d in 1..num_controls*max_control_concentrations)(controls_ul_plates[i,v,d]>=floor(min_controls_per_plate[d]/2));
 
 constraint forall(i in Plates, d in 1..num_controls*max_control_concentrations)(abs(controls_ul_plates[i,upper,d] - controls_ul_plates[i,lower,d]) <= 1);
+
+constraint forall(i in Plates, v in Vertical, d in 1..num_controls*max_control_concentrations)(abs(controls_quarter_plates[i,v,left,d] - controls_quarter_plates[i,v,right,d]) <= 1);
+
+constraint forall(i in Plates, h in Horizontal, d in 1..num_controls*max_control_concentrations)(abs(controls_quarter_plates[i,upper,h,d] - controls_quarter_plates[i,lower,h,d]) <= 1);
+
+
+constraint forall(i in Plates, v in Vertical, d in 1..num_controls*max_control_concentrations)(controls_quarter_plates[i,v,left,d] + controls_quarter_plates[i,v,right,d] == controls_ul_plates[i,v,d]);
+
+constraint forall(i in Plates, h in Horizontal, d in 1..num_controls*max_control_concentrations)(controls_quarter_plates[i,upper,h,d] + controls_quarter_plates[i,lower,h,d] == controls_lr_plates[i,h,d]);
+
+constraint forall(i in Plates, v in Vertical, d in 1..num_controls*max_control_concentrations)(controls_quarter_plates[i,v,left,d] >= (controls_ul_plates[i,v,d] div 2));
+
+constraint forall(i in Plates, v in Vertical, d in 1..num_controls*max_control_concentrations)(controls_quarter_plates[i,v,right,d] >= (controls_ul_plates[i,v,d] div 2));
+
+constraint forall(i in Plates, v in Vertical, d in 1..num_controls*max_control_concentrations)(controls_quarter_plates[i,v,left,d] <= ((controls_ul_plates[i,v,d]+1) div 2));
+
+constraint forall(i in Plates, v in Vertical, d in 1..num_controls*max_control_concentrations)(controls_quarter_plates[i,v,right,d] <= ((controls_ul_plates[i,v,d]+1) div 2));
+
 
 constraint forall(i in Plates, d in 1..num_controls*max_control_concentrations)(controls_ul_plates[i,upper,d] + controls_ul_plates[i,lower,d] <= max_controls_per_plate[d]);
 
@@ -1220,16 +1251,16 @@ array [1..numplates*3] of ann: search_order = [if (i mod 3)==1 then int_search(e
 
 
 
-%solve::seq_search([int_search(experiment_plate, first_fail, indomain_random)]++
-%search_order)
-%      :: restart_geometric(1.1,5*experiments)
-%     satisfy ; 
+solve::seq_search([int_search(experiment_plate, first_fail, indomain_random)]++
+search_order)
+     :: restart_geometric(1.1,5*experiments)
+    satisfy ; 
 
 %% Trying to use a more deterministic search strategy for testing
-solve:: if testing==true /\ false then seq_search([int_search(experiment_plate, first_fail, indomain_min)]++search_order) 
-        else seq_search([int_search(experiment_plate, first_fail, indomain_random)]++search_order)
-                :: restart_geometric(1.1,5*experiments) endif
-     satisfy ; 
+% solve:: if (false) then seq_search([int_search(experiment_plate, first_fail, indomain_min)]++search_order) 
+%         else (seq_search([int_search(experiment_plate, first_fail, indomain_random)]++search_order)
+%                 :: restart_geometric(1.1,5*experiments)) endif
+%      satisfy ; 
 
 
 %solve::seq_search([int_search(experiment_plate, first_fail, indomain_random)]++
@@ -1279,10 +1310,10 @@ output [if debugging then "Plate 1:\n" else "" endif];
          
 %%TODO: change output so symbols are not hardcoded
 output [if debugging then if fix(plates[i,j,k]) == 0  then "  ." 
-        elseif fix(plates[i,j,k]) == (experiments+1)  then "  +" %% Positive controls
-        elseif fix(plates[i,j,k]) == (experiments+2)  then "  -" %% Negative controls
-        elseif fix(plates[i,j,k]) == (experiments+3)  then "  x" %% Blank controls
-        elseif fix(plates[i,j,k]) == (experiments+4)  then "  ~" %% DMSO controls
+        elseif fix(plates[i,j,k]) == (experiments+1)  then "  +" %% Some control
+        elseif fix(plates[i,j,k]) == (experiments+2)  then "  -" %% Other control...
+        elseif fix(plates[i,j,k]) == (experiments+3)  then "  x" %% ...
+        elseif fix(plates[i,j,k]) == (experiments+4)  then "  ~" %% ...
         elseif fix(plates[i,j,k]) == (experiments+5)  then "  *" %% other
         elseif fix(plates[i,j,k]) == (experiments+6)  then "  #" %% other
         elseif fix(plates[i,j,k]) == (experiments+7)  then "  &" %% other
@@ -1303,7 +1334,7 @@ output [if debugging then "Plate:" else "" endif, if debugging then show(plates)
 
 output [if debugging then "\nCompound's plate:\n" else "" endif, if debugging then show(experiment_plate) else "" endif];
 
-output [if debugging then "\nSpread constrols:\n" else "" endif, if debugging then show(spread_controls) else "" endif];
+output [if debugging then "\nSpread controls:\n" else "" endif, if debugging then show(spread_controls) else "" endif];
 
 output [if debugging then "\nControls' layout:\n" else "" endif, if debugging then show(controls_layout) else "" endif];
 
@@ -1324,6 +1355,8 @@ output [if debugging then "\nControls per half row:\n" else "" endif, if debuggi
 output [if debugging then "\nControls per upper/lower half plates:\n" else "" endif, if debugging then show(controls_ul_plates) else "" endif];
 
 output [if debugging then "\nControls per left/right half plates:\n" else "" endif, if debugging then show(controls_lr_plates) else "" endif];
+
+output [if debugging then "\nControls per quarter plates (controls_quarter_plates):\n" else "" endif, if debugging then show(controls_quarter_plates) else "" endif];
 
 output [if debugging then "\nTotal Compounds:\n" else "" endif, if debugging then show(sum([compound_concentrations[i]*compound_replicates[i] | i in 1..compounds])) else "" endif];
 
