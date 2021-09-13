@@ -68,18 +68,20 @@ int: total_controls = sum([control_concentrations[i]*control_replicates[i] | i i
 
 %%% Potentially new parameters
 bool: balance_controls_inside_plate = true;
-bool: interconnected_plates = (numplates==1); %Makes the problem much harder by connecting the plates
-int: control_slack = 1; %Makes the problem harder/easier by constraining how equally should we distribute controls
+bool: interconnected_plates = true; %(numplates==1); %Makes the problem much harder by connecting the plates
+int: control_slack = 0; %Makes the problem harder/easier by constraining how equally should we distribute controls
 bool: spread_controls = (ceil(inner_plate_size/2)*numplates >= total_controls); %Makes the problem harder when there are many controls
 
 %% Which individual controls can be spread more than others?
 array[1..num_controls*max_control_concentrations] of bool: spread_control = [ ceil(inner_plate_size/4)*numplates >= (control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1])) | i in 1..num_controls*max_control_concentrations];
 
+constraint assert(not (num_controls == 1 /\ spread_control[1]==false),"Invalid datafile: There are too many controls of only one kind. This is not allowed at the moment. If you believe this is a mistake, please contact the developers.");
 
 %%% Testing %%%
 
 opt bool: testing;
-bool: debugging = false;
+bool: debugging = true;
+%bool: enforce = false;
 
 
 %% Plate size / number of wells
@@ -775,8 +777,8 @@ constraint forall(i in Plates)(abs(sum(d in 1..num_controls*max_control_concentr
 
 %% Implied constraints for half plates
 %% Connecting the number of compounds with the number of controls for each half plate.
-%% TODO: revise the right hand side
-constraint forall(i in Plates, v in Vertical)(ul_half_plates[i,v] + sum(controls_ul_plates[i,v,..]) <= ((inner_plate_size+1) div 2));
+%% TODO: this is only correct for plates with an even number of rows
+constraint forall(i in Plates, v in Vertical)(ul_half_plates[i,v] + sum(controls_ul_plates[i,v,..]) <= ((inner_plate_size) div 2));
 
 constraint forall(i in Plates)(ul_half_plates[i,upper] + ul_half_plates[i,lower] + sum(controls_ul_plates[i,..,..]) + count(plates[i,..,..], 0) == inner_plate_size);
 
