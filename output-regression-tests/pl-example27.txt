@@ -1,5 +1,67 @@
 3 plates
-plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
+Spreading controls... [true, true, true, true] ... true
+Plate 1:
+          +           +       -        
+      ~           x               +    
+  +           -           ~           x
+      -           +               ~    
+  x       ~           -       +        
+              +           x           +
+
+ Plate 2:
+  +       +                       x    
+      -           x       ~           +
+              ~       +       -        
+                  -       x       +    
+      +       +       ~                
+  ~       x                   +       -
+
+ Plate 3:
+  -       x           ~           +    
+                  +           x       -
+      +       ~           +            
+          -       x           ~       +
+      ~               +           x    
+  +           +           -            
+Plate:[91, 98, 121, 41, 19, 121, 96, 122, 3, 23, 17, 124, 47, 8, 123, 44, 97, 94, 121, 1, 121, 93, 100, 122, 2, 18, 124, 43, 104, 123, 103, 122, 20, 92, 121, 5, 24, 99, 124, 46, 123, 7, 124, 21, 101, 122, 4, 121, 45, 89, 48, 42, 6, 121, 90, 102, 123, 22, 95, 121, 121, 85, 121, 57, 15, 11, 39, 35, 123, 73, 58, 122, 9, 33, 123, 76, 124, 86, 79, 121, 87, 75, 59, 124, 36, 121, 64, 122, 13, 81, 12, 62, 84, 80, 122, 34, 123, 77, 121, 16, 78, 121, 40, 121, 83, 124, 10, 63, 61, 37, 124, 38, 123, 14, 74, 60, 88, 121, 82, 122, 122, 68, 123, 72, 29, 124, 53, 116, 121, 106, 70, 25, 54, 120, 121, 31, 117, 123, 109, 122, 108, 121, 111, 124, 51, 118, 121, 56, 27, 67, 52, 115, 122, 26, 123, 105, 66, 124, 71, 121, 32, 124, 65, 55, 114, 121, 110, 28, 123, 50, 121, 112, 113, 121, 107, 49, 122, 69, 119, 30]
+Compound's plate:
+[1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+Spread controls:
+true
+Controls' layout:
+[false, false, true, false, false, true, false, true, false, false, false, true, false, false, true, false, false, false, true, false, true, false, false, true, false, false, true, false, false, true, false, true, false, false, true, false, false, false, true, false, true, false, true, false, false, true, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, true, false, false, false, false, false, true, false, false, true, false, false, true, false, true, false, false, true, false, false, false, true, false, true, false, true, false, false, false, false, false, false, true, false, true, false, true, false, false, true, false, true, false, true, false, false, false, false, true, false, true, false, false, false, false, true, false, true, true, false, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, true, false, true, false, true, false, false, true, false, false, false, false, false, true, false, true, false, false, true, false, true, false, true, false, false, false, true, false, false, true, false, true, false, false, true, false, false, true, false, false, false]
+Experiment's row:
+[2, 3, 1, 5, 4, 6, 5, 2, 2, 5, 1, 4, 3, 6, 1, 4, 2, 3, 1, 4, 5, 6, 1, 4, 2, 4, 3, 5, 1, 6, 2, 5, 2, 4, 1, 3, 5, 6, 1, 5, 1, 6, 3, 2, 5, 4, 2, 6, 6, 5, 3, 4, 1, 2, 5, 3, 1, 2, 3, 6, 5, 4, 5, 3, 5, 4, 3, 1, 6, 2, 4, 1, 1, 6, 3, 2, 4, 5, 2, 4, 3, 6, 5, 4, 1, 2, 3, 6, 5, 6, 1, 4, 3, 2, 6, 1, 2, 1, 4, 3, 5, 6, 4, 3, 4, 1, 6, 3, 2, 5, 3, 6, 6, 5, 4, 1, 2, 3, 6, 2]
+Experiment's row (per plate):
+[7, 7, 6, 7, 6, 7, 7, 6, 7, 7, 7, 6, 6, 7, 7, 6, 7, 7]
+Controls per row:
+[10, 10, 10, 10, 10, 10]
+Controls per row per plate:
+[3, 3, 4, 3, 4, 3, 3, 4, 3, 3, 3, 4, 4, 3, 3, 4, 3, 3]
+Controls per column:
+[6, 6, 6, 6, 6, 6, 6, 6, 6, 6]
+Controls per half row:
+[5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+Controls per upper/lower half plates:
+[4, 2, 2, 2, 4, 2, 2, 2, 4, 2, 2, 2, 4, 2, 2, 2, 4, 2, 2, 2, 4, 2, 2, 2]
+Controls per left/right half plates:
+[4, 2, 2, 2, 4, 2, 2, 2, 4, 2, 2, 2, 4, 2, 2, 2, 4, 2, 2, 2, 4, 2, 2, 2]
+Controls per quarter plates (controls_quarter_plates):
+[2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1]
+Total Compounds:
+120
+Compounds per half plates:
+[20, 20, 20, 20, 20, 20]
+Concentrations per half plates:
+[4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+Concentrations upper half plates:
+60
+Concentrations lower half plates:
+60
+Controls per plate per row:
+[0, 2, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 2, 0, 1, 0, 0, 2, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 2, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 2, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 2, 1, 0, 0]
+Controls per plate per column:
+[0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0]plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
 plate_1,B02,comp12,l3,comp12_l3
 plate_1,B03,comp13,m1,comp13_m1
 plate_1,B04,pos,cont1-conc1,pos_cont1-conc1
@@ -60,124 +122,124 @@ plate_1,G08,blank,cont3-conc1,blank_cont3-conc1
 plate_1,G09,comp3,c15,comp3_c15
 plate_1,G10,comp12,l30,comp12_l30
 plate_1,G11,pos,cont1-conc1,pos_cont1-conc1
-plate_2,B02,comp5,e3,comp5_e3
-plate_2,B03,comp10,j0.3,comp10_j0.3
-plate_2,B04,comp2,b30,comp2_b30
-plate_2,B05,comp5,e30,comp5_e30
-plate_2,B06,neg,cont2-conc1,neg_cont2-conc1
+plate_2,B02,pos,cont1-conc1,pos_cont1-conc1
+plate_2,B03,comp11,k10,comp11_k10
+plate_2,B04,pos,cont1-conc1,pos_cont1-conc1
+plate_2,B05,comp8,h0.3,comp8_h0.3
+plate_2,B06,comp2,b30,comp2_b30
 plate_2,B07,comp2,b3,comp2_b3
-plate_2,B08,blank,cont3-conc1,blank_cont3-conc1
-plate_2,B09,comp11,k10,comp11_k10
-plate_2,B10,pos,cont1-conc1,pos_cont1-conc1
-plate_2,B11,comp8,h0.3,comp8_h0.3
-plate_2,C02,pos,cont1-conc1,pos_cont1-conc1
-plate_2,C03,comp8,h1,comp8_h1
-plate_2,C04,pos,cont1-conc1,pos_cont1-conc1
-plate_2,C05,comp11,k30,comp11_k30
-plate_2,C06,comp2,b0.3,comp2_b0.3
-plate_2,C07,dmso,cont4-conc1,dmso_cont4-conc1
-plate_2,C08,comp11,k15,comp11_k15
-plate_2,C09,comp5,e0.3,comp5_e0.3
+plate_2,B08,comp5,e30,comp5_e30
+plate_2,B09,comp5,e3,comp5_e3
+plate_2,B10,blank,cont3-conc1,blank_cont3-conc1
+plate_2,B11,comp10,j0.3,comp10_j0.3
+plate_2,C02,comp8,h1,comp8_h1
+plate_2,C03,neg,cont2-conc1,neg_cont2-conc1
+plate_2,C04,comp2,b0.3,comp2_b0.3
+plate_2,C05,comp5,e0.3,comp5_e0.3
+plate_2,C06,blank,cont3-conc1,blank_cont3-conc1
+plate_2,C07,comp10,j5,comp10_j5
+plate_2,C08,dmso,cont4-conc1,dmso_cont4-conc1
+plate_2,C09,comp11,k15,comp11_k15
 plate_2,C10,comp10,j30,comp10_j30
-plate_2,C11,comp10,j5,comp10_j5
-plate_2,D02,comp10,j3,comp10_j3
-plate_2,D03,blank,cont3-conc1,blank_cont3-conc1
+plate_2,C11,pos,cont1-conc1,pos_cont1-conc1
+plate_2,D02,comp11,k30,comp11_k30
+plate_2,D03,comp10,j3,comp10_j3
 plate_2,D04,comp8,h3,comp8_h3
 plate_2,D05,dmso,cont4-conc1,dmso_cont4-conc1
-plate_2,D06,comp11,k0.3,comp11_k0.3
-plate_2,D07,comp8,h100,comp8_h100
-plate_2,D08,comp5,e5,comp5_e5
-plate_2,D09,pos,cont1-conc1,pos_cont1-conc1
+plate_2,D06,comp5,e5,comp5_e5
+plate_2,D07,pos,cont1-conc1,pos_cont1-conc1
+plate_2,D08,comp8,h100,comp8_h100
+plate_2,D09,neg,cont2-conc1,neg_cont2-conc1
 plate_2,D10,comp2,b10,comp2_b10
-plate_2,D11,neg,cont2-conc1,neg_cont2-conc1
-plate_2,E02,comp11,k5,comp11_k5
-plate_2,E03,comp2,b5,comp2_b5
-plate_2,E04,neg,cont2-conc1,neg_cont2-conc1
+plate_2,D11,comp11,k0.3,comp11_k0.3
+plate_2,E02,comp2,b5,comp2_b5
+plate_2,E03,comp8,h15,comp8_h15
+plate_2,E04,comp11,k5,comp11_k5
 plate_2,E05,comp10,j100,comp10_j100
-plate_2,E06,pos,cont1-conc1,pos_cont1-conc1
+plate_2,E06,neg,cont2-conc1,neg_cont2-conc1
 plate_2,E07,comp5,e1,comp5_e1
-plate_2,E08,comp8,h15,comp8_h15
+plate_2,E08,blank,cont3-conc1,blank_cont3-conc1
 plate_2,E09,comp10,j10,comp10_j10
-plate_2,E10,dmso,cont4-conc1,dmso_cont4-conc1
+plate_2,E10,pos,cont1-conc1,pos_cont1-conc1
 plate_2,E11,comp2,b100,comp2_b100
-plate_2,F02,comp8,h10,comp8_h10
+plate_2,F02,comp10,j15,comp10_j15
 plate_2,F03,pos,cont1-conc1,pos_cont1-conc1
-plate_2,F04,comp11,k3,comp11_k3
-plate_2,F05,comp2,b1,comp2_b1
-plate_2,F06,comp5,e10,comp5_e10
-plate_2,F07,neg,cont2-conc1,neg_cont2-conc1
-plate_2,F08,comp10,j15,comp10_j15
-plate_2,F09,blank,cont3-conc1,blank_cont3-conc1
-plate_2,F10,comp8,h30,comp8_h30
-plate_2,F11,comp5,e100,comp5_e100
+plate_2,F04,comp5,e100,comp5_e100
+plate_2,F05,pos,cont1-conc1,pos_cont1-conc1
+plate_2,F06,comp11,k3,comp11_k3
+plate_2,F07,dmso,cont4-conc1,dmso_cont4-conc1
+plate_2,F08,comp2,b1,comp2_b1
+plate_2,F09,comp8,h30,comp8_h30
+plate_2,F10,comp8,h10,comp8_h10
+plate_2,F11,comp5,e10,comp5_e10
 plate_2,G02,dmso,cont4-conc1,dmso_cont4-conc1
 plate_2,G03,comp5,e15,comp5_e15
-plate_2,G04,comp10,j1,comp10_j1
-plate_2,G05,blank,cont3-conc1,blank_cont3-conc1
-plate_2,G06,comp8,h5,comp8_h5
-plate_2,G07,comp11,k100,comp11_k100
-plate_2,G08,pos,cont1-conc1,pos_cont1-conc1
-plate_2,G09,comp2,b15,comp2_b15
+plate_2,G04,blank,cont3-conc1,blank_cont3-conc1
+plate_2,G05,comp2,b15,comp2_b15
+plate_2,G06,comp10,j1,comp10_j1
+plate_2,G07,comp8,h5,comp8_h5
+plate_2,G08,comp11,k100,comp11_k100
+plate_2,G09,pos,cont1-conc1,pos_cont1-conc1
 plate_2,G10,comp11,k1,comp11_k1
-plate_2,G11,pos,cont1-conc1,pos_cont1-conc1
+plate_2,G11,neg,cont2-conc1,neg_cont2-conc1
 plate_3,B02,neg,cont2-conc1,neg_cont2-conc1
-plate_3,B03,comp7,g15,comp7_g15
-plate_3,B04,comp4,d0.3,comp4_d0.3
-plate_3,B05,comp14,n3,comp14_n3
-plate_3,B06,comp15,o15,comp15_o15
+plate_3,B03,comp9,i5,comp9_i5
+plate_3,B04,blank,cont3-conc1,blank_cont3-conc1
+plate_3,B05,comp9,i100,comp9_i100
+plate_3,B06,comp4,d10,comp4_d10
 plate_3,B07,dmso,cont4-conc1,dmso_cont4-conc1
-plate_3,B08,comp7,g100,comp7_g100
-plate_3,B09,comp9,i10,comp9_i10
+plate_3,B08,comp7,g10,comp7_g10
+plate_3,B09,comp15,o5,comp15_o5
 plate_3,B10,pos,cont1-conc1,pos_cont1-conc1
-plate_3,B11,comp9,i100,comp9_i100
-plate_3,C02,comp15,o10,comp15_o10
-plate_3,C03,comp14,n30,comp14_n30
-plate_3,C04,pos,cont1-conc1,pos_cont1-conc1
-plate_3,C05,comp4,d30,comp4_d30
+plate_3,B11,comp14,n1,comp14_n1
+plate_3,C02,comp9,i15,comp9_i15
+plate_3,C03,comp4,d0.3,comp4_d0.3
+plate_3,C04,comp7,g15,comp7_g15
+plate_3,C05,comp15,o100,comp15_o100
 plate_3,C06,pos,cont1-conc1,pos_cont1-conc1
-plate_3,C07,comp9,i1,comp9_i1
-plate_3,C08,comp4,d1,comp4_d1
+plate_3,C07,comp4,d30,comp4_d30
+plate_3,C08,comp15,o10,comp15_o10
 plate_3,C09,blank,cont3-conc1,blank_cont3-conc1
-plate_3,C10,comp14,n1,comp14_n1
-plate_3,C11,comp7,g1,comp7_g1
-plate_3,D02,comp4,d15,comp4_d15
-plate_3,D03,dmso,cont4-conc1,dmso_cont4-conc1
-plate_3,D04,comp14,n10,comp14_n10
-plate_3,D05,blank,cont3-conc1,blank_cont3-conc1
-plate_3,D06,comp9,i3,comp9_i3
-plate_3,D07,comp15,o0.3,comp15_o0.3
-plate_3,D08,neg,cont2-conc1,neg_cont2-conc1
-plate_3,D09,comp7,g5,comp7_g5
-plate_3,D10,comp15,o100,comp15_o100
-plate_3,D11,pos,cont1-conc1,pos_cont1-conc1
-plate_3,E02,blank,cont3-conc1,blank_cont3-conc1
-plate_3,E03,comp15,o1,comp15_o1
+plate_3,C10,comp14,n10,comp14_n10
+plate_3,C11,neg,cont2-conc1,neg_cont2-conc1
+plate_3,D02,comp14,n5,comp14_n5
+plate_3,D03,pos,cont1-conc1,pos_cont1-conc1
+plate_3,D04,comp14,n30,comp14_n30
+plate_3,D05,dmso,cont4-conc1,dmso_cont4-conc1
+plate_3,D06,comp7,g3,comp7_g3
+plate_3,D07,comp15,o15,comp15_o15
+plate_3,D08,pos,cont1-conc1,pos_cont1-conc1
+plate_3,D09,comp7,g100,comp7_g100
+plate_3,D10,comp4,d3,comp4_d3
+plate_3,D11,comp9,i3,comp9_i3
+plate_3,E02,comp7,g5,comp7_g5
+plate_3,E03,comp15,o3,comp15_o3
 plate_3,E04,neg,cont2-conc1,neg_cont2-conc1
-plate_3,E05,comp7,g3,comp7_g3
-plate_3,E06,comp14,n15,comp14_n15
-plate_3,E07,pos,cont1-conc1,pos_cont1-conc1
-plate_3,E08,comp9,i5,comp9_i5
-plate_3,E09,pos,cont1-conc1,pos_cont1-conc1
-plate_3,E10,comp4,d100,comp4_d100
-plate_3,E11,comp4,d10,comp4_d10
-plate_3,F02,comp9,i15,comp9_i15
-plate_3,F03,comp9,i30,comp9_i30
-plate_3,F04,comp7,g0.3,comp7_g0.3
-plate_3,F05,pos,cont1-conc1,pos_cont1-conc1
-plate_3,F06,comp4,d5,comp4_d5
-plate_3,F07,comp14,n0.3,comp14_n0.3
-plate_3,F08,blank,cont3-conc1,blank_cont3-conc1
-plate_3,F09,comp15,o3,comp15_o3
-plate_3,F10,comp7,g30,comp7_g30
-plate_3,F11,dmso,cont4-conc1,dmso_cont4-conc1
-plate_3,G02,comp7,g10,comp7_g10
-plate_3,G03,pos,cont1-conc1,pos_cont1-conc1
-plate_3,G04,comp9,i0.3,comp9_i0.3
-plate_3,G05,comp15,o30,comp15_o30
-plate_3,G06,dmso,cont4-conc1,dmso_cont4-conc1
-plate_3,G07,comp4,d3,comp4_d3
-plate_3,G08,comp14,n100,comp14_n100
-plate_3,G09,comp14,n5,comp14_n5
-plate_3,G10,neg,cont2-conc1,neg_cont2-conc1
-plate_3,G11,comp15,o5,comp15_o5
+plate_3,E05,comp4,d1,comp4_d1
+plate_3,E06,blank,cont3-conc1,blank_cont3-conc1
+plate_3,E07,comp14,n0.3,comp14_n0.3
+plate_3,E08,comp9,i1,comp9_i1
+plate_3,E09,dmso,cont4-conc1,dmso_cont4-conc1
+plate_3,E10,comp9,i30,comp9_i30
+plate_3,E11,pos,cont1-conc1,pos_cont1-conc1
+plate_3,F02,comp4,d100,comp4_d100
+plate_3,F03,dmso,cont4-conc1,dmso_cont4-conc1
+plate_3,F04,comp9,i0.3,comp9_i0.3
+plate_3,F05,comp7,g30,comp7_g30
+plate_3,F06,comp15,o1,comp15_o1
+plate_3,F07,pos,cont1-conc1,pos_cont1-conc1
+plate_3,F08,comp14,n15,comp14_n15
+plate_3,F09,comp4,d5,comp4_d5
+plate_3,F10,blank,cont3-conc1,blank_cont3-conc1
+plate_3,F11,comp7,g1,comp7_g1
+plate_3,G02,pos,cont1-conc1,pos_cont1-conc1
+plate_3,G03,comp14,n100,comp14_n100
+plate_3,G04,comp15,o0.3,comp15_o0.3
+plate_3,G05,pos,cont1-conc1,pos_cont1-conc1
+plate_3,G06,comp14,n3,comp14_n3
+plate_3,G07,comp7,g0.3,comp7_g0.3
+plate_3,G08,neg,cont2-conc1,neg_cont2-conc1
+plate_3,G09,comp9,i10,comp9_i10
+plate_3,G10,comp15,o30,comp15_o30
+plate_3,G11,comp4,d15,comp4_d15
 ----------

@@ -1,5 +1,61 @@
 1 plates
-plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
+warning: there are 264 empty wells. Consider using them as controls.
+
+Spreading controls... [true] ... true
+Plate 1:
+  .   .   .       .   .   .   .   .   .   .   .   .       .   .   .   .   .   .   .   +
+  .   .       .   .   .   .   +   .   .   +   .   .   .       .   .   .   .   .   .   .
+  +       .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+  .   .   .   .   .       .   .   .   .   .   .   .   +   .   .       +   .   .   .   .
+  .   .   .   +   .   .   .       .   .   .   .   .   .   .   .   .   .       .   .   .
+  .   .   .   .   .   .   +   .       .   .   .   .   .   .   .   .   .   .   .       .
+      .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   +   .   .   .   +   .
+  .       .   .   .   .   .   .   .   +   .       .   .   .   .   .   .   .   .   .   .
+  .   .   .   .       +   .   .   .   .   .   .   .   .   .       .   .   .   .   .   .
+  .   .   .   .   .   .       .   .   .   .   .   +   .   .   +   .       .   .   .   .
+  .   +   .       .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+  .   .   .   .   +   .   .   .   +   .   .   .       .   .   .   .   .   .   .   .   .
+  .   .   .   .   .   .   .   .   .       .   .   .   .   .   .   .   .   +   .   .    
+  .   .   .   .   .   .   .   .   .   .       +   .   .   +   .   .   .   .       .   .
+Plate:[0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 5, 0, 0, 0, 0, 25, 0, 0, 25, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 25, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 2, 25, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 0, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 0, 25, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 25, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 25, 0, 0, 25, 0, 9, 0, 0, 0, 0, 0, 25, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 0, 25, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 25, 0, 0, 25, 0, 0, 0, 0, 21, 0, 0]
+Compound's plate:
+[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+Spread controls:
+true
+Controls' layout:
+[false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, true, false, false, false, false, false, false, false]
+Experiment's row:
+[10, 4, 2, 1, 2, 9, 13, 6, 10, 1, 5, 9, 8, 3, 14, 4, 13, 5, 6, 8, 14, 11, 7, 12]
+Experiment's row (per plate):
+[2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 1, 2, 2]
+Controls per row:
+[20, 20, 21, 20, 20, 20, 21, 20, 20, 20, 21, 21, 20, 20]
+Controls per row per plate:
+[20, 20, 21, 20, 20, 20, 21, 20, 20, 20, 21, 21, 20, 20]
+Controls per column:
+[13, 12, 13, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13]
+Controls per half row:
+[10, 10, 10, 10, 10, 11, 10, 10, 10, 10, 10, 10, 10, 11, 10, 10, 10, 10, 10, 10, 10, 11, 11, 10, 10, 10, 10, 10]
+Controls per upper/lower half plates:
+[10, 10]
+Controls per left/right half plates:
+[10, 10]
+Controls per quarter plates (controls_quarter_plates):
+[5, 5, 5, 5]
+Total Compounds:
+24
+Compounds per half plates:
+[12, 12]
+Concentrations per half plates:
+[2, 1, 2, 1, 1, 2, 2, 1, 1, 2, 2, 1, 1, 2, 1, 2]
+Concentrations upper half plates:
+12
+Concentrations lower half plates:
+12
+Controls per plate per row:
+[19, 1, 18, 2, 20, 1, 18, 2, 19, 1, 19, 1, 19, 2, 19, 1, 19, 1, 18, 2, 20, 1, 19, 2, 19, 1, 18, 2]
+Controls per plate per column:
+[12, 1, 11, 1, 13, 0, 11, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 1, 13, 0, 12, 1, 12, 1]plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
 plate_1,B05,c2,l,c2_l
 plate_1,B15,c4,l,c4_l
 plate_1,B23,[neg],1,[neg]_1

@@ -1,35 +1,89 @@
 4 plates
-plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
-plate_1,B02,comp2,comp2-conc1,comp2_comp2-conc1
-plate_1,B03,neg,cont2-conc1,neg_cont2-conc1
-plate_1,B04,comp1,comp1-conc2,comp1_comp1-conc2
-plate_1,B05,dmso,cont4-conc1,dmso_cont4-conc1
-plate_1,C02,pos,cont1-conc1,pos_cont1-conc1
-plate_1,C03,comp1,comp1-conc1,comp1_comp1-conc1
-plate_1,C04,blank,cont3-conc1,blank_cont3-conc1
-plate_1,C05,comp2,comp2-conc2,comp2_comp2-conc2
-plate_2,B02,comp4,comp4-conc1,comp4_comp4-conc1
-plate_2,B03,neg,cont2-conc1,neg_cont2-conc1
-plate_2,B04,comp1,comp1-conc1,comp1_comp1-conc1
-plate_2,B05,blank,cont3-conc1,blank_cont3-conc1
-plate_2,C02,dmso,cont4-conc1,dmso_cont4-conc1
-plate_2,C03,comp1,comp1-conc2,comp1_comp1-conc2
+Spreading controls... [true, true, true, true] ... true
+Plate 1:
+  +       ~    
+      x       -
+
+ Plate 2:
+      x       ~
+  -       +    
+
+ Plate 3:
+              +
+      +        
+
+ Plate 4:
+  +            
+          +    
+Plate:[33, 2, 36, 7, 8, 35, 1, 34, 9, 35, 11, 36, 34, 12, 33, 10, 18, 13, 16, 33, 15, 33, 14, 17, 33, 6, 26, 4, 3, 25, 33, 5]
+Compound's plate:
+[1, 1, 4, 4, 4, 4, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0]
+Spread controls:
+true
+Controls' layout:
+[true, false, true, false, false, true, false, true, false, true, false, true, true, false, true, false, false, false, false, true, false, true, false, false, true, false, false, false, false, false, true, false]
+Experiment's row:
+[2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 1, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0]
+Experiment's row (per plate):
+[2, 2, 2, 2, 3, 3, 3, 3]
+Controls per row:
+[6, 6]
+Controls per row per plate:
+[2, 2, 2, 2, 1, 1, 1, 1]
+Controls per column:
+[3, 3, 3, 3]
+Controls per half row:
+[3, 3, 3, 3]
+Controls per upper/lower half plates:
+[1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0]
+Controls per left/right half plates:
+[1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0]
+Controls per quarter plates (controls_quarter_plates):
+[1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+Total Compounds:
+20
+Compounds per half plates:
+[2, 2, 2, 2, 3, 3, 3, 3]
+Concentrations per half plates:
+[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0]
+Concentrations upper half plates:
+10
+Concentrations lower half plates:
+10
+Controls per plate per row:
+[0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0]
+Controls per plate per column:
+[0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
+plate_1,B02,pos,cont1-conc1,pos_cont1-conc1
+plate_1,B03,comp1,comp1-conc2,comp1_comp1-conc2
+plate_1,B04,dmso,cont4-conc1,dmso_cont4-conc1
+plate_1,B05,comp4,comp4-conc1,comp4_comp4-conc1
+plate_1,C02,comp4,comp4-conc2,comp4_comp4-conc2
+plate_1,C03,blank,cont3-conc1,blank_cont3-conc1
+plate_1,C04,comp1,comp1-conc1,comp1_comp1-conc1
+plate_1,C05,neg,cont2-conc1,neg_cont2-conc1
+plate_2,B02,comp1,comp1-conc1,comp1_comp1-conc1
+plate_2,B03,blank,cont3-conc1,blank_cont3-conc1
+plate_2,B04,comp2,comp2-conc1,comp2_comp2-conc1
+plate_2,B05,dmso,cont4-conc1,dmso_cont4-conc1
+plate_2,C02,neg,cont2-conc1,neg_cont2-conc1
+plate_2,C03,comp2,comp2-conc2,comp2_comp2-conc2
 plate_2,C04,pos,cont1-conc1,pos_cont1-conc1
-plate_2,C05,comp4,comp4-conc2,comp4_comp4-conc2
-plate_3,B02,pos,cont1-conc1,pos_cont1-conc1
-plate_3,B03,comp4,comp4-conc2,comp4_comp4-conc2
-plate_3,B04,comp3,comp3-conc2,comp3_comp3-conc2
-plate_3,B05,comp1,comp1-conc2,comp1_comp1-conc2
-plate_3,C02,comp1,comp1-conc1,comp1_comp1-conc1
-plate_3,C03,comp3,comp3-conc1,comp3_comp3-conc1
-plate_3,C04,pos,cont1-conc1,pos_cont1-conc1
-plate_3,C05,comp4,comp4-conc1,comp4_comp4-conc1
-plate_4,B02,comp1,comp1-conc2,comp1_comp1-conc2
-plate_4,B03,comp2,comp2-conc2,comp2_comp2-conc2
-plate_4,B04,pos,cont1-conc1,pos_cont1-conc1
-plate_4,B05,comp3,comp3-conc1,comp3_comp3-conc1
-plate_4,C02,pos,cont1-conc1,pos_cont1-conc1
-plate_4,C03,comp3,comp3-conc2,comp3_comp3-conc2
-plate_4,C04,comp2,comp2-conc1,comp2_comp2-conc1
-plate_4,C05,comp1,comp1-conc1,comp1_comp1-conc1
+plate_2,C05,comp1,comp1-conc2,comp1_comp1-conc2
+plate_3,B02,comp1,comp1-conc2,comp1_comp1-conc2
+plate_3,B03,comp3,comp3-conc1,comp3_comp3-conc1
+plate_3,B04,comp4,comp4-conc2,comp4_comp4-conc2
+plate_3,B05,pos,cont1-conc1,pos_cont1-conc1
+plate_3,C02,comp4,comp4-conc1,comp4_comp4-conc1
+plate_3,C03,pos,cont1-conc1,pos_cont1-conc1
+plate_3,C04,comp3,comp3-conc2,comp3_comp3-conc2
+plate_3,C05,comp1,comp1-conc1,comp1_comp1-conc1
+plate_4,B02,pos,cont1-conc1,pos_cont1-conc1
+plate_4,B03,comp3,comp3-conc2,comp3_comp3-conc2
+plate_4,B04,comp1,comp1-conc2,comp1_comp1-conc2
+plate_4,B05,comp2,comp2-conc2,comp2_comp2-conc2
+plate_4,C02,comp2,comp2-conc1,comp2_comp2-conc1
+plate_4,C03,comp1,comp1-conc1,comp1_comp1-conc1
+plate_4,C04,pos,cont1-conc1,pos_cont1-conc1
+plate_4,C05,comp3,comp3-conc1,comp3_comp3-conc1
 ----------

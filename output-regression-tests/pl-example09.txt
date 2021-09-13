@@ -1,5 +1,59 @@
 2 plates
-plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
+Spreading controls... [true, true, true, true] ... true
+Plate 1:
+                  +       x           +
+      x       ~       -       +        
+  -       +                       ~    
+      ~               +       x        
+  +           +           ~           -
+          x       -               +    
+
+ Plate 2:
+      x           +           -        
+          ~               +       +    
+  -           +       x               ~
+      +           ~       -       x    
+  x           -                       +
+          +           ~       +        
+Plate:[71, 44, 80, 64, 81, 9, 83, 28, 15, 81, 76, 83, 14, 84, 59, 82, 79, 81, 42, 47, 82, 26, 81, 58, 48, 72, 61, 74, 84, 10, 46, 84, 69, 16, 63, 81, 27, 83, 60, 43, 81, 75, 12, 81, 25, 57, 84, 62, 78, 82, 41, 11, 83, 77, 82, 13, 73, 45, 81, 70, 34, 83, 7, 38, 81, 20, 30, 82, 3, 22, 37, 56, 84, 8, 17, 65, 81, 29, 81, 52, 82, 1, 33, 81, 51, 83, 53, 23, 67, 84, 24, 81, 66, 31, 84, 50, 82, 35, 83, 40, 83, 68, 49, 82, 21, 2, 18, 55, 5, 81, 54, 19, 81, 4, 32, 84, 6, 81, 39, 36]
+Compound's plate:
+[2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+Spread controls:
+true
+Controls' layout:
+[false, false, false, false, true, false, true, false, false, true, false, true, false, true, false, true, false, true, false, false, true, false, true, false, false, false, false, false, true, false, false, true, false, false, false, true, false, true, false, false, true, false, false, true, false, false, true, false, false, true, false, false, true, false, true, false, false, false, true, false, false, true, false, false, true, false, false, true, false, false, false, false, true, false, false, false, true, false, true, false, true, false, false, true, false, true, false, false, false, true, false, true, false, false, true, false, true, false, true, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, false, true, false, false]
+Experiment's row:
+[3, 5, 1, 6, 5, 6, 1, 2, 1, 3, 6, 5, 6, 2, 1, 4, 2, 5, 6, 1, 5, 1, 3, 4, 5, 3, 4, 1, 2, 1, 4, 6, 3, 1, 4, 6, 2, 1, 6, 4, 6, 2, 4, 1, 6, 4, 2, 3, 5, 4, 3, 2, 3, 6, 5, 2, 5, 3, 2, 4, 3, 5, 4, 1, 2, 4, 3, 5, 4, 6, 1, 3, 6, 3, 5, 2, 6, 5, 2, 1]
+Experiment's row (per plate):
+[7, 6, 7, 7, 6, 7, 7, 7, 6, 6, 7, 7]
+Controls per row:
+[6, 7, 7, 7, 7, 6]
+Controls per row per plate:
+[3, 4, 3, 3, 4, 3, 3, 3, 4, 4, 3, 3]
+Controls per column:
+[4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+Controls per half row:
+[3, 3, 3, 4, 4, 3, 3, 4, 4, 3, 3, 3]
+Controls per upper/lower half plates:
+[4, 2, 2, 2, 4, 2, 2, 2, 4, 2, 2, 2, 4, 2, 2, 2]
+Controls per left/right half plates:
+[4, 2, 2, 2, 4, 2, 2, 2, 4, 2, 2, 2, 4, 2, 2, 2]
+Controls per quarter plates (controls_quarter_plates):
+[2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1]
+Total Compounds:
+80
+Compounds per half plates:
+[20, 20, 20, 20]
+Concentrations per half plates:
+[2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+Concentrations upper half plates:
+40
+Concentrations lower half plates:
+40
+Controls per plate per row:
+[0, 2, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 2, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 2, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 2, 0, 0, 1]
+Controls per plate per column:
+[0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1]plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
 plate_1,B02,comp8,h3,comp8_h3
 plate_1,B03,comp1,a5,comp1_a5
 plate_1,B04,comp10,j5,comp10_j5
@@ -60,64 +114,64 @@ plate_1,G08,comp9,i0.3,comp9_i0.3
 plate_1,G09,comp2,b0.3,comp2_b0.3
 plate_1,G10,pos,cont1-conc1,pos_cont1-conc1
 plate_1,G11,comp8,h1,comp8_h1
-plate_2,B02,comp6,f1,comp6_f1
+plate_2,B02,comp9,i1,comp9_i1
 plate_2,B03,blank,cont3-conc1,blank_cont3-conc1
 plate_2,B04,comp2,b3,comp2_b3
-plate_2,B05,pos,cont1-conc1,pos_cont1-conc1
-plate_2,B06,comp10,j1,comp10_j1
-plate_2,B07,comp8,h1,comp8_h1
-plate_2,B08,comp1,a3,comp1_a3
-plate_2,B09,dmso,cont4-conc1,dmso_cont4-conc1
-plate_2,B10,comp9,i1,comp9_i1
-plate_2,B11,comp5,e5,comp5_e5
-plate_2,C02,comp5,e0.3,comp5_e0.3
-plate_2,C03,comp2,b5,comp2_b5
-plate_2,C04,comp4,d5,comp4_d5
-plate_2,C05,comp3,c5,comp3_c5
-plate_2,C06,neg,cont2-conc1,neg_cont2-conc1
-plate_2,C07,comp10,j0.3,comp10_j0.3
+plate_2,B05,comp10,j1,comp10_j1
+plate_2,B06,pos,cont1-conc1,pos_cont1-conc1
+plate_2,B07,comp5,e5,comp5_e5
+plate_2,B08,comp8,h1,comp8_h1
+plate_2,B09,neg,cont2-conc1,neg_cont2-conc1
+plate_2,B10,comp1,a3,comp1_a3
+plate_2,B11,comp6,f1,comp6_f1
+plate_2,C02,comp10,j0.3,comp10_j0.3
+plate_2,C03,comp4,d5,comp4_d5
+plate_2,C04,dmso,cont4-conc1,dmso_cont4-conc1
+plate_2,C05,comp2,b5,comp2_b5
+plate_2,C06,comp5,e0.3,comp5_e0.3
+plate_2,C07,comp7,g0.3,comp7_g0.3
 plate_2,C08,pos,cont1-conc1,pos_cont1-conc1
-plate_2,C09,comp7,g0.3,comp7_g0.3
+plate_2,C09,comp8,h0.3,comp8_h0.3
 plate_2,C10,pos,cont1-conc1,pos_cont1-conc1
-plate_2,C11,comp8,h0.3,comp8_h0.3
-plate_2,D02,pos,cont1-conc1,pos_cont1-conc1
-plate_2,D03,comp7,g3,comp7_g3
-plate_2,D04,dmso,cont4-conc1,dmso_cont4-conc1
-plate_2,D05,comp1,a0.3,comp1_a0.3
-plate_2,D06,comp9,i0.3,comp9_i0.3
+plate_2,C11,comp3,c5,comp3_c5
+plate_2,D02,neg,cont2-conc1,neg_cont2-conc1
+plate_2,D03,comp1,a0.3,comp1_a0.3
+plate_2,D04,comp9,i0.3,comp9_i0.3
+plate_2,D05,pos,cont1-conc1,pos_cont1-conc1
+plate_2,D06,comp3,c3,comp3_c3
 plate_2,D07,blank,cont3-conc1,blank_cont3-conc1
 plate_2,D08,comp4,d0.3,comp4_d0.3
-plate_2,D09,comp3,c3,comp3_c3
-plate_2,D10,comp6,f3,comp6_f3
-plate_2,D11,neg,cont2-conc1,neg_cont2-conc1
-plate_2,E02,comp9,i3,comp9_i3
-plate_2,E03,neg,cont2-conc1,neg_cont2-conc1
-plate_2,E04,comp3,c1,comp3_c1
+plate_2,D09,comp6,f3,comp6_f3
+plate_2,D10,comp7,g3,comp7_g3
+plate_2,D11,dmso,cont4-conc1,dmso_cont4-conc1
+plate_2,E02,comp6,f5,comp6_f5
+plate_2,E03,pos,cont1-conc1,pos_cont1-conc1
+plate_2,E04,comp7,g1,comp7_g1
 plate_2,E05,comp8,h3,comp8_h3
-plate_2,E06,pos,cont1-conc1,pos_cont1-conc1
-plate_2,E07,comp7,g1,comp7_g1
-plate_2,E08,comp6,f5,comp6_f5
-plate_2,E09,comp4,d3,comp4_d3
-plate_2,E10,dmso,cont4-conc1,dmso_cont4-conc1
+plate_2,E06,dmso,cont4-conc1,dmso_cont4-conc1
+plate_2,E07,comp3,c1,comp3_c1
+plate_2,E08,neg,cont2-conc1,neg_cont2-conc1
+plate_2,E09,comp9,i3,comp9_i3
+plate_2,E10,blank,cont3-conc1,blank_cont3-conc1
 plate_2,E11,comp10,j5,comp10_j5
 plate_2,F02,blank,cont3-conc1,blank_cont3-conc1
-plate_2,F03,comp6,f0.3,comp6_f0.3
-plate_2,F04,comp1,a1,comp1_a1
-plate_2,F05,dmso,cont4-conc1,dmso_cont4-conc1
-plate_2,F06,comp7,g5,comp7_g5
-plate_2,F07,neg,cont2-conc1,neg_cont2-conc1
+plate_2,F03,comp7,g5,comp7_g5
+plate_2,F04,comp3,c0.3,comp3_c0.3
+plate_2,F05,neg,cont2-conc1,neg_cont2-conc1
+plate_2,F06,comp6,f0.3,comp6_f0.3
+plate_2,F07,comp1,a1,comp1_a1
 plate_2,F08,comp5,e1,comp5_e1
-plate_2,F09,pos,cont1-conc1,pos_cont1-conc1
-plate_2,F10,comp3,c0.3,comp3_c0.3
-plate_2,F11,comp2,b0.3,comp2_b0.3
-plate_2,G02,comp10,j3,comp10_j3
-plate_2,G03,comp4,d1,comp4_d1
+plate_2,F09,comp4,d3,comp4_d3
+plate_2,F10,comp2,b0.3,comp2_b0.3
+plate_2,F11,pos,cont1-conc1,pos_cont1-conc1
+plate_2,G02,comp4,d1,comp4_d1
+plate_2,G03,comp5,e3,comp5_e3
 plate_2,G04,pos,cont1-conc1,pos_cont1-conc1
-plate_2,G05,comp5,e3,comp5_e3
+plate_2,G05,comp1,a5,comp1_a5
 plate_2,G06,comp8,h5,comp8_h5
-plate_2,G07,comp9,i5,comp9_i5
-plate_2,G08,blank,cont3-conc1,blank_cont3-conc1
-plate_2,G09,comp2,b1,comp2_b1
-plate_2,G10,comp1,a5,comp1_a5
-plate_2,G11,pos,cont1-conc1,pos_cont1-conc1
+plate_2,G07,dmso,cont4-conc1,dmso_cont4-conc1
+plate_2,G08,comp2,b1,comp2_b1
+plate_2,G09,pos,cont1-conc1,pos_cont1-conc1
+plate_2,G10,comp10,j3,comp10_j3
+plate_2,G11,comp9,i5,comp9_i5
 ----------
