@@ -15,7 +15,7 @@ myUnitTests=( 'pl-example01'
 	      'pl-example15' 'pl-example17' 'pl-example18' 'pl-example19'
 	      '2020-10-08-jonne-slack' 'pl-example21' 'pl-example22' 'pl-example23' 'pl-example24'
 	      'pl-example25' 'pl-example27' 'pl-example28' 'pl-example29'
-	      'pl-example30' 'pl-example31' 'pl-example35' 'pl-example36'
+	      'pl-example30' 'pl-example31' 'pl-example35' 'pl-example36' 'pl-example37'
 	      'pl-example20' #'2020-09-30-jonne-slack'
 	    )
 
@@ -34,6 +34,7 @@ myUnitTestsResults=( '4 plates'
 		     'MiniZinc: evaluation error:' #'pl-example31'
 		     '1 plates' #'pl-example35'
 		     'MiniZinc: evaluation error:' #'pl-example36'
+		     '1 plates'
 		     '1 plates' #'pl-example20'
 		     #'1 plates' #'2020-09-30-jonne-slack'
 		   )
