@@ -80,7 +80,7 @@ constraint assert(not (num_controls == 1 /\ spread_control[1]==false),"Invalid d
 %%% Testing %%%
 
 opt bool: testing;
-bool: debugging = true;
+bool: debugging = false;
 %bool: enforce = false;
 
 
