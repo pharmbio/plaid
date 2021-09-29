@@ -1,51 +1,5 @@
 1 plates
-Spreading controls... [true, true, true, true] ... true
-Plate 1:
-      +           x           -        
-          -           +           ~    
-  +           ~           x           +
-      ~               -       +        
-          +       +                   x
-  -           x           ~       +    
-Plate:[17, 41, 33, 3, 43, 12, 24, 42, 25, 8, 15, 32, 42, 28, 21, 41, 1, 13, 44, 38, 41, 14, 29, 44, 6, 39, 43, 19, 37, 41, 5, 44, 23, 35, 30, 42, 31, 41, 18, 10, 34, 40, 41, 16, 41, 20, 11, 26, 4, 43, 42, 22, 2, 43, 9, 7, 44, 36, 41, 27]
-Compound's plate:
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-Spread controls:
-true
-Controls' layout:
-[false, true, false, false, true, false, false, true, false, false, false, false, true, false, false, true, false, false, true, false, true, false, false, true, false, false, true, false, false, true, false, true, false, false, false, true, false, true, false, false, false, false, true, false, true, false, false, false, false, true, true, false, false, true, false, false, true, false, true, false]
-Experiment's row:
-[2, 6, 1, 5, 4, 3, 6, 1, 6, 4, 5, 1, 2, 3, 2, 5, 1, 4, 3, 5, 2, 6, 4, 1, 1, 5, 6, 2, 3, 4, 4, 2, 1, 5, 4, 6, 3, 2, 3, 5]
-Experiment's row (per plate):
-[7, 7, 6, 7, 7, 6]
-Controls per row:
-[3, 3, 4, 3, 3, 4]
-Controls per row per plate:
-[3, 3, 4, 3, 3, 4]
-Controls per column:
-[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
-Controls per half row:
-[2, 1, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2]
-Controls per upper/lower half plates:
-[4, 2, 2, 2, 4, 2, 2, 2]
-Controls per left/right half plates:
-[4, 2, 2, 2, 4, 2, 2, 2]
-Controls per quarter plates (controls_quarter_plates):
-[2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1]
-Total Compounds:
-40
-Compounds per half plates:
-[20, 20]
-Concentrations per half plates:
-[4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
-Concentrations upper half plates:
-20
-Concentrations lower half plates:
-20
-Controls per plate per row:
-[0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 2, 0, 1, 1, 0, 1, 1, 0, 1, 0, 2, 0, 1, 0, 0, 1, 1, 1, 1]
-Controls per plate per column:
-[0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0]plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
+plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
 plate_1,B02,comp3,c0.3,comp3_c0.3
 plate_1,B03,pos,comp1-conc1,pos_comp1-conc1
 plate_1,B04,comp5,e0.3,comp5_e0.3

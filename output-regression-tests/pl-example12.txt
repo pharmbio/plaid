@@ -1,51 +1,5 @@
 2 plates
-Spreading controls... [true, true, true, true] ... true
-Plate 1:
-  -   ~   -   +   x       ~   x   -   +
-  x   +   x   ~   -   +   -   +   ~   x
-
- Plate 2:
-  -   x   -   +   ~   +   -   x   ~   +
-      +   ~   x   -   x   ~   +   -   x
-Plate:[4, 6, 4, 3, 5, 2, 6, 5, 4, 3, 5, 3, 5, 6, 4, 3, 4, 3, 6, 5, 4, 5, 4, 3, 6, 3, 4, 5, 6, 3, 1, 3, 6, 5, 4, 5, 6, 3, 4, 5]
-Compound's plate:
-[2, 1]
-Spread controls:
-false
-Controls' layout:
-[true, true, true, true, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, true, true, true, true, true, true, true, true, true]
-Experiment's row:
-[2, 1]
-Experiment's row (per plate):
-[1, 0, 0, 1]
-Controls per row:
-[19, 19]
-Controls per row per plate:
-[9, 10, 10, 9]
-Controls per column:
-[3, 4, 4, 4, 4, 3, 4, 4, 4, 4]
-Controls per half row:
-[10, 9, 9, 10]
-Controls per upper/lower half plates:
-[2, 3, 2, 2, 3, 2, 3, 2, 3, 3, 2, 2, 2, 2, 3, 2]
-Controls per left/right half plates:
-[2, 3, 3, 2, 3, 2, 2, 2, 2, 3, 2, 2, 3, 2, 3, 2]
-Controls per quarter plates (controls_quarter_plates):
-[1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
-Total Compounds:
-2
-Compounds per half plates:
-[1, 0, 0, 1]
-Concentrations per half plates:
-[0, 1, 1, 0]
-Concentrations upper half plates:
-1
-Concentrations lower half plates:
-1
-Controls per plate per row:
-[0, 2, 3, 2, 2, 0, 3, 2, 3, 2, 0, 3, 3, 2, 2, 0, 2, 2, 3, 2]
-Controls per plate per column:
-[0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0]plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
+plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
 plate_1,B02,neg,cont2-conc1,neg_cont2-conc1
 plate_1,F02,neg,cont2-conc1,neg_cont2-conc1
 plate_1,B03,dmso,cont4-conc1,dmso_cont4-conc1

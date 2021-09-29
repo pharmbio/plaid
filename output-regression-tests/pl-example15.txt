@@ -1,49 +1,5 @@
 1 plates
-Spreading controls... [true, true, true, true] ... true
-Plate 1:
-      ~       -       +       x
-  +       x       ~       -    
-      -       +       x       ~
-  x       ~       -       +    
-Plate:[2, 20, 15, 18, 12, 17, 8, 19, 17, 10, 19, 13, 20, 1, 18, 7, 5, 18, 11, 17, 14, 19, 4, 20, 19, 3, 20, 6, 18, 16, 17, 9]
-Compound's plate:
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-Spread controls:
-true
-Controls' layout:
-[false, true, false, true, false, true, false, true, true, false, true, false, true, false, true, false, false, true, false, true, false, true, false, true, true, false, true, false, true, false, true, false]
-Experiment's row:
-[2, 1, 4, 3, 3, 4, 2, 1, 4, 2, 3, 1, 2, 3, 1, 4]
-Experiment's row (per plate):
-[4, 4, 4, 4]
-Controls per row:
-[4, 4, 4, 4]
-Controls per row per plate:
-[4, 4, 4, 4]
-Controls per column:
-[2, 2, 2, 2, 2, 2, 2, 2]
-Controls per half row:
-[2, 2, 2, 2, 2, 2, 2, 2]
-Controls per upper/lower half plates:
-[2, 2, 2, 2, 2, 2, 2, 2]
-Controls per left/right half plates:
-[2, 2, 2, 2, 2, 2, 2, 2]
-Controls per quarter plates (controls_quarter_plates):
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-Total Compounds:
-16
-Compounds per half plates:
-[8, 8]
-Concentrations per half plates:
-[2, 2, 2, 2, 2, 2, 2, 2]
-Concentrations upper half plates:
-8
-Concentrations lower half plates:
-8
-Controls per plate per row:
-[0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1]
-Controls per plate per column:
-[0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1]plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
+plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
 plate_1,B02,comp1,1,comp1_1
 plate_1,B03,dmso,cont4-conc1,dmso_cont4-conc1
 plate_1,B04,comp2,3,comp2_3

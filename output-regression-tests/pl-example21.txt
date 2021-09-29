@@ -1,51 +1,5 @@
 1 plates
-Spreading controls... [false, true, true, true] ... false
-Plate 1:
-  ~   -   +           x   +   ~   x    
-  +           x   +       -       +   ~
-      x   -   +   ~   +       +       -
-  +   ~           +   -           +   x
-          x   +   x   +   ~   -   ~    
-  -   +   ~   -           x   +       +
-Plate:[24, 22, 21, 15, 20, 23, 21, 24, 23, 2, 21, 18, 14, 23, 21, 10, 22, 8, 21, 24, 5, 23, 22, 21, 24, 21, 9, 21, 1, 22, 21, 24, 7, 11, 21, 22, 17, 13, 21, 23, 12, 3, 23, 21, 23, 21, 24, 22, 24, 6, 22, 21, 24, 22, 4, 16, 23, 21, 19, 21]
-Compound's plate:
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-Spread controls:
-false
-Controls' layout:
-[true, true, true, false, false, true, true, true, true, false, true, false, false, true, true, false, true, false, true, true, false, true, true, true, true, true, false, true, false, true, true, true, false, false, true, true, false, false, true, true, false, false, true, true, true, true, true, true, true, false, true, true, true, true, false, false, true, true, false, true]
-Experiment's row:
-[3, 1, 5, 6, 3, 5, 4, 2, 3, 2, 4, 5, 4, 2, 1, 6, 4, 2, 6, 1]
-Experiment's row (per plate):
-[3, 4, 3, 4, 3, 3]
-Controls per row:
-[7, 6, 7, 6, 7, 7]
-Controls per row per plate:
-[7, 6, 7, 6, 7, 7]
-Controls per column:
-[4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
-Controls per half row:
-[3, 4, 3, 3, 4, 3, 3, 3, 3, 4, 4, 3]
-Controls per upper/lower half plates:
-[8, 4, 4, 4, 8, 4, 4, 4]
-Controls per left/right half plates:
-[8, 4, 4, 4, 8, 4, 4, 4]
-Controls per quarter plates (controls_quarter_plates):
-[4, 2, 2, 2, 4, 2, 2, 2, 4, 2, 2, 2, 4, 2, 2, 2]
-Total Compounds:
-20
-Compounds per half plates:
-[10, 10]
-Concentrations per half plates:
-[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
-Concentrations upper half plates:
-10
-Concentrations lower half plates:
-10
-Controls per plate per row:
-[0, 2, 1, 2, 2, 0, 3, 1, 1, 1, 0, 3, 2, 1, 1, 0, 3, 1, 1, 1, 0, 2, 1, 2, 2, 0, 3, 2, 1, 1]
-Controls per plate per column:
-[0, 2, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 2, 1, 1, 0, 0, 2, 0, 1, 1, 0, 2, 1, 1, 0, 0, 1, 1, 1, 1, 0, 2, 1, 0, 1, 0, 2, 0, 1, 1, 0, 1, 1, 1, 1]plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
+plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
 plate_1,B02,dmso,cont4-conc1,dmso_cont4-conc1
 plate_1,B03,neg,cont2-conc1,neg_cont2-conc1
 plate_1,B04,pos,cont1-conc1,pos_cont1-conc1
