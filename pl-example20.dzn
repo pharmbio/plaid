@@ -2,9 +2,11 @@
 %% Description: 1 plate divided horizontally (top part and lower part have the same layout).
 %% 2021/Jan/13: satisfiable. It generates 1 plate in aprox. 45sec 
 %% 2021/Mar/04: satisfiable. It generates 1 plate in aprox. 1m 9sec 
+%% 2021/Apr/23: It takes about 47s 159msec (with interconnected_plates = false)
+%% 2021/Jul/02: It takes about 21m 40s (with interconnected_plates = true)
+%% 2021/Jul/09: It takes about 22m 40s (with interconnected_plates = true)
 
-
-%% Plate dimentions: (this is a 1536-well plate)
+%% Plate dimentions: (this is a 768-well plate)
 num_rows = 16; %% height
 num_cols = 48; %% width
 
@@ -13,29 +15,27 @@ horizontal_cell_lines	 = 2;
 size_empty_edge = 1;
 allow_empty_wells = false;
 
-% New and used!
 concentrations_on_different_rows = true;
 concentrations_on_different_columns = true;
 
-% New and unused! (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
-replicates_on_different_plates = true;
-replicates_on_same_plate = false;
+replicates_on_different_plates = false;
+replicates_on_same_plate = true;
 
 %%% Compounds %%%
-compounds = 7; %% number of drugs/compounds
+compounds = 7+1; %% number of drugs/compounds
 compound_replicates	 = [ 5 | i in 1..compounds];
-compound_concentrations	 = [ 3 | i in 1..compounds];
+compound_concentrations	 = [ 3 | i in 1..7]++[1];
 
-compound_concentration_names = [|"L","M","H"|"L","M","H"|"L","M","H"|"L","M","H"|"L","M","H"|"L","M","H"|"L","M","H"|];
+compound_concentration_names = [|"L","M","H"|"L","M","H"|"L","M","H"|"L","M","H"|"L","M","H"|"L","M","H"|"L","M","H"|"comb-conc1","",""|];
 compound_concentration_indicators = ["" | i in 1..max(compound_concentrations)]; 
 
-compound_names = ["BPA","BADGE","PFOA","4-MBC","DBP","DEHP","TCEP"]; 
+compound_names = ["BPA","BADGE","PFOA","4-MBC","DBP","DEHP","TCEP"]++["BPA+H"]; 
 
 %%% Combinations %%%
-combinations 	= 1;
-combination_concentrations = 1;
-combination_names = ["BPA+H"];
-combination_concentration_names = ["comb-conc\(i)" | i in 1..combination_concentrations];
+combinations 	= 0;
+combination_concentrations = 0;
+combination_names = [];
+combination_concentration_names = [];
 
 %% Controls %%
 num_controls = 4;

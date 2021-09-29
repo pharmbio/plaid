@@ -1,5 +1,7 @@
 %%% Exp_DoseResponse conditions	%%%
 %% 2020/Nov/17: satisfiable. It generates 2 plates in 321 msec
+%% 2021/Apr/22: It takes about 280msec (with interconnected_plates = false) 
+%% 2021/Jul/03: It takes about 5m 54s (with interconnected_plates = false)
 
 %% Plate dimentions: (this is a 96-well plate)
 num_rows = 8; %% height
@@ -19,27 +21,27 @@ replicates_on_different_plates = true;
 replicates_on_same_plate = false;
 
 %% Compounds %%
-compounds = 1;
+compounds = 1+1;
 
-compound_concentrations	 = [1]; 
+compound_concentrations	 = [1,1]; 
 
 compound_replicates	 = [2| i in 1..compounds]; 
 
 
-compound_concentration_names = [|"comp-conc1"|];
+compound_concentration_names = [|"comp-conc1"|"comb-conc1"|];
 
 compound_concentration_indicators = [""]; 
 
-compound_names = ["BPA"]; 
+compound_names = ["BPA","BPA+H"]; 
 
 %% Combinations %%%
-combinations 	= 1;
+combinations 	= 0;
 
-combination_concentrations = 1;
+combination_concentrations = 0;
 
-combination_names = ["BPA+H"]; 
+combination_names = []; 
   
-combination_concentration_names = ["comb-conc1"];
+combination_concentration_names = [];
 
 
 %% Controls %%

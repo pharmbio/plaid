@@ -3,6 +3,8 @@
 %% so we can test having no edge.
 %% Produces 4 plates.
 %% 2021/Jan/13: It takes about 6s 459msec
+%% 2021/Apr/22: It takes about 7m 10s (with interconnected_plates = false)
+%% 2021/Jul/02: It takes about 3s 341msec (with interconnected_plates = false)
 
 %% Plate dimentions: (this is a 96-well plate)
 num_rows = 6; %% height

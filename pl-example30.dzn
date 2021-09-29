@@ -1,0 +1,53 @@
+%%% Plate for the paper
+%% It produces 1 plate with 20 controls and some compounds
+%% In older models, neg controls are clustered in a row
+%%
+%% 2021/Jul/08: it takes about 11s 599msec
+
+num_rows = 16; %% height
+num_cols = 24; %% width
+
+vertical_cell_lines	 = 1;
+horizontal_cell_lines = 1;
+
+allow_empty_wells = true;
+size_empty_edge = 1;
+
+% New and used!
+concentrations_on_different_rows = true;
+concentrations_on_different_columns = true;
+
+% New and unused! (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
+replicates_on_different_plates = false;
+replicates_on_same_plate = true;
+
+%%% Compounds %%%
+compounds = 4; %% number of drugs/compounds
+compound_concentrations	 = [ 3 | i in 1..compounds];
+compound_replicates	 = [ 2 | i in 1..compounds];
+
+compound_names = ["c1","c2","c3","c4"];
+compound_concentration_names = [|"l","m","h"|"l","m","h"|"l","m","h"|"l","m","h"|];
+
+
+compound_concentration_indicators = ["","",""];
+ 
+
+
+%%% Combinations %%%
+combinations = 0;
+combination_concentrations = 0;
+combination_names = [];
+combination_concentration_names = [];
+
+
+%% Controls %%
+num_controls = 1;
+control_concentrations = [1];
+
+control_replicates = [20];
+control_concentration_names = [|"1"|];
+
+control_names = ["[neg]"];
+
+ 

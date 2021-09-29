@@ -2,6 +2,7 @@
 %% Produces 4 plates.
 %% Same compounds as pl-example01, but replicates are not constrained to appear on different plates
 %% 2021/Apr/09: It takes about 2s 262msec
+%% 2021/Jul/03: It takes about 8s 931msec
 
 %% Plate dimentions: (this is a 96-well plate)
 num_rows = 8; %% height

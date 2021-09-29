@@ -1,0 +1,59 @@
+%% Plate layout for Ameli
+%% 2021/Apr/22: It takes about 752msec (with interconnected_plates = false)
+
+%% Plate dimentions: (this is a 384-well plate)
+num_rows = 14; %% height
+num_cols = 21; %% width
+
+
+horizontal_cell_lines = 1;
+vertical_cell_lines = 3;
+
+allow_empty_wells = true;
+
+% New and used!
+concentrations_on_different_rows = false;
+concentrations_on_different_columns = false;
+
+% New and unused! (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
+replicates_on_different_plates = false;
+replicates_on_same_plate = true;
+
+size_empty_edge = 0;
+
+
+%%% Compounds %%%
+compounds = 8; %% number of drugs/compounds
+compound_concentrations	 = [6| i in 1..compounds]; 
+
+compound_names = ["PFOA", "ETOP", "FEN", "BC", "MC", "T", "FD", "DMSO"];
+
+compound_replicates	 = [2| i in 1..compounds]; 
+
+compound_concentration_names = [|"0.5", "1", "5", "10", "50", "100"
+|"0.5", "1", "5", "10", "50", "100"
+|"0.5", "1", "5", "10", "50", "100"
+|"0.5", "1", "5", "10", "50", "100"
+|"0.5", "1", "5", "10", "50", "100"
+|"0.5", "1", "5", "10", "50", "100"
+|"0.5", "1", "5", "10", "50", "100"
+|"0.5", "1", "5", "10", "50", "100"|];
+
+compound_concentration_indicators = ["" | i in 1..6]; 
+
+
+%%% Combinations %%%
+combinations = 	0;
+combination_names = [];
+combination_concentration_names = [];
+combination_concentrations = 0;
+
+
+%%% Controls %%%
+num_controls = 0;
+control_replicates = [];
+control_concentrations = [];
+control_names = [];
+
+control_concentration_names =  [];  
+  

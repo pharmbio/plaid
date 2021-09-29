@@ -1,0 +1,46 @@
+%%% Small example to test GUI issues
+%% 2021/09/14: satisfiable. It generates 1 plate in aprox. 686msec
+
+%% Plate dimentions: (this is a 384-well plate)
+num_rows = 4; %% height
+num_cols = 6; %% width
+
+vertical_cell_lines	 = 1;
+horizontal_cell_lines	 = 1;
+size_empty_edge = 0;
+allow_empty_wells = true;
+
+concentrations_on_different_rows = false;
+concentrations_on_different_columns = false;
+
+% Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false
+replicates_on_different_plates = false;
+replicates_on_same_plate = false;
+
+%%% Compounds %%%
+compounds = 3; %% number of drugs/compounds
+compound_replicates	 = [ 1 | i in 1..compounds];
+compound_concentrations	 = [3,3,7];
+compound_names = ["(1)","(2)","(1)(2)"];
+
+compound_concentration_names = [|"L","M","H","","","",""|"L","M","H","","","",""|"1","2","3","4","5","6","7"|];
+
+compound_concentration_indicators = ["" | i in 1..max(compound_concentrations)];
+
+
+
+%%% Combinations %%%
+combinations = 0;
+combination_concentrations = 0;
+combination_names = [];
+
+combination_concentration_names = [];
+
+%% Controls %%
+num_controls = 1;
+control_concentrations = [ 1 ];
+control_replicates = [1];
+control_names = ["neg"];
+  
+control_concentration_names = [|"1"|];
+ 
