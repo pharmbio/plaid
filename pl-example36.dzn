@@ -1,5 +1,5 @@
 %% Produces 1 plate.
-%% 2021/09/13: Bug: the solver says UNSAT
+%% 2021/09/13: UNSAT. Too many the controls would end up too close to each other.
 
 %% Plate dimentions: (this is a 384-well plate)
 num_rows = 4; %% height
