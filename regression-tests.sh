@@ -22,7 +22,7 @@ myUnitTests=( 'pl-example01' '4 plates'
 	      'pl-example19' '1 plates'
 	      'pl-example21' '1 plates'
 	      'pl-example22' '4 plates'
-	      #'pl-example23' '2 plates'
+	      #'pl-example23' '2 plates' #Duplicated example
 	      'pl-example24' '2 plates'
 	      'pl-example25' '2 plates'
 	      'pl-example27' '3 plates'
@@ -39,6 +39,7 @@ myUnitTests=( 'pl-example01' '4 plates'
 	      'dose-response-20-3-1' '1 plates'
 	      'dose-response-20-3-2' '1 plates'
 	      'dose-response-20-3-3' '1 plates'
+	      'pl-example42' '1 plates'
 	      'pl-example20' '1 plates'
 	      #'2020-09-30-jonne-slack' #'1 plates'
 	    )
@@ -54,8 +55,6 @@ do
     
     /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn ${myUnitTests[${i}]}.dzn --cmdline-data "testing=true"  &> ${myUnitTests[${i}]}.txt
     
-     #/Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode -p 8 -t 7200000 -r $RANDOM plate-design.mzn ${myUnitTests[${i}]}.dzn  --cmdline-data testing=true > ${myUnitTests[${i}]}.txt
-
     echo "It took about $SECONDS sec."
     
     read -r line < ${myUnitTests[${i}]}.txt
