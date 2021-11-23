@@ -1,0 +1,52 @@
+%%
+%% It produces 1 plate
+%%
+%% 2021/Nov/23: It takes about 16m 4s
+
+num_rows = 16; %% height
+num_cols = 24; %% width
+
+vertical_cell_lines	 = 1;
+horizontal_cell_lines = 1;
+
+allow_empty_wells = true;
+size_empty_edge = 1;
+
+% New and used!
+concentrations_on_different_rows = true;
+concentrations_on_different_columns = true;
+
+% New and unused! (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
+replicates_on_different_plates = false;
+replicates_on_same_plate = true;
+
+
+%%% Compounds %%%
+compounds = 126; %% number of drugs/compounds
+compound_concentrations	 = [ 2 | i in 1..compounds];
+compound_replicates	 = [ 1 | i in 1..compounds];
+
+compound_names =["Drug \(i)" | i in 1..compounds];
+compound_concentration_names = [|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|"L","H"|];
+
+
+compound_concentration_indicators = ["" | i in 1..max(compound_concentrations)];
+ 
+
+
+%%% Combinations (Deprecated) %%%
+combinations = 0;
+combination_concentrations = 0;
+combination_names = [];
+combination_concentration_names = [];
+
+
+%% Controls %%
+num_controls = 6;
+control_concentrations = [1,1,1,1,1,1];
+
+control_names = ["[DMSO]"]++["[a]","[b]","[c]","[d]","[e]"];
+control_concentration_names = [|"1"|"1"|"1"|"1"|"1"|"1"|];
+control_replicates = [20]++[2,2,2,2,2];
+
+ 
