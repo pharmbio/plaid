@@ -17,7 +17,7 @@
 %
 % Authors: Maria Andreina FRANCISCO RODRIGUEZ (maria.andreina.francisco@farmbio.uu.se)
 % Version: 1.0
-% Last Revision: September 2021
+% Last Revision: November 2021
 %
 
 include "globals.mzn";
@@ -94,7 +94,7 @@ int: numcols = floor(num_cols/vertical_cell_lines)-2*size_empty_edge;
 %% TODO: add latex indicators for controls 
 %array[1..compound_concentrations] of string: compound_concentration_names;
 
-array[1..compounds,int] of string: compound_concentration_names;
+array[1..compounds,1..max_compound_concentrations] of string: compound_concentration_names;
 
 
 %% FIX ME!
