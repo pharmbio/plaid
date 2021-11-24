@@ -749,9 +749,8 @@ constraint forall(i in Plates, d in 1..num_controls*max_control_concentrations)(
 constraint forall(i in 1..num_controls*max_control_concentrations)(sum([controls_ul_plates[p,v,i] | v in Vertical, p in Plates]) == control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1]) );
 
 
-%% NOW :(
-
-%constraint forall(i in Plates, v in Vertical)(sum(controls_ul_plates[i,v,..]) == sum_controls_ul_plates[i,v]);
+% Implied constraint:
+constraint forall(i in Plates, v in Vertical)(sum(controls_ul_plates[i,v,..]) == sum_controls_ul_plates[i,v]);
 
 %% Half of the total number of controls on each upper/lower half of the plate.
 constraint forall(i in Plates)(abs(sum(controls_ul_plates[i,upper,..]) - sum(controls_ul_plates[i,lower,..])) <= 1);
@@ -978,10 +977,9 @@ array [Plates,Rows,Columns] of var 0..1: controls_layout;
 
 constraint forall(i in Plates, j in Rows, k in Columns)(controls_layout[i,j,k] == ((plates[i,j,k] > experiments)) );
 
-%constraint if spread_controls then forall(i in Plates, j in Rows)(regular(controls_layout[i,j,..], "(0|1) (0|(0 1))*")::domain) endif;
+
 constraint if spread_controls then forall(i in Plates, j in Rows)(regular(controls_layout[i,j,..], "(0|(1 0))* (1?)")::domain) endif;
 
-%constraint if spread_controls then forall(i in Plates, k in Columns)(regular(controls_layout[i,..,k], "(0|1) (0|(0 1))*")::domain) endif;
 constraint if spread_controls then forall(i in Plates, k in Columns)(regular(controls_layout[i,..,k], "(0|(1 0))* (1?)")::domain) endif;
 
 constraint if force_spread_controls then forall(i in Plates, j in 1..numrows)(regular(controls_layout[i,j,..], "(0|(1 0 0))* (1|(1 0))?")::domain) endif;
@@ -1124,25 +1122,6 @@ constraint if spread_controls then forall(i in Plates)(plates[i,numrows,numcols]
 %% TODO: Add spread_controls contraint in borders!
 
 
-constraint if force_spread_controls then forall(i in Plates, j in 3..numrows-2, k in 3..numcols-2)(plates[i,j,k] > experiments -> 
-            plates[i,j-2,k-2]!= plates[i,j,k] /\ 
-            plates[i,j-2,k-1]  != plates[i,j,k] /\
-            plates[i,j-2,k]  != plates[i,j,k] /\
-            plates[i,j-2,k+1]  != plates[i,j,k] /\
-            plates[i,j-2,k+2]!= plates[i,j,k] /\
-            plates[i,j-1,k-2]  != plates[i,j,k] /\
-            plates[i,j-1,k+2]  != plates[i,j,k] /\
-            plates[i,j,k-2]  != plates[i,j,k] /\
-            plates[i,j,k+2]  != plates[i,j,k] /\
-            plates[i,j+1,k-2]  != plates[i,j,k] /\
-            plates[i,j+1,k+2]  != plates[i,j,k] /\
-            plates[i,j+2,k-2]!= plates[i,j,k] /\
-            plates[i,j+2,k-1]  != plates[i,j,k] /\
-            plates[i,j+2,k]  != plates[i,j,k] /\
-            plates[i,j+2,k+1]  != plates[i,j,k] /\
-            plates[i,j+2,k+2]!= plates[i,j,k]
-            ) endif;
-
 % j=1
 constraint forall(i in Plates, k in 2..numcols-1)(plates[i,1,k] > experiments -> 
            plates[i,1,k-1]  != plates[i,1,k] /\
@@ -1220,7 +1199,7 @@ constraint if force_spread_controls then forall(i in Plates, j in 3..numrows-2, 
             plates[i,j+2,k+2] <= experiments
             ) endif;
                       
-
+            
 constraint if force_spread_controls then forall(i in Plates, j = 2, k in 3..numcols-2)(plates[i,j,k] > experiments -> 
             plates[i,j,k-2]  <= experiments /\
             plates[i,j,k+2]  <= experiments /\
@@ -1317,6 +1296,7 @@ array [1..numplates*2] of ann: search_order_b = [if (i mod 2) == 1 then int_sear
 
 
 solve::seq_search([int_search(experiment_plate, first_fail, indomain_random)]++
+%solve::seq_search([int_search(experiment_plate, first_fail, indomain_min)]++
 (if (swap_search mod 2 == 0) then search_order_b else search_order_a endif))
 %[int_search(controls_layout, random, indomain_max), %int_search(experiment_plate_row, first_fail, indomain_random), 
 %int_search(plates, first_fail, indomain_random)]) 
