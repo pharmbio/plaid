@@ -78,7 +78,7 @@ array[1..num_controls*max_control_concentrations] of bool: spread_control = [ ce
 
 %%% Testing %%%
 opt bool: testing;
-bool: debugging = false;
+bool: debugging = true;
 %bool: enforce = false;
 opt int: swap_search;
 opt bool: sorted_compounds;
@@ -980,9 +980,9 @@ constraint if spread_controls then forall(i in Plates, j in Rows)(regular(contro
 
 constraint if spread_controls then forall(i in Plates, k in Columns)(regular(controls_layout[i,..,k], "(0|(1 0))* (1?)")::domain) endif;
 
-constraint if force_spread_controls then forall(i in Plates, j in 1..numrows)(regular(controls_layout[i,j,..], "(0|(1 0 0))* (1|(1 0))?")::domain) endif;
+constraint if force_spread_controls then forall(i in Plates, j in Rows)(regular(controls_layout[i,j,..], "(0|(1 0 0))* (1|(1 0))?")::domain) endif;
 
-constraint if force_spread_controls then forall(i in Plates, k in 1..numcols)(regular(controls_layout[i,..,k], "(0|(1 0 0))* (1|(1 0))?")::domain) endif;
+constraint if force_spread_controls then forall(i in Plates, k in Columns)(regular(controls_layout[i,..,k], "(0|(1 0 0))* (1|(1 0))?")::domain) endif;
 
 
 constraint if spread_controls then forall(i in Plates, j in Rows)(my_implied_cost(controls_only_in_plate_row[i,j],controls_layout[i,j,..])::domain) endif;
