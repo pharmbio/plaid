@@ -13,11 +13,11 @@
 % limitations under the License.
 %
 %
-% Description:  A microplate layout designer
+% Description:  A highly effective microplate layout designer
 %
 % Authors: Maria Andreina FRANCISCO RODRIGUEZ (maria.andreina.francisco@farmbio.uu.se)
 % Version: 1.0
-% Last Revision: November 2021
+% Last Revision: December 2021
 %
 
 include "globals.mzn";
@@ -40,6 +40,7 @@ bool: force_spread_controls;
 int: horizontal_cell_lines;
 int: vertical_cell_lines;
 int: size_empty_edge;
+bool: inner_empty_edge = true;
 
 %% Compounds %%
 int: compounds; %% number of drugs/compounds
@@ -78,7 +79,7 @@ array[1..num_controls*max_control_concentrations] of bool: spread_control = [ ce
 
 %%% Testing %%%
 opt bool: testing;
-bool: debugging = true;
+bool: debugging = false;
 %bool: enforce = false;
 opt int: swap_search;
 opt bool: sorted_compounds;
@@ -90,9 +91,10 @@ int: num_cols;
 
 
 %% TODO: this could be problematic when there are multiple cell lines
-int: numrows = floor(num_rows/horizontal_cell_lines)-2*size_empty_edge;
-int: numcols = floor(num_cols/vertical_cell_lines)-2*size_empty_edge;
-
+int: numrows = if inner_empty_edge then floor(num_rows/horizontal_cell_lines)-2*size_empty_edge else floor((num_rows-2*size_empty_edge)/horizontal_cell_lines) endif;
+int: numcols = if inner_empty_edge then floor(num_cols/vertical_cell_lines)-2*size_empty_edge else floor((num_cols-2*size_empty_edge)/vertical_cell_lines) endif;
+%int: numrows = floor(num_rows/horizontal_cell_lines)-2*size_empty_edge;
+%int: numcols = floor(num_cols/vertical_cell_lines)-2*size_empty_edge;
 
 %% TODO: add latex indicators for controls 
 %array[1..compound_concentrations] of string: compound_concentration_names;
@@ -1365,7 +1367,7 @@ array[int] of string: letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J
 output ["plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL\n"];
 
 %%% TODO: FIX ME!!!!!! Problem when there are vertical/horizontal cell lines!
-output [if fix(plates[i,j,k]) > 0 then "plate_\(i)," ++   letters[size_empty_edge+j+(numrows+2*size_empty_edge)*(h-1)] ++ if (size_empty_edge+k+(2*size_empty_edge+numcols)*(v-1)) < 10 then "0" else "" endif ++ "\(size_empty_edge+k+(2*size_empty_edge+numcols)*(v-1))," ++ 
+output [if fix(plates[i,j,k]) > 0 then "plate_\(i)," ++   letters[size_empty_edge+j+(numrows+(1+inner_empty_edge)*size_empty_edge)*(h-1)] ++ if (size_empty_edge+k+((1+inner_empty_edge)*size_empty_edge+numcols)*(v-1)) < 10 then "0" else "" endif ++ "\(size_empty_edge+k+((1+inner_empty_edge)*size_empty_edge+numcols)*(v-1))," ++ 
 
 %%%% Compounds %%%%
 
