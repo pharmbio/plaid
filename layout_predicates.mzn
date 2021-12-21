@@ -38,3 +38,6 @@ predicate my_implied_cost_ext(var int:cost, array[int] of var int: x) =
   forall(i in 2..L-2)(c_cost[i+2] <= 1 + c_cost[i-1]) /\
   forall(i in 2..L-2)(c_cost[i+2] - 1 <= c_cost[i-1]);
   
+
+
+
