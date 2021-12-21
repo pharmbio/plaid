@@ -35,6 +35,7 @@ bool: replicates_on_same_plate;
 bool: concentrations_on_different_rows;
 bool: concentrations_on_different_columns;
 bool: force_spread_controls;
+bool: force_spread_concentrations;
 
 %% Information about the layout %%
 int: horizontal_cell_lines;
@@ -119,6 +120,8 @@ constraint assert(compounds==0 \/ min(compound_replicates) > 0,"Invalid datafile
 constraint assert(compounds==0 \/ min(compound_concentrations) > 0,"Invalid datafile: Number of concentrations should be larger than zero.");
 constraint assert((replicates_on_different_plates /\ replicates_on_same_plate) == false,"Invalid datafile: replicates cannot be both on the same plate and on different plates");
 constraint assert(not (num_controls == 1 /\ spread_control[1]==false),"Invalid datafile: There are too many controls of only one kind. This is not allowed at the moment. If you believe this is a mistake, please contact the developers.");
+constraint assert(numrows mod 2 == 0, "Invalid datafile: Currently we only support plate sizes that have an inner area with an even number of rows.");
+constraint assert(numcols mod 2 == 0, "Invalid datafile: Currently we only support plate sizes that have an inner area with an even number of columns." );
 
 
 
@@ -130,6 +133,8 @@ constraint assert(total_wells > 0, "Invalid datafile: the plates cannot be compl
 
 int: inner_plate_size = numcols*numrows;
 
+constraint assert(inner_plate_size>0, "Invalid datafile: There are no wells on the plate!");
+
 constraint assert(min(compound_concentrations++[0]) <= inner_plate_size, "Invalid datafile: Number of concentrations does not fit in one plate. If you think this is a mistake, please contact the development team.");
 
 %% Number of plates needed
@@ -137,6 +142,7 @@ constraint assert(min(compound_concentrations++[0]) <= inner_plate_size, "Invali
 int: numplates = max(ceil(total_wells/inner_plate_size),1);         
               
 force_spread_controls = (ceil(inner_plate_size/9)*numplates >= total_controls) ;
+force_spread_concentrations = (ceil(inner_plate_size/9) >= max_compound_concentrations) ;
 %force_spread_controls = false;
 
 %% Detecting some unsatisfiable cases.
@@ -255,6 +261,25 @@ constraint forall(l in 1..experiments, k in Columns)(count_eq([plates[i,j,k] | i
 
 constraint forall(l in 1..experiments where ((l mod max_compound_concentrations) == 1))(all_equal([experiment_plate[i] | i in l..(l+compound_concentrations[(floor(((l-1)/max_compound_concentrations)) mod compounds)+1]-1)]));
 
+%% TODO: check if other compounds have fewer concentrations and can be spread around more
+%% TODO: change to include replicates
+%constraint if force_spread_concentrations then forall(i in Plates, j in 1..numrows-1, k in 1..numcols-1,l in 1..experiments where ((l mod max_compound_concentrations) == 1)) (1>=among([plates[i,j,k],plates[i,j+1,k],plates[i,j,k+1],plates[i,j+1,k+1]],(l..(l+compound_concentrations[(floor(((l-1)/max_compound_concentrations)) mod compounds)+1]-1)))):: domain endif;
+
+
+constraint if force_spread_concentrations then forall(i in Plates, j in 1..numrows-1, k in 1..numcols-1,l in 1..experiments where ((l mod max_compound_concentrations) == 1)) (
+  let{
+    var 0..1: num_concentrations;
+   } in among(num_concentrations,[plates[i,j,k],plates[i,j+1,k],plates[i,j,k+1],plates[i,j+1,k+1]],(l..(l+compound_concentrations[(floor(((l-1)/max_compound_concentrations)) mod compounds)+1]-1)))) endif;
+
+% constraint forall(i in Plates, j in Rows) (
+%   let{
+%     var int: exprInRow;
+%     constraint exprInRow = among(plates[i,j,..], 1..experiments)::domain; 
+%     %sum([experiment_row[l] == j /\ experiment_plate[l] == i| l in 1..experiments]);
+%   } in exprInRow <= numcols-among([plates[i,j,k] | k in Columns], ({0} union experiments+1..experiments+num_controls*max_control_concentrations)));
+  
+  
+  
 %% A combination with all concentrations must appear on a single plate
 %constraint forall(l in (experiments+1)..experiments where ((l-experiments) mod combination_concentrations == 1))(all_equal([experiment_plate[i] | i in l..(l+combination_concentrations-1)]));
 
@@ -605,7 +630,7 @@ array [Plates,Vertical] of var 0..ceil(inner_plate_size/2): ul_half_plates;
 constraint forall(i in Plates) (among(ul_half_plates[i,upper],plates[i,1..floor(numrows/2),..], 1..experiments));
 constraint forall(i in Plates) (among(ul_half_plates[i,lower],plates[i,floor(numrows/2)+1..numrows,..], 1..experiments));
 
-constraint forall(i in Plates) (sum(e in 1..experiments)(experiment_plate[e] == i /\ experiment_row[e] <= floor(numrows/2)) == ul_half_plates[i,upper]);
+constraint forall(i in Plates) (sum(e in 1..experiments)(experiment_plate[e] == i /\ experiment_row[e] <= (numrows div 2)) == ul_half_plates[i,upper]);
 constraint forall(i in Plates) (sum(e in 1..experiments)(experiment_plate[e] == i /\ experiment_row[e] > floor(numrows/2)) == ul_half_plates[i,lower]);
 
 constraint (sum(e in 1..experiments)(experiment_row[e] in 1..floor(numrows/2)) == sum(i in Plates)(ul_half_plates[i,upper]));
