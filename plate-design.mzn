@@ -13,31 +13,35 @@
 % limitations under the License.
 %
 %
-% Description:  A microplate layout designer
+% Description:  A highly effective microplate layout designer
 %
 % Authors: Maria Andreina FRANCISCO RODRIGUEZ (maria.andreina.francisco@farmbio.uu.se)
 % Version: 1.0
-% Last Revision: September 2021
+% Last Revision: December 2021
 %
 
 include "globals.mzn";
 include "gecode.mzn";
+include "layout_predicates.mzn";
 %include "chuffed.mzn";
  
 
 %%%% Input Data  %%%%
 
 %% Information about constraints %%
-int: horizontal_cell_lines;
-int: vertical_cell_lines;
 bool: allow_empty_wells;
 bool: replicates_on_different_plates;
 bool: replicates_on_same_plate;
 bool: concentrations_on_different_rows;
 bool: concentrations_on_different_columns;
 bool: force_spread_controls;
+bool: force_spread_concentrations;
 
+%% Information about the layout %%
+int: horizontal_cell_lines;
+int: vertical_cell_lines;
 int: size_empty_edge;
+bool: inner_empty_edge = true;
 
 %% Compounds %%
 int: compounds; %% number of drugs/compounds
@@ -48,8 +52,7 @@ int: max_compound_concentrations = max(compound_concentrations++[0]);
 
 array[1..compounds] of string: compound_names;
 
-%% Combinations %%
-%% Deprecated
+%% Combinations (Deprecated) %%
 int: combinations;
 int: combination_concentrations;
 array[1..combinations] of string: combination_names;
@@ -57,7 +60,6 @@ array[1..combination_concentrations] of string: combination_concentration_names;
 
 %% Information about controls %%
 int: num_controls;
-
 array [1..num_controls] of int: control_replicates; 
 array [1..num_controls] of int: control_concentrations;
 int: max_control_concentrations = max(control_concentrations++[0]);
@@ -66,7 +68,7 @@ array[1..num_controls] of string: control_names;
 
 int: total_controls = sum([control_concentrations[i]*control_replicates[i] | i in 1..num_controls]);
 
-%%% Potentially new parameters
+%% Potentially new parameters %%
 bool: balance_controls_inside_plate = true;
 bool: interconnected_plates = true; %(numplates==1); %Makes the problem much harder by connecting the plates
 int: control_slack = 0; %Makes the problem harder/easier by constraining how equally should we distribute controls
@@ -75,28 +77,30 @@ bool: spread_controls = (ceil(inner_plate_size/2)*numplates >= total_controls); 
 %% Which individual controls can be spread more than others?
 array[1..num_controls*max_control_concentrations] of bool: spread_control = [ ceil(inner_plate_size/4)*numplates >= (control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1])) | i in 1..num_controls*max_control_concentrations];
 
-constraint assert(not (num_controls == 1 /\ spread_control[1]==false),"Invalid datafile: There are too many controls of only one kind. This is not allowed at the moment. If you believe this is a mistake, please contact the developers.");
 
 %%% Testing %%%
-
 opt bool: testing;
 bool: debugging = false;
 %bool: enforce = false;
+opt int: swap_search;
+opt bool: sorted_compounds;
 
 
 %% Plate size / number of wells
 int: num_rows;
 int: num_cols;
 
+
 %% TODO: this could be problematic when there are multiple cell lines
-int: numrows = floor(num_rows/horizontal_cell_lines)-2*size_empty_edge;
-int: numcols = floor(num_cols/vertical_cell_lines)-2*size_empty_edge;
+int: numrows = if inner_empty_edge then floor(num_rows/horizontal_cell_lines)-2*size_empty_edge else floor((num_rows-2*size_empty_edge)/horizontal_cell_lines) endif;
+int: numcols = if inner_empty_edge then floor(num_cols/vertical_cell_lines)-2*size_empty_edge else floor((num_cols-2*size_empty_edge)/vertical_cell_lines) endif;
+%int: numrows = floor(num_rows/horizontal_cell_lines)-2*size_empty_edge;
+%int: numcols = floor(num_cols/vertical_cell_lines)-2*size_empty_edge;
 
-
-%% TODO: add latex indicators for combinations and controls 
+%% TODO: add latex indicators for controls 
 %array[1..compound_concentrations] of string: compound_concentration_names;
 
-array[1..compounds,int] of string: compound_concentration_names;
+array[1..compounds,1..max_compound_concentrations] of string: compound_concentration_names;
 
 
 %% FIX ME!
@@ -115,6 +119,9 @@ constraint assert(numcols > 0,"Invalid datafile: Number of columns should be lar
 constraint assert(compounds==0 \/ min(compound_replicates) > 0,"Invalid datafile: Number of replicates should be larger than zero.");
 constraint assert(compounds==0 \/ min(compound_concentrations) > 0,"Invalid datafile: Number of concentrations should be larger than zero.");
 constraint assert((replicates_on_different_plates /\ replicates_on_same_plate) == false,"Invalid datafile: replicates cannot be both on the same plate and on different plates");
+constraint assert(not (num_controls == 1 /\ spread_control[1]==false),"Invalid datafile: There are too many controls of only one kind. This is not allowed at the moment. If you believe this is a mistake, please contact the developers.");
+constraint assert(numrows mod 2 == 0, "Invalid datafile: Currently we only support plate sizes that have an inner area with an even number of rows.");
+constraint assert(numcols mod 2 == 0, "Invalid datafile: Currently we only support plate sizes that have an inner area with an even number of columns." );
 
 
 
@@ -126,6 +133,8 @@ constraint assert(total_wells > 0, "Invalid datafile: the plates cannot be compl
 
 int: inner_plate_size = numcols*numrows;
 
+constraint assert(inner_plate_size>0, "Invalid datafile: There are no wells on the plate!");
+
 constraint assert(min(compound_concentrations++[0]) <= inner_plate_size, "Invalid datafile: Number of concentrations does not fit in one plate. If you think this is a mistake, please contact the development team.");
 
 %% Number of plates needed
@@ -133,6 +142,7 @@ constraint assert(min(compound_concentrations++[0]) <= inner_plate_size, "Invali
 int: numplates = max(ceil(total_wells/inner_plate_size),1);         
               
 force_spread_controls = (ceil(inner_plate_size/9)*numplates >= total_controls) ;
+force_spread_concentrations = (ceil(inner_plate_size/9) >= max_compound_concentrations) ;
 %force_spread_controls = false;
 
 %% Detecting some unsatisfiable cases.
@@ -197,6 +207,7 @@ array [1..experiments] of var {0} union Columns: experiment_column;
 
 
 
+
 constraint global_cardinality(plates,[0]++[ i | i in 1..experiments]++[i | i in experiments+1..experiments]++[ experiments+i | i in 1..num_controls*max_control_concentrations],[emptywells]++[(floor((i-1)/(compounds*max_compound_concentrations))<compound_replicates[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) /\ ((floor((i-1))) mod max_compound_concentrations) < compound_concentrations[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1] | i in 1..experiments]++[1|i in experiments+1..experiments]++[control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1]) | i in 1..num_controls*max_control_concentrations]);
 
 %% Experiments that do not exists are not located in any plate, row, or column.
@@ -250,6 +261,25 @@ constraint forall(l in 1..experiments, k in Columns)(count_eq([plates[i,j,k] | i
 
 constraint forall(l in 1..experiments where ((l mod max_compound_concentrations) == 1))(all_equal([experiment_plate[i] | i in l..(l+compound_concentrations[(floor(((l-1)/max_compound_concentrations)) mod compounds)+1]-1)]));
 
+%% TODO: check if other compounds have fewer concentrations and can be spread around more
+%% TODO: change to include replicates
+%constraint if force_spread_concentrations then forall(i in Plates, j in 1..numrows-1, k in 1..numcols-1,l in 1..experiments where ((l mod max_compound_concentrations) == 1)) (1>=among([plates[i,j,k],plates[i,j+1,k],plates[i,j,k+1],plates[i,j+1,k+1]],(l..(l+compound_concentrations[(floor(((l-1)/max_compound_concentrations)) mod compounds)+1]-1)))):: domain endif;
+
+
+constraint if force_spread_concentrations then forall(i in Plates, j in 1..numrows-1, k in 1..numcols-1,l in 1..experiments where ((l mod max_compound_concentrations) == 1)) (
+  let{
+    var 0..1: num_concentrations;
+   } in among(num_concentrations,[plates[i,j,k],plates[i,j+1,k],plates[i,j,k+1],plates[i,j+1,k+1]],(l..(l+compound_concentrations[(floor(((l-1)/max_compound_concentrations)) mod compounds)+1]-1)))) endif;
+
+% constraint forall(i in Plates, j in Rows) (
+%   let{
+%     var int: exprInRow;
+%     constraint exprInRow = among(plates[i,j,..], 1..experiments)::domain; 
+%     %sum([experiment_row[l] == j /\ experiment_plate[l] == i| l in 1..experiments]);
+%   } in exprInRow <= numcols-among([plates[i,j,k] | k in Columns], ({0} union experiments+1..experiments+num_controls*max_control_concentrations)));
+  
+  
+  
 %% A combination with all concentrations must appear on a single plate
 %constraint forall(l in (experiments+1)..experiments where ((l-experiments) mod combination_concentrations == 1))(all_equal([experiment_plate[i] | i in l..(l+combination_concentrations-1)]));
 
@@ -339,13 +369,19 @@ constraint if concentrations_on_different_rows then (forall(l in 1..compounds) (
 
 
 array [Plates,Rows] of var 0..numplates*numcols: experiments_in_plate_row;
+array [Plates,Columns] of var 0..numplates*numrows: experiments_in_plate_column;
 
 %% Definition of experiments_in_plate_row
 constraint forall(i in Plates, j in Rows)(count(experiment_plate_row[i,..],j,experiments_in_plate_row[i,j]));
 
 constraint forall(i in Plates, j in Rows)(among(experiments_in_plate_row[i,j],plates[i,j,..],1..experiments));
 
+constraint forall(i in Plates, k in Columns)(among(experiments_in_plate_column[i,k],plates[i,..,k],1..experiments));
+
 constraint forall(i in Plates, j in Rows)(experiments_in_plate_row[i,j] + controls_in_plate_row[i,j] == numcols);
+
+constraint forall(i in Plates, j in Rows)(experiments_in_plate_row[i,j] + controls_only_in_plate_row[i,j] <= numcols);
+constraint forall(i in Plates, k in Columns)(experiments_in_plate_column[i,k] + controls_in_plate_column[i,k] == numrows);
 
 constraint if (concentrations_on_different_rows /\ (max_compound_concentrations >= numrows)) then forall(i in Plates, j in Rows, r in 1..compounds*replicates)(
 count(experiment_plate_row[i,1..experiments-max_compound_concentrations*r],j) + count(experiment_plate_row[i,experiments-max_compound_concentrations*r+1..experiments],j) == experiments_in_plate_row[i,j]
@@ -415,6 +451,7 @@ constraint if concentrations_on_different_columns /\ ((numcols mod 2) == 0) then
 %% Right now it looks like it's mostly taking time 
 
 constraint global_cardinality_low_up(experiment_row, [i | i in Rows], [0| i in Rows], [numplates*numcols| i in Rows]);
+constraint global_cardinality_low_up(experiment_column, [i | i in Columns], [0| i in Columns], [numplates*numrows| i in Columns]);   
 
 array [Plates,Rows] of var 0..numcols: controls_in_plate_row;
 array [Plates,Columns] of var 0..numrows: controls_in_plate_column;
@@ -502,11 +539,7 @@ constraint forall(i in Plates, k in Columns) (
 % sum([ experiment_column[l] == k /\ experiment_plate[l] == i| l in 1..experiments])
 (among(plates[i,..,k], 1..experiments)::domain) <= numrows-among([plates[i,j,k] | j in Rows], ({0} union experiments+1..experiments+num_controls*max_control_concentrations)));
 
-
-%% Implied constraint:
-
-                                                                                      
-%%KEEP%% constraint global_cardinality_low_up_closed(experiment_column, [i | i in 2..numcols-1], [0| i in 2..numcols-1], [numplates*(numrows-2)| i in 2..numcols-1]);                                         
+                                      
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -519,11 +552,6 @@ constraint if replicates_on_different_plates then forall(l in 1..compounds) (nva
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Different compound replicas must appear on the same plate
 constraint if replicates_on_same_plate then forall(l in 1..compounds) (all_equal([experiment_plate[(l-1)*max_compound_concentrations + i*compounds*max_compound_concentrations + 1] | i in 0..(compound_replicates[l]-1)])) endif;
-
-
-%% Different combination replicas must appear on different plates (if possible!)
-%% Taking away combinations.
-%constraint forall(l in 0..(combinations-1)) (nvalue(min_plates, [experiment_plate[experiments + l*combination_concentrations + i*combinations*combination_concentrations + 1] | i in 0..(replicates-1)])); 
 
 
 %constraint if try_new then forall(l in 1..compounds) (alldifferent_except_0([experiment_column[(l-1)*max_compound_concentrations + i*compounds*max_compound_concentrations + 1] | i in 0..(compound_replicates[l]-1)])::domain) endif; 
@@ -559,18 +587,21 @@ constraint if concentrations_on_different_columns then forall(l in 1..compounds)
 
 
 int: min_compounds_plate = max(floor((sum([compound_concentrations[i]*compound_replicates[i] | i in 1..compounds]))/inner_plate_size), min(compound_concentrations++[0]) );
+
 constraint global_cardinality_low_up(experiment_plate,[ i | i in Plates],[ min_compounds_plate | i in Plates],[ inner_plate_size | i in Plates]);
 
-
+%% TODO: Think more about this constraint and what happens when there are replicates, etc.
+%% This option is possibly going to make some plans unfeasible (when there are different numbers of replicates, etc).
+constraint if sorted_compounds == true /\ max(compound_replicates)<=1 then sorted_except_0(experiment_plate,numplates,at_least_compounds,at_most_compounds) endif;
 
 
 % Balancing compounds between plates (and knowing that there must be some sort of balance!)
 %% FIX ME!
 %% I want to remove these constraints but I need to make other stronger first
-int: at_least_compounds = min(compound_concentrations++[0])*floor(sum(compound_replicates)/numplates);
+int: at_least_compounds = min(compound_concentrations++[infinity])*(sum(compound_replicates) div numplates);
 int: at_most_compounds = max_compound_concentrations*ceil(sum(compound_replicates)/numplates);
 
-constraint global_cardinality_low_up([experiment_plate[i] | i in 1..experiments] ,[ i | i in Plates],[ at_least_compounds | i in Plates],[ at_most_compounds | i in Plates]);
+constraint if at_least_compounds <= at_most_compounds then global_cardinality_low_up([experiment_plate[i] | i in 1..experiments] ,[ i | i in Plates],[ at_least_compounds | i in Plates],[ at_most_compounds | i in Plates]) endif;
 
 
 
@@ -599,7 +630,7 @@ array [Plates,Vertical] of var 0..ceil(inner_plate_size/2): ul_half_plates;
 constraint forall(i in Plates) (among(ul_half_plates[i,upper],plates[i,1..floor(numrows/2),..], 1..experiments));
 constraint forall(i in Plates) (among(ul_half_plates[i,lower],plates[i,floor(numrows/2)+1..numrows,..], 1..experiments));
 
-constraint forall(i in Plates) (sum(e in 1..experiments)(experiment_plate[e] == i /\ experiment_row[e] <= floor(numrows/2)) == ul_half_plates[i,upper]);
+constraint forall(i in Plates) (sum(e in 1..experiments)(experiment_plate[e] == i /\ experiment_row[e] <= (numrows div 2)) == ul_half_plates[i,upper]);
 constraint forall(i in Plates) (sum(e in 1..experiments)(experiment_plate[e] == i /\ experiment_row[e] > floor(numrows/2)) == ul_half_plates[i,lower]);
 
 constraint (sum(e in 1..experiments)(experiment_row[e] in 1..floor(numrows/2)) == sum(i in Plates)(ul_half_plates[i,upper]));
@@ -743,9 +774,8 @@ constraint forall(i in Plates, d in 1..num_controls*max_control_concentrations)(
 constraint forall(i in 1..num_controls*max_control_concentrations)(sum([controls_ul_plates[p,v,i] | v in Vertical, p in Plates]) == control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1]) );
 
 
-%% NOW :(
-
-%constraint forall(i in Plates, v in Vertical)(sum(controls_ul_plates[i,v,..]) == sum_controls_ul_plates[i,v]);
+% Implied constraint:
+constraint forall(i in Plates, v in Vertical)(sum(controls_ul_plates[i,v,..]) == sum_controls_ul_plates[i,v]);
 
 %% Half of the total number of controls on each upper/lower half of the plate.
 constraint forall(i in Plates)(abs(sum(controls_ul_plates[i,upper,..]) - sum(controls_ul_plates[i,lower,..])) <= 1);
@@ -803,6 +833,10 @@ constraint if interconnected_plates then forall(j in Rows) (controls_in_row[j] <
 
 constraint if interconnected_plates then forall(j in Rows) (controls_in_row[j] >= floor((total_controls+emptywells)/numrows) ) endif;
 
+constraint forall(i in Plates, j in Rows) (controls_only_in_plate_row[i,j] <= ceil(ceil(total_controls/numplates)/numrows) ) ;
+
+constraint forall(i in Plates, j in Rows) (controls_only_in_plate_row[i,j] >= ((total_controls div numplates) div numrows) ) ;
+
 
 %%% Controls per row per plate %%%
 %% Relaxing this constraint a bit...
@@ -835,6 +869,10 @@ constraint if interconnected_plates then forall(i in Plates, j in Rows) (control
 constraint if interconnected_plates then forall(k in Columns) (controls_in_column[k] <= ceil((total_controls+emptywells)/numcols) ) endif;
 
 constraint if interconnected_plates then forall(k in Columns) (controls_in_column[k] >= floor((total_controls+emptywells)/numcols) ) endif;
+
+constraint forall(i in Plates, k in Columns) (controls_only_in_plate_column[i,k] <= ceil(ceil(total_controls / numplates) / numcols) );
+
+constraint forall(i in Plates, k in Columns) (controls_only_in_plate_column[i,k] >= ((total_controls div numplates) div numcols) );
 
 
 %%% Attempting to balance controls inside each row
@@ -960,45 +998,38 @@ constraint alldifferent_except(plates, {0} union experiments+1..experiments+num_
 %% TODO: RELAX for the case with too many replicates of the same control
 constraint if (min(spread_control++[1])>0) then forall(i in Plates, j in 1..numrows-1, k in 1..numcols-1) (alldifferent_except_0([plates[i,j,k],plates[i,j+1,k],plates[i,j,k+1],plates[i,j+1,k+1]])):: domain endif;
 
-array [Plates,Rows,Columns] of var bool: controls_layout; 
+array [Plates,Rows,Columns] of var 0..1: controls_layout; 
 
 constraint forall(i in Plates, j in Rows, k in Columns)(controls_layout[i,j,k] == ((plates[i,j,k] > experiments)) );
 
-constraint if spread_controls then forall(i in Plates, j in Rows)(regular(controls_layout[i,j,..], "(0|1)(0|01)*")::domain) endif;
 
-constraint if spread_controls then forall(i in Plates, k in Columns)(regular(controls_layout[i,..,k], "(0|1)(0|01)*")::domain) endif;
+constraint if spread_controls then forall(i in Plates, j in Rows)(regular(controls_layout[i,j,..], "(0|(1 0))* (1?)")::domain) endif;
+
+constraint if spread_controls then forall(i in Plates, k in Columns)(regular(controls_layout[i,..,k], "(0|(1 0))* (1?)")::domain) endif;
+
+constraint if force_spread_controls then forall(i in Plates, j in Rows)(regular(controls_layout[i,j,..], "(0|(1 0 0))* (1|(1 0))?")::domain) endif;
+
+constraint if force_spread_controls then forall(i in Plates, k in Columns)(regular(controls_layout[i,..,k], "(0|(1 0 0))* (1|(1 0))?")::domain) endif;
+
 
 constraint if spread_controls then forall(i in Plates, j in Rows)(my_implied_cost(controls_only_in_plate_row[i,j],controls_layout[i,j,..])::domain) endif;
 
 constraint if spread_controls then forall(i in Plates, k in Columns)(my_implied_cost(controls_only_in_plate_column[i,k],controls_layout[i,..,k])::domain) endif;
 
+constraint if force_spread_controls then forall(i in Plates, j in Rows)(my_implied_cost_ext(controls_only_in_plate_row[i,j],controls_layout[i,j,..])::domain) endif;
+
+constraint if force_spread_controls then forall(i in Plates, k in Columns)(my_implied_cost_ext(controls_only_in_plate_column[i,k],controls_layout[i,..,k])::domain) endif;
+
+
 constraint forall(i in Plates) (sum_controls_ul_plates[i,upper] == sum(controls_layout[i,1..(numrows div 2),..]));
 constraint forall(i in Plates) (sum_controls_ul_plates[i,lower] == sum(controls_layout[i,(numrows div 2)+1..numrows,..]));
 
 
-predicate my_implied_cost(var int:cost, array[int] of var int: x) = 
-  let {
-    int: L = length(x);
-    array[1..L] of var int: c_cost;
-  } in
-  c_cost[1] = x[1] /\
-  c_cost[2] <= 1 /\
-  c_cost[L] = cost /\
-  forall(i in 1..L-1)(x[i+1] = c_cost[i+1] - c_cost[i] ) /\
-  forall(i in 1..L-1)(c_cost[i+1] = x[i+1] + c_cost[i] ) /\
-  forall(i in 1..L-1)(c_cost[i] <= c_cost[i+1]) /\
-  forall(i in 2..L-1)(c_cost[i+1] <= 1 + c_cost[i-1]);
+constraint forall(i in Plates, k in Columns) (global_cardinality(controls_layout[i,..,k],
+                             [0,1],
+                             [numrows-controls_only_in_plate_column[i,k],controls_only_in_plate_column[i,k]]));
 
-
-%function array[int] of int: stupidcost(int: length, int: cost)
-
-%                        int: S,
-%                        array [int,int] of int: d,
-%                        int: q0,
-%                        set of int: F,
-%                        array [int,int] of int: c,
-%                        var int: C)                       
-                
+             
 
 constraint forall(ctr in 1..num_controls*max_control_concentrations)( if spread_control[ctr] then 
     forall(i in Plates, j in 2..numrows-1, k in 2..numcols-1)(plates[i,j,k] == experiments+ctr -> 
@@ -1078,25 +1109,6 @@ constraint if spread_controls then forall(i in Plates)(plates[i,numrows,numcols]
 %% TODO: Add spread_controls contraint in borders!
 
 
-constraint if force_spread_controls then forall(i in Plates, j in 3..numrows-2, k in 3..numcols-2)(plates[i,j,k] > experiments -> 
-            plates[i,j-2,k-2]!= plates[i,j,k] /\ 
-            plates[i,j-2,k-1]  != plates[i,j,k] /\
-            plates[i,j-2,k]  != plates[i,j,k] /\
-            plates[i,j-2,k+1]  != plates[i,j,k] /\
-            plates[i,j-2,k+2]!= plates[i,j,k] /\
-            plates[i,j-1,k-2]  != plates[i,j,k] /\
-            plates[i,j-1,k+2]  != plates[i,j,k] /\
-            plates[i,j,k-2]  != plates[i,j,k] /\
-            plates[i,j,k+2]  != plates[i,j,k] /\
-            plates[i,j+1,k-2]  != plates[i,j,k] /\
-            plates[i,j+1,k+2]  != plates[i,j,k] /\
-            plates[i,j+2,k-2]!= plates[i,j,k] /\
-            plates[i,j+2,k-1]  != plates[i,j,k] /\
-            plates[i,j+2,k]  != plates[i,j,k] /\
-            plates[i,j+2,k+1]  != plates[i,j,k] /\
-            plates[i,j+2,k+2]!= plates[i,j,k]
-            ) endif;
-
 % j=1
 constraint forall(i in Plates, k in 2..numcols-1)(plates[i,1,k] > experiments -> 
            plates[i,1,k-1]  != plates[i,1,k] /\
@@ -1174,7 +1186,7 @@ constraint if force_spread_controls then forall(i in Plates, j in 3..numrows-2, 
             plates[i,j+2,k+2] <= experiments
             ) endif;
                       
-
+            
 constraint if force_spread_controls then forall(i in Plates, j = 2, k in 3..numcols-2)(plates[i,j,k] > experiments -> 
             plates[i,j,k-2]  <= experiments /\
             plates[i,j,k+2]  <= experiments /\
@@ -1222,7 +1234,8 @@ constraint if force_spread_controls then forall(i in Plates, j = numrows, k in 3
             plates[i,j,k-2]  <= experiments /\
             plates[i,j,k+2]  <= experiments
             ) endif;             
-                                                                               
+                    
+                                                                                                                                          
 %%%% Find a solution! %%%%
 
 array [Plates,1..experiments] of var {0} union Rows: experiment_plate_row;
@@ -1231,30 +1244,27 @@ constraint forall(l in 1..experiments)((experiment_plate[l] > 0) -> (experiment_
 
 constraint forall(i in Plates, l in 1..experiments)((experiment_plate[l] != i) -> (experiment_plate_row[i,l] == 0));
 
+
 %array [1..numplates*2] of ann: search_order = [if (i mod 2)==1 then int_search(experiment_plate_row[(i+1)div 2,..], first_fail, indomain_random) else int_search(plates[i div 2,..,..], random, indomain_max) endif | i in 1..numplates*2];
  
 %array [1..numplates*2] of ann: search_order = [if (i mod 2)==1 then int_search(experiment_plate_row[(i+1)div 2,..], first_fail, indomain_random) else int_search(plates[i div 2,..,..], random, indomain_max) endif | i in 1..numplates*2];
 
-array [1..numplates*3] of ann: search_order = [if (i mod 3)==1 then int_search(experiment_plate_row[(i+2)div 3,..], first_fail, indomain_random) elseif (i mod 3) == 2 then bool_search(controls_layout[(i+1)div 3,..,..], random, indomain_max) else int_search(plates[i div 3,..,..], first_fail, indomain_random) endif | i in 1..numplates*3]; 
+%% Strategy 1: good for example04 and example11
+array [1..numplates*3] of ann: search_order_a = [if (i mod 3)==1 then int_search(experiment_plate_row[(i+2)div 3,..], first_fail, indomain_random) elseif (i mod 3) == 2 then int_search(controls_layout[(i+1)div 3,..,..], random, indomain_max) else int_search(plates[i div 3,..,..], first_fail, indomain_random) endif | i in 1..numplates*3]; 
 
+%% The one I normally use?? 
+%array [1..numplates*3] of ann: search_order = [if (i mod 3)==2 then int_search(experiment_plate_row[(i+2)div 3,..], first_fail, indomain_random) elseif (i mod 3) == 1 then int_search(controls_layout[(i+2)div 3,..,..], random, indomain_max) else int_search(plates[(i+2) div 3,..,..], first_fail, indomain_random) endif | i in 1..numplates*3]; 
 
-%solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(plates, random, indomain_max)]) satisfy; 
-
-%% Best for Gecode
-%solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(experiment_row, first_fail, indomain_random), int_search(plates, first_fail, indomain_random)]) satisfy; 
-
-%solve::seq_search([int_search(experiment_plate, first_fail, indomain_random)]++[int_search(plates[i,..,..], random, indomain_max) | i in Plates])
-%solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(experiment_plate_row, first_fail, indomain_random)]++[ 
-%int_search(plates[i,..,..], first_fail, indomain_random) | i in Plates]) 
-
-%solve::seq_search([int_search(experiment_plate, first_fail, indomain_random)]++[
-%int_search(experiment_plate_row[1,..], first_fail, indomain_random),int_search(plates[1,..,..], random, indomain_max)]++[ 
-%int_search(experiment_plate_row[2,..], first_fail, indomain_random),int_search(plates[2,..,..], random, indomain_max)])
+%% Strategy 2:
+array [1..numplates*2] of ann: search_order_b = [if (i mod 2) == 1 then int_search(controls_layout[(i+1)div 2,..,..], random, indomain_max) else int_search(plates[(i+1) div 2,..,..], first_fail, indomain_random) endif | i in 1..numplates*2]; 
 
 
 
-solve::seq_search([int_search(experiment_plate, first_fail, indomain_random)]++
-search_order)
+%solve::seq_search([int_search(experiment_plate, first_fail, indomain_random)]++
+solve::seq_search((if sorted_compounds == true then [int_search(experiment_plate, first_fail, indomain_min)] else [int_search(experiment_plate, first_fail, indomain_random)] endif)++
+(if (swap_search mod 2 == 0) then search_order_b else search_order_a endif))
+%[int_search(controls_layout, random, indomain_max), %int_search(experiment_plate_row, first_fail, indomain_random), 
+%int_search(plates, first_fail, indomain_random)]) 
      :: restart_geometric(1.1,5*experiments)
     satisfy ; 
 
@@ -1292,8 +1302,6 @@ search_order)
 
 
 
-%%KEEP%% solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(experiment_row, first_fail, indomain_random), int_search(experiment_column, random, indomain_random), int_search(plates, random, indomain_max)]) satisfy; 
-
 %solve::seq_search([int_search(experiment_plate, first_fail, indomain_random), int_search(experiment_row, first_fail, indomain_random), int_search(plates, random, indomain_max)]) satisfy; 
 
 
@@ -1307,6 +1315,10 @@ output [if testing \/ debugging then "\(numplates) plates\n" else "" endif];
 output [if debugging /\ (emptywells>0) then "warning: there are \(emptywells) empty wells. Consider using them as controls.\n\n" else "" endif];
 
 output [if debugging then "Spreading controls... \(spread_control) ... \(min(spread_control++[1])>0)\n" else "" endif];
+
+output [if debugging then "Force spread controls... \(force_spread_controls)\n" else "" endif];
+
+output [if debugging then "Random value... \(normal(0,1))\n" else "" endif];
 
 output [if debugging then "Plate 1:\n" else "" endif];
          
@@ -1325,7 +1337,6 @@ output [if debugging then if fix(plates[i,j,k]) == 0  then "  ."
         elseif fix(plates[i,j,k]) == (experiments+11) then "  $" %% other
         elseif fix(plates[i,j,k]) ==  (experiments+12) then "  X" %% other      
         elseif fix(plates[i,j,k]) >  (experiments+12) then "  Y" %% other        
-        %else show_int(3,plates[i,j,k]) endif ++
         else "   " endif ++
         %% Adding lines and headings %%
         if j== numrows /\ k == numcols /\ i<numplates then "\n\n Plate \(i+1):\n" 
@@ -1343,8 +1354,6 @@ output [if debugging then "\nControls' layout:\n" else "" endif, if debugging th
 output [if debugging then "\nExperiment's row:\n" else "" endif, if debugging then show(experiment_row) else "" endif];
 
 output [if debugging then "\nExperiment's row (per plate):\n" else "" endif, if debugging then show(experiments_in_plate_row) else "" endif];
-
- %output ["\nExperiment's column:\n", show(experiment_column)];
 
 output [if debugging then "\nControls per row:\n" else "" endif, if debugging then show(controls_in_row) else "" endif];
 
@@ -1383,32 +1392,19 @@ array[int] of string: letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J
 output ["plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL\n"];
 
 %%% TODO: FIX ME!!!!!! Problem when there are vertical/horizontal cell lines!
-output [if fix(plates[i,j,k]) > 0 then "plate_\(i)," ++   letters[size_empty_edge+j+(numrows+2*size_empty_edge)*(h-1)] ++ if (size_empty_edge+k+(2*size_empty_edge+numcols)*(v-1)) < 10 then "0" else "" endif ++ "\(size_empty_edge+k+(2*size_empty_edge+numcols)*(v-1))," ++ 
+output [if fix(plates[i,j,k]) > 0 then "plate_\(i)," ++   letters[size_empty_edge+j+(numrows+(1+inner_empty_edge)*size_empty_edge)*(h-1)] ++ if (size_empty_edge+k+((1+inner_empty_edge)*size_empty_edge+numcols)*(v-1)) < 10 then "0" else "" endif ++ "\(size_empty_edge+k+((1+inner_empty_edge)*size_empty_edge+numcols)*(v-1))," ++ 
 
 %%%% Compounds %%%%
 
-if fix(plates[i,j,k]) <= experiments then compound_names[(floor((fix(plates[i,j,k])-1)/max_compound_concentrations) mod compounds)+1] 
-++ "," ++ compound_concentration_names[(floor((fix(plates[i,j,k])-1)/max_compound_concentrations) mod compounds)+1,(((fix(plates[i,j,k])-1)) mod max_compound_concentrations)+1] ++ "," ++
+if fix(plates[i,j,k]) <= experiments then compound_names[(((fix(plates[i,j,k])-1) mod (compounds*max_compound_concentrations)) div max_compound_concentrations)+1] 
+++ "," ++ compound_concentration_names[(((fix(plates[i,j,k])-1) mod (compounds*max_compound_concentrations)) div max_compound_concentrations)+1,(((fix(plates[i,j,k])-1) mod (compounds*max_compound_concentrations)) mod max_compound_concentrations)+1] ++ "," ++
 
 compound_names[(floor(((fix(plates[i,j,k])-1)/max_compound_concentrations)) mod compounds)+1] ++ "_" ++ compound_concentration_names[(floor(((fix(plates[i,j,k])-1)/max_compound_concentrations)) mod compounds)+1,((floor((fix(plates[i,j,k])-1))) mod max_compound_concentrations)+1]
 
-elseif fix(plates[i,j,k]) <= experiments then
-combination_names[floor(((fix(plates[i,j,k])-experiments-1)/(replicates*combination_concentrations)))+1] ++
-"," ++ combination_concentration_names[(((fix(plates[i,j,k])-experiments-1)) mod combination_concentrations)+1] ++ "," ++
-
-
-%% Latex name of the combination
-%compound_concentration_indicators[((floor((fix(plates[i,j,k])-1))) mod compound_concentrations)+1] ++ "{" ++ compound_names[floor(((fix(plates[i,j,k])-1)/(replicates*compound_concentrations)))+1] ++ "}"
-
-%"{"++combination_names[floor(((fix(plates[i,j,k])-experiments-1)/(replicates*combination_concentrations)))+1]++"}"
-
-combination_names[floor(((fix(plates[i,j,k])-experiments-1)/(replicates*combination_concentrations)))+1]++"_"++combination_concentration_names[(((fix(plates[i,j,k])-experiments-1)) mod combination_concentrations)+1]
 
 %%%% Controls %%%%
-%% 
-%control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1])
 
-elseif fix(plates[i,j,k]) <= experiments + num_controls*max_control_concentrations then
+else
 %control_names[((fix(plates[i,j,k])-experiments-1) mod num_controls)+1] ++ "," ++  
 control_names[floor((fix(plates[i,j,k])-experiments-1)/max_control_concentrations)+1] ++ "," ++  
 %% control concentration
@@ -1417,25 +1413,11 @@ control_names[floor((fix(plates[i,j,k])-experiments-1)/max_control_concentration
 control_concentration_names[floor((fix(plates[i,j,k])-experiments-1)/max_control_concentrations)+1,((fix(plates[i,j,k])-experiments-1) mod max_control_concentrations)+1] 
 
 ++ "," ++ 
-%% Latex name of the control. Right now it's the same name
+%% Latex name of the control. Right now it's the same as the name
 control_names[floor((fix(plates[i,j,k])-experiments-1)/max_control_concentrations)+1] ++ "_" ++ control_concentration_names[floor((fix(plates[i,j,k])-experiments-1)/max_control_concentrations)+1,((fix(plates[i,j,k])-experiments-1) mod max_control_concentrations)+1]  
-
-%% Blanks
-else 
-
-"blank" ++ "," ++  
-%% blank concentration
-
-"" 
-
-++ "," ++ 
-%% Latex name of the control. Right now it's the same name
-"blank"  
-
 
 endif 
 
-% ++ "," ++ compound_names[floor(((fix(plates[i,j,k])-1)/(replicates*concentrations)))+1] ++ "-" ++ concentration_names[((floor((fix(plates[i,j,k])-1)/(replicates))) mod concentrations)+1] 
 ++ "\n" else "" endif|
         i in Plates, j in Rows, k in Columns, v in 1..vertical_cell_lines, h in 1..horizontal_cell_lines];       
          
