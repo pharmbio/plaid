@@ -1,0 +1,54 @@
+%%% Exp_DoseResponse conditions	%%%
+%% Description: Very small test.
+%% Produces 4 plates.
+%% 2020/Nov/17: it takes about 299msec
+%% 2021/Mar/04: it takes about 383msec
+%% 2021/Apr/22: It takes about 342msec (with interconnected_plates = false)
+
+%% Plate dimentions: (this is a 96-well plate)
+num_rows = 4; %% height
+num_cols = 6; %% width
+
+horizontal_cell_lines = 1;
+vertical_cell_lines = 1;
+
+allow_empty_wells = false;
+size_empty_edge = 1;
+
+% New and used!
+concentrations_on_different_rows = true;
+concentrations_on_different_columns = true;
+
+% New and unused! (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
+replicates_on_different_plates = true;
+replicates_on_same_plate = false;
+
+
+%%% Compounds %%%
+compounds = 5; %% number of drugs/compounds
+compound_replicates	 = [2,2,2,2,2];
+compound_concentrations	 = [2,2,2,2,2];
+
+compound_names = ["comp\(i)" | i in 1..compounds];
+
+compound_concentration_names = array2d(1..compounds, 1..max(compound_concentrations),["comp\(ceil(i/max(compound_concentrations)))-conc\((i mod max(compound_concentrations)) + 1)" | i in 1..compounds*max(compound_concentrations)]);   
+
+compound_concentration_indicators = ["",""]; 
+
+
+%%% Combinations %%%
+combinations = 	0;
+combination_names = [];
+combination_concentration_names = [];
+combination_concentrations = 0;
+
+
+%%% Controls %%%
+num_controls = 4;
+control_replicates = [6,2,2,2];
+control_concentrations = [1,1,1,1];
+control_names = ["pos","neg","blank","dmso"];
+control_concentration_names =  array2d(1..num_controls, 1..1,["cont\(ceil(i/max(control_concentrations)))-conc\(((i-1) mod max(control_concentrations)) + 1)" | i in 1..num_controls*max(control_concentrations)]);
+
+
+  
