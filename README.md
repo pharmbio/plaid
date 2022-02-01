@@ -64,7 +64,7 @@ highly customizable.
 * Clone this repo OR download plate-design.mzn and empty-file.dzn.
 * Fill in the specific details of your experiment in a
 empty-file.dzn. Alternatively, you can download and modify any of the example .dzn
-files. (TODO: add an example input file in JSON)
+files in /regression-tests. (TODO: add an example input file in JSON)
 
 
 <a name="minizinc-ide"></a>
