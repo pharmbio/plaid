@@ -1,29 +1,35 @@
-# PLAID
+<p align="center">
+<img width="60%" height="60%" src="https://github.com/pharmbio/plaid/blob/main/images/plaid-logo.png?raw=true">
+</p>
 
-**PLAID** (Plate Layouts using Artificial Intelligence Design) is a flexible
-constraint-programming model representing the Plate Layout Design
-problem. **PLAID** was developed with the goal of helping
-researchers plan well-designed experiments by creating a robust
-microplate layout and thus reducing the rate of (partial) microplate
-rejection.<sup>[1](#RefModRef2020)</sup>
+# PLAID: Plate Layouts using Artificial Intelligence Design
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+**PLAID** is a flexible
+constraint-programming model for creating highly-effective microplate
+layouts.
+**PLAID** was developed with the goal of helping
+researchers plan well-designed experiments by creating robust
+microplate layouts<sup>[1](#RefModRef2020)</sup> and thus improving
+the quality of the data obtained from an assay.
 
 **PLAID**  is easy and straightforward to use. The current
-model guarantees the following constraints:
+model allows:
 
-* The outermost rows and columns can be left empty in order to reduce
-errors due to the edge effect.
+* Choosing how many outermost rows and columns should be left empty in
+order to reduce errors due to the edge effect.
 * For each compound or combination thereof:
   - all concentration levels of a given replica appear on the same
   plate.
-  - each concentration level appears on a different row and column.
-* If possible, the replicated compounds and combinations appear on a
+  - each concentration level can be constrained to appear on a different row and column.
+* The replicated compounds and combinations can be constrained to appear on the same plate or a
 different plate.
 * For each type of control and concentration, the difference in number
 between plates is at most 1.
 * Controls of the same kind are separated by at least 1 well in any
 direction.
-* If empty wells are allowed (other than those used to reduce the edge
-effect), they are placed as close to the border as possible.
+* Empty wells are balanced across the plate together with controls.
 
 Using **PLAID** does not require any programming knowledge.
 Users just need to write down the necessary information such as number
