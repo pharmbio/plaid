@@ -55,6 +55,7 @@ highly customizable.
 * [Contact](#contact)
 * [Citation](#citation)
 * [References](#references)
+* [License](#license)
 
 
 <a name="installation"></a>
@@ -141,3 +142,12 @@ Berlin, Heidelberg (2007)
 
 <a name="RefGecode">3</a>: Gecode Team: Gecode: Generic constraint development environment
 (2019), available from http://www.gecode.org
+
+
+
+<a name="license"></a>
+## License
+
+PLAID has an Apache 2.0 LICENSE. The PLAID team
+accepts no responsibility or liability for the use of PLAID or any
+direct or indirect damages arising out of its use.
