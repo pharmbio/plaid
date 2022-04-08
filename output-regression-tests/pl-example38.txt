@@ -1,0 +1,5 @@
+MiniZinc: evaluation error: 
+  /Users/andreina/Documents/GitHub/multiplate-designer/plate-design.mzn:125:
+  in call 'assert'
+  Assertion failed: Invalid datafile: Currently we only support plate sizes that have an inner area with an even number of columns.
+
