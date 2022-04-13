@@ -7,8 +7,8 @@ import seaborn as sns
 
 from sklearn.metrics import r2_score
 
-import utilities as util
-import disturbances as dt
+import libraries.utilities as util
+import libraries.disturbances as dt
 
 # Function taken from https://gist.github.com/yannabraham/5f210fed773785d8b638
 def ll4(x,b,c,d,e):

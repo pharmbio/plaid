@@ -1,17 +1,18 @@
 import matplotlib.pyplot as plt
-import seaborn as sb
+import seaborn as sns
 import numpy as np
+import pandas as pd
 import random
 import os
 import re
-from statannotations.Annotator import Annotator # adds p-values to plots
+from statannotations.Annotator import Annotator # to add p-values to plots
 
 
 def plot_plate(plate_df, title="", mask=None, filename=None, vmin=None, vmax=None):
     fig, ax = plt.subplots(figsize=(15, 8))
     ax.xaxis.tick_top()
-    plt.title(title, fontsize = 15) # title with fontsize 20
-    sb.heatmap(plate_df,linewidth=0.3,square=True,mask=mask,vmin=vmin,vmax=vmax)
+    plt.title(title, fontsize = 15) 
+    sns.heatmap(plate_df,linewidth=0.3,square=True,mask=mask,vmin=vmin,vmax=vmax)
     plt.show()
     
     if filename != None:
