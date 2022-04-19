@@ -102,14 +102,27 @@ Department of Pharmaceutical Biosciences, Uppsala University, Sweden.
 
 Got ideas for improvement? We would love to hear about your suggestions!
 
+
+<a name="publications"></a>
+## Publications
+M. A. Francisco Rodríguez, and O. Spjuth. *A Constraint
+Programming Approach to Microplate Layout Design* In: J. Espasa and N.
+Dang (editors), Proceedings of ModRef 2020, the 19th International
+Workshop on Constraint Modelling and Reformulation, held at CP 2020,
+September 2020.
+[[PDF](https://modref.github.io/papers/ModRef2020_A%20Constraint%20Programming%20Approach%20to%20Microplate%20Layout%20Design.pdf)]
+[[Slides](https://modref.github.io/slides/ModRef2020_Slides_A%20Constraint%20Programming%20Approach%20to%20Microplate%20Layout%20Design.pdf)]
+[[Video](https://www.youtube.com/watch?v=naddH2TQIjE&ab_channel=CP2020)]
+
+
 <a name="citation"></a>
 ## Citation
 
-Our ModRef2020 extended abstract can be used to cite this project.
+Our bioRxiv preprint can be used to cite this project.
 
-"M. A. Francisco Rodríguez, and O. Spjuth. *A Constraint Programming Approach to Microplate Layout Design* In: J. Espasa and N.
-Dang (editors), Proceedings of ModRef 2020, the 19th International
-Workshop on Constraint Modelling and Reformulation, held at CP 2020, September 2020."
+"M. A. Francisco Rodríguez, J. Carreras Puigvert, and
+O. Spjuth. *Designing Microplate Layouts Using Artificial
+Intelligence* April, 2022. DOI: 10.1101/2022.03.31.486595" [[PDF](https://doi.org/10.1101/2022.03.31.486595)]
 
 
 
