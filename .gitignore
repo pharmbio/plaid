@@ -1,0 +1,4 @@
+
+simulations/.ipynb_checkpoints/*
+simulations/*/.ipynb_checkpoints/*
+*.pyc
