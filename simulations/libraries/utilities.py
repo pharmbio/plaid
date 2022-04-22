@@ -8,14 +8,14 @@ import re
 from statannotations.Annotator import Annotator # to add p-values to plots
 
 
-def plot_plate(plate_df, title="", mask=None, filename=None, vmin=None, vmax=None):
-    fig, ax = plt.subplots(figsize=(15, 8))
+def plot_plate(plate_array, title="", mask=None, filename=None, vmin=None, vmax=None):
+    fig, ax = plt.subplots(figsize=(11, 7))
     ax.xaxis.tick_top()
     plt.title(title, fontsize = 15) 
-    sns.heatmap(plate_df,linewidth=0.3,square=True,mask=mask,vmin=vmin,vmax=vmax)
+    sns.heatmap(plate_array,linewidth=0.3,square=True,mask=mask,vmin=vmin,vmax=vmax)
     plt.show()
     
-    if filename != None:
+    if filename:
         fig.savefig(filename,bbox_inches='tight')
     
     
@@ -293,18 +293,97 @@ def check_duplicated_layouts(layout_dir = 'screening_manual_layouts/'):
     return duplicates
 
 
-def plot_row_well_series(plate,layout,neg_control = -1,pos_control = -1):
-    pass
+
+
+
+def plot_well_series(plate_array, norm_plate, layout, neg_control_id, pos_control_id,order=0, vmin=None, vmax=None, filename=None):    
+    ''' Creates the well series plots used for the PLAID bioseminar presentation
     
-    #done
+    Args:
+        plate_array: np array containing the raw data from the experiments
+        norm_plate: np array containing the corrected/normalized data from the experiments
+        layout: an np array containing the layout used in plate_array
+        neg_control_id: id (number) of the negative controls such that if layout[i][j] == neg_control_id then the i,j well 
+            contains a negative control
+        norm_function: function used to normalize the plate, for example nrm.normalize_plate_lowess_2d
+    '''
+    
+    num_rows, num_columns = layout.shape
+    
+    ### Reformat original input data
+    plate_df = pd.DataFrame(plate_array)
+    
+    intensity_df = plate_df.stack().reset_index()
+    intensity_df.columns = ["Rows","Columns","Intensity"]
+    
+    types_df = pd.DataFrame(layout).stack().reset_index()
+    types_df.columns = ["Rows","Columns","Type"]
+    
+    combined_df = pd.merge(intensity_df, types_df,  how='left', on=['Rows','Columns'])
+    combined_df['Rows'] += 1
+    combined_df['Columns'] += 1
     
     
-def plot_column_well_series(plate,layout,neg_control = -1,pos_control = -1):
-    pass
+    ### Reformat normalized/corrected plate
+    n_plate_df = pd.DataFrame(norm_plate)
+    
+    n_intensity_df = n_plate_df.stack().reset_index()
+    n_intensity_df.columns = ["Rows","Columns","Intensity"]
+    
+    n_combined_df = pd.merge(n_intensity_df, types_df,  how='left', on=['Rows','Columns'])
+    n_combined_df['Rows'] += 1
+    n_combined_df['Columns'] += 1
+    
+    
+    ### Plot heatmap before normalization
+    unstack_df = combined_df[["Rows","Columns","Intensity"]].copy()
+    unstacked_df = pd.pivot_table(unstack_df, values='Intensity', index=['Rows'],columns=['Columns'], aggfunc=np.sum)
+
+    #if filename:
+     #   plot_plate(unstacked_df, title="Input",filename=filename+'heatmap-before')
+    #else:
+     #   plot_plate(unstacked_df, title="Input")
+    
+    
+    ### Plot heatmap after normalization
+    unstack_adjusted_df = n_combined_df[["Rows","Columns","Intensity"]].copy()
+    unstacked_adjusted_df = pd.pivot_table(unstack_adjusted_df, values='Intensity', index=['Rows'],columns=['Columns'], aggfunc=np.sum)
+    
+  #  if filename:
+   #     plot_plate(unstacked_adjusted_df, title="Normalized",vmin=vmin,vmax=vmax,filename=filename+'heatmap-after')
+    #else:
+     #   plot_plate(unstacked_adjusted_df, title="Normalized",vmin=vmin,vmax=vmax)
+    
+    
+    ### Plotting well series with original and normalized data
+    fig, ax = plt.subplots(figsize=(7,5))
+    
+    ax.set(xlim=(0,num_columns+1))
+    
+    ## Add all the samples in the original data (except controls)
+    ax = sns.regplot(data=combined_df[(combined_df.Type!=pos_control_id) & (combined_df.Type!=neg_control_id)], x="Columns", y="Intensity", x_jitter=0.3, fit_reg=False, scatter_kws={"color":"orange","alpha":0.3})
+    
+    ## Positive controls from the raw/original data
+    ax = sns.regplot(data=combined_df[combined_df.Type==pos_control_id], x="Columns", y="Intensity", x_jitter=0.3, fit_reg=False, scatter_kws={"color":"orange","alpha":0.3})
+
+    # Add negative controls from the raw/original data
+    ax = sns.regplot(data=combined_df[combined_df.Type==neg_control_id], x="Columns", y="Intensity", x_jitter=0.3, fit_reg=False, marker='*',scatter_kws={"color":"purple"}, truncate=False, order=order)
+    
+    # Add normalized data
+    ax = sns.regplot(data=n_combined_df, x="Columns", y="Intensity", x_jitter=0.3, fit_reg=True, marker='x',scatter_kws={"color":"blue"}, truncate=False, order=order)
+    
+    ax.set_xticks(range(1,num_columns+1))
+    
+    if filename:
+        fig.savefig(filename)
+    
+    plt.show()
+    
     
 
     
-def plot_barplot_residuals_data(residuals_1rep, residuals_2rep, residuals_3rep, fig_name, y_max=None, leg_loc="lower center", leg_ncol=3, leg_fontsize=8):
+    
+def plot_barplot_residuals_data(residuals_1rep, residuals_2rep, residuals_3rep, fig_name, y_max=None, leg_loc="lower center", leg_ncol=3, leg_fontsize=8, pvalue_thresholds = [[1e-43, "***"], [1e-12, "**"], [1e-4, "*"], [1, "ns"]]):
     """ Plots residual plots for dose response experiments as in the manuscript.
     
     Args:
@@ -317,7 +396,7 @@ def plot_barplot_residuals_data(residuals_1rep, residuals_2rep, residuals_3rep, 
         leg_ncol: number of columns in the legend
         leg_fontsize: font size for the legend
     """
-    
+        
     residuals_df = pd.DataFrame(residuals_1rep, columns=["layout", "error_type", "Error", "E", "rows lost", "residuals", "true_residuals"])
     residuals_df_2rep = pd.DataFrame(residuals_2rep, columns=["layout", "error_type", "Error", "E", "rows lost", "residuals", "true_residuals"])
     residuals_df_3rep = pd.DataFrame(residuals_3rep, columns=["layout", "error_type", "Error", "E", "rows lost", "residuals", "true_residuals"])
