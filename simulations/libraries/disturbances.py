@@ -288,31 +288,37 @@ def add_striped_errors_odd_rows_right(plate, error=0.125):
 
 
 
-def lose_columns(plate, from_col, to_col):
+def lose_columns(plate, from_col, to_col, empty_value=0):
     num_rows, num_columns = plate.shape
     plate_array = plate.copy()
+    
+    # 0 is used as 'empty' in layout arrays, but NaN is preferable for plate/results information
+    # It can be an important difference if the value in a well is (close to) 0 or if it's empty.
     
     from_col = min(max(from_col,0),num_columns)
     to_col = min(to_col,num_columns)
     
     for col_index in range(from_col,to_col):
         for row_index in range(num_rows):
-            plate_array[row_index][col_index] = 0
+            plate_array[row_index][col_index] = empty_value
             
     return plate_array
 
 
 
-def lose_rows(plate, from_row, to_row):
+def lose_rows(plate, from_row, to_row, empty_value=0):
     num_rows, num_columns = plate.shape
     plate_array = plate.copy()
     
+    # 0 is used as 'empty' in layout arrays, but NaN is preferable for plate/results information
+    # It can be an important difference if the value in a well is (close to) 0 or if it's empty.
+        
     from_row = min(max(from_row,0),num_rows)
     to_row = min(to_row,num_rows)
     
     for row_index in range(from_row,to_row):
         for col_index in range(num_columns):
-            plate_array[row_index][col_index] = 0
+            plate_array[row_index][col_index] = empty_value
             
     return plate_array
 

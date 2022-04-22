@@ -356,7 +356,7 @@ def plot_well_series(plate_array, norm_plate, layout, neg_control_id, pos_contro
     
     
     ### Plotting well series with original and normalized data
-    fig, ax = plt.subplots(figsize=(7,5))
+    fig, ax = plt.subplots(figsize=(9,6))
     
     ax.set(xlim=(0,num_columns+1))
     
