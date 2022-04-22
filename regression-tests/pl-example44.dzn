@@ -1,6 +1,6 @@
 %% Testing the sorted_compounds = true option
 
-compoundnum_rows = 16; %% height
+num_rows = 16; %% height
 num_cols = 24; %% width
 
 vertical_cell_lines	 = 1;
