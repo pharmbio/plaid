@@ -32,7 +32,7 @@ myUnitTests=( 'pl-example01' '4 plates' '3'
 	      'pl-example35' '1 plates' '66'
 	      'pl-example36' 'MiniZinc: evaluation error:' '1'
 	      'pl-example37' '1 plates' '1'
-	      'pl-example44' '2 plates' '_' #Testing sorted_compounds
+	      'pl-example44' '2 plates' '150' #Testing sorted_compounds
 	      '2020-10-08-jonne-slack' '1 plates' '21'
 	      '2020-11-13-jonne-slack' '1 plates' '3'
 	      #'compounds-10-9-3' #'1 plates' '' #'compounds-10-9-3'
