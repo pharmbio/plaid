@@ -17,7 +17,7 @@
 %
 % Authors: Maria Andreina FRANCISCO RODRIGUEZ (maria.andreina.francisco@farmbio.uu.se)
 % Version: 1.0
-% Last Revision: December 2021
+% Last Revision: May 2022
 %
 
 include "globals.mzn";
@@ -103,12 +103,11 @@ int: numcols = if inner_empty_edge then floor(num_cols/vertical_cell_lines)-2*si
 
 array[1..compounds,1..max_compound_concentrations] of string: compound_concentration_names;
 
-
-%% FIX ME!
+%% FIX ME!! (Deprecated?)
 array[1..max_compound_concentrations] of string: compound_concentration_indicators;
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Datafile validation %%%
 constraint assert(compounds >= 0,"Invalid datafile: Number of compounds cannot be less than zero.");
 constraint assert(combinations >= 0,"Invalid datafile: Number of combinations cannot be less than zero.");
@@ -142,15 +141,14 @@ array [Plates,Columns] of var 0..numrows: experiments_in_plate_column;
 bool: even_columns = ((numcols mod 2) == 0);
 bool: even_rows = ((numrows mod 2) == 0);
 
-constraint assert(total_wells > 0, "Invalid datafile: the plates cannot be completely empty.");
-
-
 int: inner_plate_size = numcols*numrows;
 
+
+%%%%% Data validation %%%%%
+constraint assert(total_wells > 0, "Invalid datafile: the plates cannot be completely empty.");
 constraint assert(inner_plate_size>0, "Invalid datafile: There are no wells on the plate!");
-
 constraint assert(min(compound_concentrations++[0]) <= inner_plate_size, "Invalid datafile: Number of concentrations does not fit in one plate. If you think this is a mistake, please contact the development team.");
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 %% Number of plates needed
@@ -161,14 +159,6 @@ force_spread_controls = (ceil(inner_plate_size/9)*numplates >= total_controls) ;
 force_spread_concentrations = (ceil(inner_plate_size/9) >= max_compound_concentrations) ;
 %force_spread_controls = false;
 
-%% Detecting some unsatisfiable cases.
-constraint assert(ceil(sum(compound_replicates)/numplates)*min(compound_concentrations++[infinity]) + sum([floor(control_concentrations[i]*control_replicates[i]/numplates) | i in 1..num_controls]) <= inner_plate_size, "Invalid data: the design is unsatisfiable. It is not possible to divide the compounds and controls evenly across the plates. (E01)");  
-                                                                
-constraint assert((floor(sum(compound_replicates)/numplates)-1)*min(compound_concentrations++[infinity]) + max_compound_concentrations + sum([floor(control_concentrations[i]*control_replicates[i]/numplates) | i in 1..num_controls]) <= inner_plate_size, "Invalid data: the design is unsatisfiable. It is not possible to divide the compounds and controls evenly across the plates. (E02)");  
-
-                            
-                                  
-
 
 %% All types of experiments (excluding controls): compounds and combinations
 int: experiments = compounds*max_compound_concentrations*replicates;  
@@ -177,14 +167,22 @@ int: experiments = compounds*max_compound_concentrations*replicates;
 int: emptywells = numplates*inner_plate_size - total_wells;   
 
 
+
+%%%%%%% Detecting some unsatisfiable cases & Data validation %%%%%%%%%%
+constraint assert(ceil(sum(compound_replicates)/numplates)*min(compound_concentrations++[infinity]) + sum([floor(control_concentrations[i]*control_replicates[i]/numplates) | i in 1..num_controls]) <= inner_plate_size, "Invalid data: the design is unsatisfiable. It is not possible to divide the compounds and controls evenly across the plates. (E01)");  
+                                                                
+constraint assert((floor(sum(compound_replicates)/numplates)-1)*min(compound_concentrations++[infinity]) + max_compound_concentrations + sum([floor(control_concentrations[i]*control_replicates[i]/numplates) | i in 1..num_controls]) <= inner_plate_size, "Invalid data: the design is unsatisfiable. It is not possible to divide the compounds and controls evenly across the plates. (E02)");  
+
 constraint assert(emptywells == 0 \/ allow_empty_wells,"Warning: There are \(emptywells) empty wells. You can allow the plates to have inner empty wells or modify other quantities to fill them up.");
 
 constraint assert(emptywells >= 0,"Model ERROR! Inner empty wells is negative. This should never happen!");
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Plates (our solution!!) %%%%%%%%%%%
+%%%% Plates (Main model & Solution) %%%%%%%%%%%
 array [Plates,Rows,Columns] of var 0..(experiments+num_controls*max_control_concentrations): plates; 
 
 % 0 = empty wells
@@ -200,6 +198,10 @@ array [1..experiments] of var {0} union Rows: experiment_row;
 array [1..experiments] of var {0} union Columns: experiment_column;
 
 
+
+
+
+
 %%%% CONSTRAINTS %%%%
 
 constraint global_cardinality(plates,[0]++[ i | i in 1..experiments]++[i | i in experiments+1..experiments]++[ experiments+i | i in 1..num_controls*max_control_concentrations],[emptywells]++[(floor((i-1)/(compounds*max_compound_concentrations))<compound_replicates[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) /\ ((floor((i-1))) mod max_compound_concentrations) < compound_concentrations[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1] | i in 1..experiments]++[1|i in experiments+1..experiments]++[control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1]) | i in 1..num_controls*max_control_concentrations]);
@@ -208,6 +210,7 @@ constraint global_cardinality(plates,[0]++[ i | i in 1..experiments]++[i | i in 
 constraint forall(i in 1..experiments)(((floor((i-1)/(compounds*max_compound_concentrations))<compound_replicates[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) /\ ((floor((i-1))) mod max_compound_concentrations) < compound_concentrations[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) == false <-> (experiment_plate[i] = 0 /\ experiment_row[i] = 0 /\ experiment_column[i] = 0));
 
 constraint forall(i in 1..experiments)(((floor((i-1)/(compounds*max_compound_concentrations))<compound_replicates[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) /\ ((floor((i-1))) mod max_compound_concentrations) < compound_concentrations[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) <-> (experiment_plate[i] != 0 /\ experiment_row[i] != 0 /\ experiment_column[i] != 0));
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -228,26 +231,14 @@ constraint forall(l in 1..experiments)(count_eq([plates[i,j,k] | i in Plates, j 
 
 
 
-%% There might be a stronger version of these constraints...
-%constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)((experiment_row[l] == j) <- (plates[i,j,k] == l));
+%% Channeling constraints between the two models
 
-constraint forall(l in 1..experiments, i in Plates)(count_eq([plates[i,j,k] | j in Rows, k in Columns],l,(experiment_plate[l] == i)));
+constraint forall(l in 1..experiments, i in Plates)(count_eq(plates[i,..,..],l,(experiment_plate[l] == i)));
+constraint forall(l in 1..experiments, j in Rows)(count_eq(plates[..,j,..],l,(experiment_row[l] == j)));
+constraint forall(l in 1..experiments, k in Columns)(count_eq(plates[..,..,k],l,(experiment_column[l] == k)));
 
-%constraint forall(i in Plates, j in Rows, k in Columns)(plates[i,j,k] in 1..experiments -> experiment_row[plates[i,j,k]] = j);
 
-%constraint forall(l in 1..experiments, i in Plates, j in Rows, k in Columns)((experiment_column[l] == k) <- (plates[i,j,k] == l));
 
-%constraint forall(i in Plates, j in Rows, k in Columns)((experiment_column[plates[i,j,k]] = k) <- (plates[i,j,k] in 1..experiments));
-
-constraint forall(l in 1..experiments, j in Rows)(count_eq([plates[i,j,k] | i in Plates, k in Columns],l,(experiment_row[l] == j)));
-
-%constraint forall(l in 1..experiments, j in Rows)(experiment_row[l] != j <-> count_eq([plates[experiment_plate[l],j,k] | k in Columns],l,0));
-
-%constraint forall(l in 1..experiments, k in Columns)(experiment_column[l] == k <-> count_eq([plates[experiment_plate[l],j,k] | j in Rows],l,1));
-
-%constraint forall(l in 1..experiments, k in Columns)(count_eq([plates[experiment_plate[l],j,k] | j in Rows],l,(experiment_column[l] == k)));
-
-constraint forall(l in 1..experiments, k in Columns)(count_eq([plates[i,j,k] | i in Plates, j in Rows],l,(experiment_column[l] == k)));
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -284,9 +275,9 @@ constraint if force_spread_concentrations then forall(i in Plates, j in 1..numro
 
 
 % Might be redundant != implied
-%constraint forall(i in Plates, j in Rows, k in Columns) ((0 < plates[i,j,k] /\ plates[i,j,k] <= experiments) <-> experiment_plate[plates[i,j,k]]==i);
-%constraint forall(i in Plates, j in Rows, k in Columns) ((0 < plates[i,j,k] /\ plates[i,j,k] <= experiments) <-> experiment_row[plates[i,j,k]]==j);
-%constraint forall(i in Plates, j in Rows, k in Columns) ((0 < plates[i,j,k] /\ plates[i,j,k] <= experiments) <-> experiment_column[plates[i,j,k]]==k);
+constraint forall(i in Plates, j in Rows, k in Columns) ((0 < plates[i,j,k] /\ plates[i,j,k] <= experiments) <-> experiment_plate[plates[i,j,k]]==i);
+constraint forall(i in Plates, j in Rows, k in Columns) ((0 < plates[i,j,k] /\ plates[i,j,k] <= experiments) <-> experiment_row[plates[i,j,k]]==j);
+constraint forall(i in Plates, j in Rows, k in Columns) ((0 < plates[i,j,k] /\ plates[i,j,k] <= experiments) <-> experiment_column[plates[i,j,k]]==k);
 
 
 % Spread the compounds across different rows and columns
@@ -1387,6 +1378,8 @@ output [if debugging then "\nConcentrations per half plates:\n" else "" endif, i
 output [if debugging then "\nConcentrations upper half plates:\n" else "" endif, if debugging then show(sum(ul_concentrations[..,upper])) else "" endif];
 
 output [if debugging then "\nConcentrations lower half plates:\n" else "" endif, if debugging then show(sum(ul_concentrations[..,lower])) else "" endif];
+
+output [if debugging then "\nCompounds per left-right half plates:\n" else "" endif, if debugging then show(lr_half_plates) else "" endif];
 
 output [if debugging then "\nControls per plate per row:\n" else "" endif, if debugging then show(controls_row_plates) else "" endif];
 
