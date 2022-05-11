@@ -20,6 +20,7 @@ def __add_bowlshaped_errors_to_columns(plate, error):
         for col_index in range(num_columns):
             if (plate[row_index][col_index] > 0):
                 plate_array[row_index][col_index] += error*abs(col_index - translation_const)
+                plate_array[row_index][col_index] = max(plate_array[row_index][col_index],0)
             
     return plate_array
 
@@ -35,6 +36,7 @@ def __add_bowlshaped_errors_to_rows(plate, error):
         for col_index in range(num_columns):
             if (plate[row_index][col_index] > 0):
                 plate_array[row_index][col_index] += error*abs(row_index - translation_const)
+                plate_array[row_index][col_index] = max(plate_array[row_index][col_index],0)
                 
     return plate_array
 
@@ -292,9 +294,6 @@ def lose_columns(plate, from_col, to_col, empty_value=0):
     num_rows, num_columns = plate.shape
     plate_array = plate.copy()
     
-    # 0 is used as 'empty' in layout arrays, but NaN is preferable for plate/results information
-    # It can be an important difference if the value in a well is (close to) 0 or if it's empty.
-    
     from_col = min(max(from_col,0),num_columns)
     to_col = min(to_col,num_columns)
     
@@ -310,9 +309,6 @@ def lose_rows(plate, from_row, to_row, empty_value=0):
     num_rows, num_columns = plate.shape
     plate_array = plate.copy()
     
-    # 0 is used as 'empty' in layout arrays, but NaN is preferable for plate/results information
-    # It can be an important difference if the value in a well is (close to) 0 or if it's empty.
-        
     from_row = min(max(from_row,0),num_rows)
     to_row = min(to_row,num_rows)
     

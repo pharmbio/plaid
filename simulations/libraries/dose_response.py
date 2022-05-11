@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import scipy.optimize as opt
-
+import warnings
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -146,6 +146,7 @@ def fit_data(result_data, response_column, result_column, df_params=None, layout
   #  print(up_b)
 
     for name, group_t in compoundData:
+        warnings.filterwarnings("ignore", message="divide by zero encountered in true_divide")
         group = group_t[np.logical_not(np.isnan(group_t[result_column]))]
         
         if len(group)>0:
@@ -307,7 +308,7 @@ def fit_data_min_req(result_data, response_column, result_column):
 
 
 
-def plate_curves_after_error(layout_dir,layout_file,plate_content,expected_noise,error_function,error,normalization_function,min_dist,lose_from_row=0,lose_to_row=0, df_params=None):
+def plate_curves_after_error(layout_dir,layout_file,plate_content,expected_noise,error_function,error,normalization_function,min_dist=0,lose_from_row=0,lose_to_row=0, df_params=None):
 
     plate_content, neg_control_values = __run_experiment(layout_dir,layout_file,plate_content,expected_noise,error_function,error,normalization_function,min_dist,lose_from_row,lose_to_row)
     
@@ -335,6 +336,7 @@ def __run_experiment(layout_dir,layout_file,plate_content,expected_noise,error_f
     #control_locations = dt.lose_rows(control_locations, lose_from_row, lose_to_row)
     layout = dt.lose_rows(layout, lose_from_row, lose_to_row)
     
+
     plate = normalization_function(plate,layout,neg_control_id, min_dist=min_dist)
     
     # Collect negative controls
@@ -380,3 +382,11 @@ def mean_controls(plate_array,layout,control_id):
     
     return z
     #return np.mean(z)
+    
+    
+def generate_compound_curves(compounds,concentrations,dilution,low_e,slopes=[0.5,1,1.5],startDose=10000,step=5):
+    params = []
+    for i in range(compounds):
+        params.append({'compound':i, 'b':slopes[i%3], 'c':0, 'd':100, 'e':(low_e+step*np.random.random()),'startDose':startDose, 'nDose':concentrations, 'dilution':dilution})
+        
+    return params

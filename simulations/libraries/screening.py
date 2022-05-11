@@ -2,6 +2,9 @@
 # https://academic.oup.com/bioinformatics/article/31/23/3815/208794
 
 import numpy as np
+from random import randrange
+
+import libraries.utilities as util
 
 def control_stats(plate_array, layout, neg_control_id, pos_control_id):
     num_rows, num_columns = layout.shape
@@ -34,33 +37,39 @@ def zfactor(neg_control_mean, pos_control_mean, neg_stdev, pos_stdev):
                 
                 
                 
-def fill_plate(layout, neg_control_id, pos_control_id, neg_control_mean = 95, pos_control_mean = 5, neg_stdev = 5, pos_stdev = 5):
+def fill_plate(layout, neg_control_id, pos_control_id, neg_control_mean = 95, pos_control_mean = 5, neg_stdev = 5, pos_stdev = 5, percent_non_active = 0.66):
     num_rows, num_columns = layout.shape
-    
+        
     plate = np.full((num_rows, num_columns), 0.0)
     
-    #neg_control_id = np.max(layout)
-    #pos_control_id = neg_control_id -1 
+    ##At least 0%, At most 100%
+    percent_non_active = min(max(percent_non_active, 0.0),1.0)
+    
+    activity_layout = place_active_compounds(layout, neg_control_id, pos_control_id, percent_non_active)
 
     for row_index in range(num_rows):
         for col_index in range(num_columns):
-            if (layout[row_index][col_index] == neg_control_id):
-                 plate[row_index][col_index] = np.random.normal(neg_control_mean, neg_stdev)
-            elif (layout[row_index][col_index] > 2*(neg_control_id-2)//3):
-                 plate[row_index][col_index] = np.random.normal(pos_control_mean, pos_stdev)
-            else:
-                 plate[row_index][col_index] = np.random.normal(neg_control_mean, neg_stdev)
-                    
-    return np.abs(plate)
+            if (activity_layout[row_index][col_index] == 1):
+                plate[row_index][col_index] = np.random.normal(pos_control_mean, pos_stdev)
+            elif (layout[row_index][col_index] > 0):
+                plate[row_index][col_index] = np.random.normal(neg_control_mean, neg_stdev)    
+                
+    return np.abs(plate), activity_layout
 
 
 
-def screen(layout_dir,layout_file,neg_control_mean, pos_control_mean, neg_stdev, pos_stdev,error_function,error,normalization_function,min_dist,lose_from_row=0,lose_to_row=0):
+#if (layout[row_index][col_index] == neg_control_id) or (layout[row_index][col_index] <= percent_non_active*(neg_control_id-2)):
+#                 plate[row_index][col_index] = np.random.normal(neg_control_mean, neg_stdev)
+ #           else:
+  #               plate[row_index][col_index] = np.random.normal(pos_control_mean, pos_stdev)
+
+
+def screen(layout_dir,layout_file,neg_control_mean, pos_control_mean, neg_stdev, pos_stdev,error_function,error,normalization_function,percent_non_active=0.66,min_dist=0,lose_from_row=0,lose_to_row=0):
     
     layout = np.load(layout_dir+layout_file)    
 
     # Fill plate
-    plate = fill_plate(layout, neg_control_mean, pos_control_mean, neg_stdev, pos_stdev)
+    plate = fill_plate(layout, neg_control_mean, pos_control_mean, neg_stdev, pos_stdev, percent_non_active)
     
     # Add errors
     plate = error_function(plate, error)
@@ -80,3 +89,24 @@ def screen(layout_dir,layout_file,neg_control_mean, pos_control_mean, neg_stdev,
     zfactor = zfactor(neg_control_mean, pos_control_mean, neg_stdev, pos_stdev)
     
     return ssmd, zfactor
+
+
+
+
+def place_active_compounds(layout, neg_control_id, pos_control_id, percent_non_active):
+    num_rows, num_columns = layout.shape
+        
+    activity_plate = util.get_controls_layout(layout,pos_control_id)
+    
+    nb_active_comp = np.ceil((1-percent_non_active)*(neg_control_id-2))
+    
+    while nb_active_comp>0:
+        rand_row = randrange(num_rows)
+        rand_col = randrange(num_columns)
+        
+        if (layout[rand_row][rand_col] > 0) and (layout[rand_row][rand_col] < pos_control_id) and (activity_plate[rand_row][rand_col] != 1):
+            activity_plate[rand_row][rand_col] = 1
+            nb_active_comp = nb_active_comp - 1
+            
+            
+    return activity_plate

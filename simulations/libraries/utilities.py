@@ -6,6 +6,7 @@ import random
 import os
 import re
 from statannotations.Annotator import Annotator # to add p-values to plots
+from scipy import stats
 
 
 def plot_plate(plate_array, title="", mask=None, filename=None, vmin=None, vmax=None):
@@ -19,7 +20,7 @@ def plot_plate(plate_array, title="", mask=None, filename=None, vmin=None, vmax=
         fig.savefig(filename,bbox_inches='tight')
     
     
-def create_random_layout_controls(plate_id, num_controls=20, num_rows=16, num_columns=24, directory="controls_manual_layouts"):
+def create_random_layout_controls(plate_id, num_controls=20, num_rows=16, num_columns=24, directory="layouts/controls_manual_layouts"):
     '''Create a random layout of (negative) controls'''
     
     layout = np.full(num_rows*num_columns, 0)
@@ -35,7 +36,7 @@ def create_random_layout_controls(plate_id, num_controls=20, num_rows=16, num_co
 
     
 
-def create_random_layout_compounds(plate_id, num_controls=20, num_rows=16, num_columns=24, directory="compounds_manual_layouts", size_empty_edge=1):
+def create_random_layout_compounds(plate_id, num_controls=20, num_rows=16, num_columns=24, directory="layouts/compounds_manual_layouts", size_empty_edge=1):
     '''Create a random layout of negative controls and compounds'''
     
     total_compounds = (num_rows-2*size_empty_edge)*(num_columns-2*size_empty_edge)-num_controls
@@ -61,7 +62,7 @@ def create_random_layout_compounds(plate_id, num_controls=20, num_rows=16, num_c
     np.save(directory+'/plate_layout_rand_'+str(num_controls)+"_"+plate_id+'.npy',layout)
     
     
-def save_plaid_layout(plate_id, layout_array, num_rows=16, num_columns=24, compounds=36, concentrations=4, replicates=2, size_empty_edge=1, neg_controls=20,directory="compounds_PLAID_layouts"):
+def save_plaid_layout(plate_id, layout_array, num_rows=16, num_columns=24, compounds=36, concentrations=4, replicates=2, size_empty_edge=1, neg_controls=20,directory="layouts/compounds_PLAID_layouts"):
 
     assert size_empty_edge >= 0
     assert num_rows >= 0
@@ -86,7 +87,7 @@ def save_plaid_layout(plate_id, layout_array, num_rows=16, num_columns=24, compo
     np.save(directory+'/plate_layout_'+str(neg_controls)+"-"+str(compounds)+"-"+str(concentrations)+"-"+str(replicates)+"_"+plate_id+'.npy',layout)
 
     
-def save_plaid_controls_layout(plate_id, layout_array, num_rows=16, num_columns=24, size_empty_edge=1, directory="controls_PLAID_layouts"):
+def save_plaid_controls_layout(plate_id, layout_array, num_rows=16, num_columns=24, size_empty_edge=1, directory="layouts/controls_PLAID_layouts"):
     layout = __shape_layout(layout_array, num_rows, num_columns, size_empty_edge)
     
     layout = get_controls_layout(layout)
@@ -114,7 +115,7 @@ def get_controls_layout(layout, neg_control = None):
 
 
 
-def save_plaid_screening_layout(plate_id, layout_array, num_rows=16, num_columns=24, size_empty_edge=1, directory="screening_PLAID_layouts"):
+def save_plaid_screening_layout(plate_id, layout_array, num_rows=16, num_columns=24, size_empty_edge=1, directory="layouts/screening_PLAID_layouts"):
     neg_id = np.max(layout_array)
     pos_id = neg_id - 1
     
@@ -127,7 +128,7 @@ def save_plaid_screening_layout(plate_id, layout_array, num_rows=16, num_columns
     np.save(directory+'/plate_layout_'+str(neg_controls)+"-"+str(pos_controls)+"_"+plate_id+'.npy',layout)
     
     
-def create_random_layout_screening(plate_id, neg_controls=10, pos_controls = 10, num_rows=16, num_columns=24, directory="screening_manual_layouts", size_empty_edge=1):
+def create_random_layout_screening(plate_id, neg_controls=10, pos_controls = 10, num_rows=16, num_columns=24, directory="layouts/screening_manual_layouts", size_empty_edge=1):
     '''Create a random layout for a screening experiment'''
     
     total_compounds = (num_rows-2*size_empty_edge)*(num_columns-2*size_empty_edge)-neg_controls-pos_controls
@@ -160,7 +161,7 @@ def __shape_layout(layout, num_rows, num_columns, size_empty_edge):
     return layout
 
 
-def fill_in_border_layout_screening(plate_id, control_layout, directory="screening_manual_layouts", size_empty_edge=1):
+def fill_in_border_layout_screening(plate_id, control_layout, directory="layouts/screening_manual_layouts", size_empty_edge=1):
     '''Fill in a border layout for a screening experiment'''
     num_rows, num_columns = control_layout.shape
     
@@ -194,7 +195,7 @@ def fill_in_border_layout_screening(plate_id, control_layout, directory="screeni
     
 
     
-def fill_in_border_layout_screening_vertically(plate_id, control_layout, directory="screening_manual_layouts", size_empty_edge=1):
+def fill_in_border_layout_screening_vertically(plate_id, control_layout, directory="layouts/screening_manual_layouts", size_empty_edge=1):
     '''Fill in a border layout for a screening experiment'''
     num_rows, num_columns = control_layout.shape
     
@@ -230,7 +231,7 @@ def fill_in_border_layout_screening_vertically(plate_id, control_layout, directo
 
     
     
-def fill_in_border_layout(plate_id, control_layout, directory="screening_manual_layouts", size_empty_edge=1):
+def fill_in_border_layout(plate_id, control_layout, directory="layouts/screening_manual_layouts", size_empty_edge=1):
     '''Fill in a border layout for a screening experiment'''
     num_rows, num_columns = control_layout.shape
     
@@ -356,7 +357,7 @@ def plot_well_series(plate_array, norm_plate, layout, neg_control_id, pos_contro
     
     
     ### Plotting well series with original and normalized data
-    fig, ax = plt.subplots(figsize=(9,6))
+    fig, ax = plt.subplots(figsize=(11,7))
     
     ax.set(xlim=(0,num_columns+1))
     
@@ -640,3 +641,151 @@ def plot_r2_percentage(data_1rep, data_2rep, data_3rep, fig_name='', y_max=None,
     # Show and save figure!
     plt.show()
     fig.savefig("percentage-low-r2-curves"+fig_name+".png",bbox_inches='tight')
+
+    
+    
+def create_latex_table(data, tex_filename, column_name="MSE"):
+    # Open file
+    latex_f=open(tex_filename,'w')
+    
+    results_df = pd.DataFrame(data, columns=["layout", "compound", "MSE", "error type", "Error", "E", "rows lost", "r2_score", "b", "c", "d", "e", "fit_b", "fit_c", "fit_d", "fit_e"])
+    results_df.MSE = pd.to_numeric(results_df.MSE, errors='coerce')
+    results_df = results_df.sort_values("MSE")
+    results_df = results_df[np.logical_not(np.isnan(results_df['MSE']))]
+
+    results_df.loc[(results_df['layout'] >= "plate_layout_rand"), 'layout'] = "Random"
+    results_df.loc[(results_df['layout'] >= "plate_layout_border") & (results_df['layout'] != "Random"), 'layout'] = "Border"
+    results_df.loc[(results_df['layout'] >= "plate_layout") & (results_df['layout'] != "Random") & (results_df['layout'] != "Border"), 'layout'] = "Effective"
+
+    results_df.d = pd.to_numeric(results_df.d, errors='coerce')
+    results_df.fit_d = pd.to_numeric(results_df.fit_d, errors='coerce')
+
+    results_df.insert(0, 'diff_d', 0)
+    results_df.diff_d = abs(results_df.d - results_df.fit_d)    
+    
+    plaid_description = results_df[results_df['layout']=='Effective'].describe()
+    random_description = results_df[results_df['layout']=='Random'].describe()
+    border_description = results_df[results_df['layout']=='Border'].describe()
+
+    latex_f.write(" & Effective & Random & Border \\\\ ")
+    latex_f.write("\n\\hline\n")
+    
+    rows = [{'row_id':'count', 'row_name':'\\tabCount{}'},
+            {'row_id':'mean',  'row_name':'\\tabMean{}'},
+            {'row_id':'std',   'row_name':'\\tabSTD{}'},
+            {'row_id':'min',   'row_name':'\\tabMin{}'},
+            {'row_id':'25%',   'row_name':'\\tabQone{}'},
+            {'row_id':'50%',   'row_name':'\\tabMedian{}'},
+            {'row_id':'75%',   'row_name':'\\tabQthree{}'},
+            {'row_id':'max',   'row_name':'\\tabMax{}'}]
+    
+    for row in rows:
+        latex_f.write(row['row_name']+" & "+str(round(plaid_description.loc[row['row_id'],column_name],2))+" & "+str(round(random_description.loc[row['row_id'],column_name],2))+" & "+str(round(border_description.loc[row['row_id'],column_name],2))+"\\\\ \n")
+    
+    latex_f.write("\\hline")
+        
+    # Close file
+    latex_f.close()
+    
+    
+def create_latex_table_wide(data_1rep, data_2rep, data_3rep, tex_filename, table_text = "Relative \\ECIC", column_name="MSE"):
+    # Open file
+    latex_f=open(tex_filename,'w')
+    
+    results_df = pd.DataFrame(data_1rep, columns=["layout", "compound", "MSE", "error type", "Error", "E", "rows lost", "r2_score", "b", "c", "d", "e", "fit_b", "fit_c", "fit_d", "fit_e"])
+    results_df_2rep = pd.DataFrame(data_2rep, columns=["layout", "compound", "MSE", "error type", "Error", "E", "rows lost", "r2_score", "b", "c", "d", "e", "fit_b", "fit_c", "fit_d", "fit_e"])
+    results_df_3rep = pd.DataFrame(data_3rep, columns=["layout", "compound", "MSE", "error type", "Error", "E", "rows lost", "r2_score", "b", "c", "d", "e", "fit_b", "fit_c", "fit_d", "fit_e"])
+
+    results_df.insert(0, 'replicates', 1)
+    results_df_2rep.insert(0, 'replicates', 2)
+    results_df_3rep.insert(0, 'replicates', 3)
+
+    results_df = results_df.append(results_df_2rep)
+    results_df = results_df.append(results_df_3rep)
+
+    results_df.MSE = pd.to_numeric(results_df[column_name], errors='coerce')
+    results_df = results_df.sort_values(column_name)
+    results_df = results_df[np.logical_not(np.isnan(results_df[column_name]))]
+    
+    results_df.loc[(results_df['layout'] >= "plate_layout_rand"), 'layout'] = "Random"
+    results_df.loc[(results_df['layout'] >= "plate_layout_border") & (results_df['layout'] != "Random"), 'layout'] = "Border"
+    results_df.loc[(results_df['layout'] >= "plate_layout") & (results_df['layout'] != "Random") & (results_df['layout'] != "Border"), 'layout'] = "Effective"
+    
+#    plaid_description = results_df[results_df['layout']=='Effective'].describe()
+ #   random_description = results_df[results_df['layout']=='Random'].describe()
+  #  border_description = results_df[results_df['layout']=='Border'].describe()
+
+#    latex_f.write(" & Effective & Random & Border \\\\ ")
+#    latex_f.write("\n\\hline\n")
+
+    layouts = ['Effective','Random','Border']
+    
+    latex_f.write("\\multirow{4}{*}{"+table_text+"}")
+    
+    for layout in layouts:
+        latex_f.write(" & "+layout)
+        
+        for rep in range(1,4):
+            description = results_df[(results_df['layout']==layout) & (results_df['replicates']==rep)].describe()
+            latex_f.write(" & "+str(round(description.loc['mean',column_name],2))+" $\\pm$ ("+str(round(description.loc['std',column_name],2))+")")
+            
+        latex_f.write("\\\\ \n")
+    
+ #   for row in rows:
+  #      latex_f.write(row['row_name']+" & "+str(round(plaid_description.loc[row['row_id'],column_name],2))+" & "+str(round(random_description.loc[row['row_id'],column_name],2))+" & "+str(round(border_description.loc[row['row_id'],column_name],2))+"\\\\ \n")
+    
+    latex_f.write("\\hline \n")
+        
+    # Close file
+    latex_f.close()
+
+    
+    
+    
+    
+    
+def create_latex_table_pvalues_wide(data_1rep, data_2rep, data_3rep, tex_filename, table_text = "Relative \\ECIC", column_name="MSE"):
+    # Open file
+    latex_f=open(tex_filename,'w')
+    
+    results_df = pd.DataFrame(data_1rep, columns=["layout", "compound", "MSE", "error type", "Error", "E", "rows lost", "r2_score", "b", "c", "d", "e", "fit_b", "fit_c", "fit_d", "fit_e"])
+    results_df_2rep = pd.DataFrame(data_2rep, columns=["layout", "compound", "MSE", "error type", "Error", "E", "rows lost", "r2_score", "b", "c", "d", "e", "fit_b", "fit_c", "fit_d", "fit_e"])
+    results_df_3rep = pd.DataFrame(data_3rep, columns=["layout", "compound", "MSE", "error type", "Error", "E", "rows lost", "r2_score", "b", "c", "d", "e", "fit_b", "fit_c", "fit_d", "fit_e"])
+
+    results_df.insert(0, 'replicates', 1)
+    results_df_2rep.insert(0, 'replicates', 2)
+    results_df_3rep.insert(0, 'replicates', 3)
+
+    results_df = results_df.append(results_df_2rep)
+    results_df = results_df.append(results_df_3rep)
+
+    results_df[column_name] = pd.to_numeric(results_df[column_name], errors='coerce')
+    results_df = results_df.sort_values(column_name)
+    results_df = results_df[np.logical_not(np.isnan(results_df[column_name]))]
+    results_df = results_df[np.logical_not(np.isinf(results_df[column_name]))]
+    
+    results_df.loc[(results_df['layout'] >= "plate_layout_rand"), 'layout'] = "Random"
+    results_df.loc[(results_df['layout'] >= "plate_layout_border") & (results_df['layout'] != "Random"), 'layout'] = "Border"
+    results_df.loc[(results_df['layout'] >= "plate_layout") & (results_df['layout'] != "Random") & (results_df['layout'] != "Border"), 'layout'] = "Effective"
+
+    layouts = ['Effective','Random','Border']
+    
+    latex_f.write("\\multirow{4}{*}{"+table_text+"}")
+    
+    for layout_1 in range(3):
+        for layout_2 in range(layout_1+1,3):
+            latex_f.write(" & "+layouts[layout_1]+" -- "+layouts[layout_2])
+
+            for rep in range(1,4):
+                results_array_1 = results_df.loc[(results_df.layout==layouts[layout_1]) & (results_df.replicates==rep),column_name]
+                results_array_2 = results_df.loc[(results_df.layout==layouts[layout_2]) & (results_df.replicates==rep),column_name]
+
+                _, pvalue = stats.ttest_ind(results_array_1,results_array_2,equal_var = False)
+                latex_f.write(" & "+'{:.2e}'.format(pvalue))
+
+            latex_f.write("\\\\ \n")
+    
+    latex_f.write("\\hline \n")
+        
+    # Close file
+    latex_f.close()

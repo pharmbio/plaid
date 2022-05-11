@@ -5,7 +5,7 @@ import libraries.utilities as util
 from scipy.interpolate import interp1d
 from sklearn.linear_model import LinearRegression
 from loess.loess_2d import loess_2d
-
+import warnings
 
 def normalize_plate_nearest_control(plate_array, layout, neg_control_id, min_dist=0):
     control_locations = util.get_controls_layout(layout,neg_control=neg_control_id)
@@ -270,13 +270,18 @@ def normalize_plate_lowess_deprecated(plate_array, layout, neg_control_id=None, 
 
 
 
+
 # This is the preferred method of smoothing!
 def normalize_plate_lowess_2d(plate_array_in, layout, neg_control_id, min_dist=None, frac = 1.0):
     """ Smoothing using loess_2d """
 
-    plate_array = plate_array_in
-    plate_array = np.log10(plate_array_in)
+    #warnings.filterwarnings("error")
     
+    #plate_array = plate_array_in
+    
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", message="divide by zero encountered in log10")
+        plate_array = np.log10(plate_array_in)
 
     control_locations = util.get_controls_layout(layout,neg_control=neg_control_id)
 
@@ -308,8 +313,10 @@ def normalize_plate_lowess_2d(plate_array_in, layout, neg_control_id, min_dist=N
     ynew = y_adjusted['Rows'].to_numpy().reshape((-1,))
     znew = y_adjusted['Intensity'].to_numpy().reshape((-1,))
 
-    zout, _ = loess_2d(x, y, z, xnew=xnew, ynew=ynew, degree=1, frac=frac, npoints=None, rescale=False, sigz=None)
-    zout_controls, _ = loess_2d(x, y, z, degree=1, frac=frac, npoints=None, rescale=False, sigz=None)
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", message="divide by zero encountered in true_divide")
+        zout, _ = loess_2d(x, y, z, xnew=xnew, ynew=ynew, degree=1, frac=frac, npoints=None, rescale=False, sigz=None)
+        zout_controls, _ = loess_2d(x, y, z, degree=1, frac=frac, npoints=None, rescale=False, sigz=None)
     
     z_norm = znew - zout + np.nanmean(zout_controls)
     
@@ -319,15 +326,18 @@ def normalize_plate_lowess_2d(plate_array_in, layout, neg_control_id, min_dist=N
     #return new_plate
     #return normalize_plate_nearest_control(new_plate, layout, neg_control_id)
     return normalize_plate_mean(np.power(10,new_plate), layout, neg_control_id)
-    return normalize_plate_mean(new_plate, layout, neg_control_id)
+    #return normalize_plate_mean(new_plate, layout, neg_control_id)
     
     
     
 def normalize_plate_linear(plate_array_in, layout, neg_control_id, min_dist=None):
     #neg_control_id = np.max(layout)
     
-    plate_array = plate_array_in
-    plate_array = np.log10(plate_array_in)
+    #plate_array = plate_array_in
+    
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", message="divide by zero encountered in log10")
+        plate_array = np.log10(plate_array_in)
     
     control_locations = util.get_controls_layout(layout,neg_control=neg_control_id)
 
@@ -350,9 +360,11 @@ def normalize_plate_linear(plate_array_in, layout, neg_control_id, min_dist=None
     ###################
     
     ### Adjust rows ###
-    linear_model_rows = LinearRegression() 
-    #print(y_adjusted[y_adjusted.Type==neg_control_id].Rows.to_numpy().reshape(-1,1))
-    linear_model_rows.fit(y_adjusted[y_adjusted.Type==neg_control_id].Rows.to_numpy().reshape(-1,1), y_adjusted[y_adjusted.Type==neg_control_id].Intensity.to_numpy().reshape(-1, 1))
+    
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", message="divide by zero encountered in true_divide")
+        linear_model_rows = LinearRegression()
+        linear_model_rows.fit(y_adjusted[y_adjusted.Type==neg_control_id].Rows.to_numpy().reshape(-1,1), y_adjusted[y_adjusted.Type==neg_control_id].Intensity.to_numpy().reshape(-1, 1))
 
     xnew_rows = np.array([i for i in range(0,num_rows)])
     y_pred_rows = linear_model_rows.predict(xnew_rows.reshape(-1, 1))
@@ -362,8 +374,10 @@ def normalize_plate_linear(plate_array_in, layout, neg_control_id, min_dist=None
     y_adjusted.loc[y_adjusted['Type']>0, ['Intensity']] += mean_y
     
     ### Adjust columns ###
-    linear_model_columns = LinearRegression()
-    linear_model_columns.fit(y_adjusted[y_adjusted.Type==neg_control_id].Columns.to_numpy().reshape(-1,1), y_adjusted[y_adjusted.Type==neg_control_id].Intensity.to_numpy().reshape(-1, 1))
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", message="divide by zero encountered in true_divide")
+        linear_model_columns = LinearRegression()
+        linear_model_columns.fit(y_adjusted[y_adjusted.Type==neg_control_id].Columns.to_numpy().reshape(-1,1), y_adjusted[y_adjusted.Type==neg_control_id].Intensity.to_numpy().reshape(-1, 1))
 
     xnew_columns = np.array([i for i in range(0,num_columns)])
     y_pred_columns = linear_model_columns.predict(xnew_columns.reshape(-1, 1))
@@ -381,7 +395,7 @@ def normalize_plate_linear(plate_array_in, layout, neg_control_id, min_dist=None
     
     #return normalize_plate_nearest_control(unstacked_adjusted_df.to_numpy(), layout, neg_control_id)
     return normalize_plate_mean(np.power(10,unstacked_adjusted_df.to_numpy()), layout, neg_control_id)
-    return normalize_plate_mean(unstacked_adjusted_df.to_numpy(), layout, neg_control_id)
+    #return normalize_plate_mean(unstacked_adjusted_df.to_numpy(), layout, neg_control_id)
 
 
 
