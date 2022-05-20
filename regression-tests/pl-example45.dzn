@@ -1,0 +1,41 @@
+%% Plate dimentions: (this is a 384-well plate)
+num_rows = 16; %% height
+num_cols = 24; %% width
+
+vertical_cell_lines	 = 1;
+horizontal_cell_lines	 = 1;
+size_empty_edge = 1;
+allow_empty_wells = false;
+
+concentrations_on_different_rows = true;
+concentrations_on_different_columns = true;
+
+% Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false
+
+replicates_on_different_plates = false;
+replicates_on_same_plate = true;
+
+%%% Compounds %%%
+compounds = 30; %% number of drugs/compounds
+compound_replicates	 = [1| i in 1..compounds]; 
+compound_concentrations	 = [10| i in 1..compounds]; 
+
+compound_concentration_names = array2d(1..compounds,1..10,["\(i mod 10)" | i in 1..compounds*10]);
+
+compound_names = ["TEST-\(i)" | i in 1..compounds];
+
+compound_concentration_indicators = ["\\dotuline","\\uwave","\\uuline"]++["" | i in 1..max(compound_concentrations)-3];
+
+%%% Combinations %%%
+combinations = 0;
+combination_concentrations	 = 0; 
+combination_names = []; 
+combination_concentration_names = [];
+
+
+%%% Controls %%%
+num_controls = 2;
+control_replicates = [4,4];
+control_concentrations = [1,1];
+control_concentration_names = [|"1"|"1"|];
+control_names = ["DMSO", "H2O"];
