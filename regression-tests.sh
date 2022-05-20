@@ -1,8 +1,8 @@
 #!/bin/sh
 
-echo "\nHello, world! Let's check if our PLAID constraint model continues to behave as expected...\n"
+echo "\nHello, world! Let's check that our PLAID constraint model continues to behave as expected...\n"
 
-myUnitTests=( 'pl-example01' '4 plates' '3'
+myUnitTests=( 'pl-example01' '4 plates' '5'
 	      'pl-example02' 'Error: assertion failed: Invalid data: the design is unsatisfiable. It is not possible to divide the compounds and controls evenly across the plates. (E01)' '1'
 	      'pl-example03' 'Error: assertion failed: Invalid data: the design is unsatisfiable. It is not possible to divide the compounds and controls evenly across the plates. (E01)' '1'
 	      'pl-example05' '2 plates' '1'
@@ -10,8 +10,8 @@ myUnitTests=( 'pl-example01' '4 plates' '3'
 	      'pl-example07-tiny' '4 plates' '1'
 	      'pl-example08-small' '2 plates' '3'
 	      'pl-example09' '2 plates' '2'
-	      'pl-example10' '4 plates' '14'
-	      'pl-example11' '2 plates' '384'
+	      'pl-example10' '4 plates' '10'
+	      'pl-example11' '2 plates' '385'
 	      'pl-example12' '2 plates' '1'
 	      'pl-example13' '1 plates' '5'
 	      'pl-example14' '1 plates' '1'
@@ -22,26 +22,28 @@ myUnitTests=( 'pl-example01' '4 plates' '3'
 	      'pl-example21' '1 plates' '1'
 	      'pl-example22' '4 plates' '1'
 	      #'pl-example23' '2 plates' '' #Duplicated example
-	      'pl-example24' '2 plates' '332'
-	      'pl-example25' '2 plates' '12'
+	      'pl-example24' '2 plates' '330'
+	      'pl-example25' '2 plates' '10'
 	      'pl-example27' '3 plates' '2'
-	      'pl-example28' '4 plates' '9'
-	      'pl-example29' '2 plates' '4'
+	      'pl-example28' '4 plates' '10'
+	      'pl-example29' '2 plates' '5'
 	      'pl-example30' '1 plates' '5'
 	      'pl-example31' 'Error: assertion failed: Invalid datafile: There are too many controls of only one kind. This is not allowed at the moment. If you believe this is a mistake, please contact the developers.' '1'
-	      'pl-example35' '1 plates' '66'
+	      'pl-example35' '1 plates' '65'
 	      'pl-example36' 'Error: assertion failed: Invalid datafile: There are too many controls of only one kind. This is not allowed at the moment. If you believe this is a mistake, please contact the developers.' '1'
 	      'pl-example37' '1 plates' '1'
+	      'pl-example42' '1 plates' '350'
 	      'pl-example44' '2 plates' '150' #Testing sorted_compounds
-	      '2020-10-08-jonne-slack' '1 plates' '21'
+	      'pl-example45' '1 plates' '11'
+	      '2020-10-08-jonne-slack' '1 plates' '20'
 	      '2020-11-13-jonne-slack' '1 plates' '3'
 	      #'compounds-10-9-3' #'1 plates' '' #'compounds-10-9-3'
-	      'dose-response-20-3-1' '1 plates' '115'
-	      'dose-response-20-3-2' '1 plates' '121'
-	      'dose-response-20-3-3' '1 plates' '118'
+	      'dose-response-20-3-1' '1 plates' '100'
+	      'dose-response-20-3-2' '1 plates' '100'
+	      'dose-response-20-3-3' '1 plates' '100'
 	      'screening-8-8-1' '1 plates' '20'
-	      'pl-example04-jonne-doubled' '2 plates' '319'
-	      'pl-example42' '1 plates' '336'
+	      'pl-example04-jonne-doubled' '2 plates' '320'
+	      'pl-example42' '1 plates' '340'
 	      'pl-example20' '1 plates' '2221'
 	      #'2020-09-30-jonne-slack' #'1 plates'
 	    )
@@ -81,12 +83,12 @@ do
 
     # Compare that the solution is the same as before (so hopefully we haven't lost any solutions)
     
-#    if cmp "${myUnitTests[${i}]}.txt" "./output-regression-tests/${myUnitTests[${i}]}.txt";
- #   then
-#	echo "The solution has not changed :-)"
- #   else
-#	echo "WARNING: Check ${myUnitTests[${i}]}.dzn! Something changed!!!!!!!!\n"
- #   fi
+    #    if cmp "${myUnitTests[${i}]}.txt" "./output-regression-tests/${myUnitTests[${i}]}.txt";
+    #   then
+    #	echo "The solution has not changed :-)"
+    #   else
+    #	echo "WARNING: Check ${myUnitTests[${i}]}.dzn! Something changed!!!!!!!!\n"
+    #   fi
 
     echo "\n"
 done
