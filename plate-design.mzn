@@ -601,6 +601,10 @@ constraint if concentrations_on_different_columns /\ even_columns then (forall(l
  lr_concentrations[r*compounds + l,left] + lr_concentrations[r*compounds + l,right] == compound_concentrations[l]
 ))) endif; 
 
+constraint if concentrations_on_different_columns /\ even_columns then (forall(h in Horizontal)(
+sum(lr_half_plates[..,h]) == sum(lr_concentrations[..,h])
+))endif;
+
 
 %% Implied constraints 
 %% These constraints are too weak when the number of plates increases
@@ -726,6 +730,9 @@ constraint if concentrations_on_different_rows then forall(l in 1..compounds) (f
 
 constraint if concentrations_on_different_columns then forall(l in 1..compounds) (forall(conc in 0..compound_concentrations[l]-1)(alldifferent([experiment_column[(l-1)*max_compound_concentrations + i*compounds*max_compound_concentrations + conc + 1] | i in 0..(min(compound_replicates[l],numcols)-1)])::domain)) endif; 
 
+constraint if concentrations_on_different_rows /\ even_rows then (forall(v in Vertical)(
+sum(ul_half_plates[..,v]) == sum(ul_concentrations[..,v])
+))endif;
 
 %% Balancing compounds between plates: distribute the compounds equitatively among all the plates
 
@@ -793,6 +800,9 @@ constraint if concentrations_on_different_columns then forall(k in Columns)(sum(
 constraint if concentrations_on_different_rows then forall(i in Plates, j in Rows)(experiments_in_plate_row[i,j]>=(at_least_compounds div numrows)) endif;
 constraint if concentrations_on_different_columns then forall(i in Plates, k in Columns)(experiments_in_plate_column[i,k]>=(at_least_compounds div numcols)) endif;
 
+constraint if concentrations_on_different_rows then forall(i in Plates, j in Rows)(experiments_in_plate_row[i,j]<=ceil(at_most_compounds / numrows)) endif;
+constraint if concentrations_on_different_columns then forall(i in Plates, k in Columns)(experiments_in_plate_column[i,k]<=ceil(at_most_compounds / numcols)) endif;
+
 array [Plates,Vertical] of var 0..numcols*(numrows div 2): ul_half_plates;
 array [Plates,Horizontal] of var 0..numrows*(numcols div 2): lr_half_plates;
 
@@ -857,7 +867,7 @@ constraint sum(ul_half_plates) == sum([compound_concentrations[i]*compound_repli
 constraint forall(v in Vertical)(sum(ul_half_plates[..,v]) <= ceil(sum([compound_concentrations[i]*compound_replicates[i] | i in 1..compounds])/2));
 constraint forall(h in Horizontal)(sum(lr_half_plates[..,h]) <= ceil(sum([compound_concentrations[i]*compound_replicates[i] | i in 1..compounds])/2));
 
-%% HERE A experiment_plate
+%% HERE
 
 
 constraint forall(i in Plates, v in Vertical) ( ul_half_plates[i,v] <= ((sum([ (experiment_plate[c] == i) | c in 1..experiments]) + 1) div 2));
@@ -917,9 +927,9 @@ array [Plates,Rows,{0} union 1..num_controls*max_control_concentrations] of var 
 array [Plates,Columns,{0} union 1..num_controls*max_control_concentrations] of var int: controls_column_plates;
 
 
-constraint forall(i in Plates)(global_cardinality([plates[i,j,k] | j in 1..floor(numrows/2), k in Columns], [experiments+d | d in 1..num_controls*max_control_concentrations], [controls_ul_plates[i,upper,d] | d in 1..num_controls*max_control_concentrations]));
+constraint forall(i in Plates)(global_cardinality([plates[i,j,k] | j in 1..(numrows div 2), k in Columns], [experiments+d | d in 1..num_controls*max_control_concentrations], [controls_ul_plates[i,upper,d] | d in 1..num_controls*max_control_concentrations]));
 
-constraint forall(i in Plates)(global_cardinality([plates[i,j,k] | j in floor(numrows/2)+1..numrows, k in Columns], [experiments+d | d in 1..num_controls*max_control_concentrations], [controls_ul_plates[i,lower,d] | d in 1..num_controls*max_control_concentrations]));
+constraint forall(i in Plates)(global_cardinality([plates[i,j,k] | j in (numrows div 2)+1..numrows, k in Columns], [experiments+d | d in 1..num_controls*max_control_concentrations], [controls_ul_plates[i,lower,d] | d in 1..num_controls*max_control_concentrations]));
 
 
 %% Defining controls_quarter_plates variables
@@ -1091,6 +1101,7 @@ constraint if interconnected_plates then forall(j in Rows) ( (floor((total_contr
 constraint if interconnected_plates then forall(j in Rows) ( (floor((total_controls+emptywells)/numrows) div 2) <= controls_in_half_row[j,right]) endif;
 
 constraint if interconnected_plates then forall(j in Rows, h in Horizontal) ( (controls_in_row[j] div 2) <= controls_in_half_row[j,h] ) endif;
+% constraint if interconnected_plates then forall(j in Rows, h in Horizontal) ( ((controls_in_row[j]+1) div 2) >= controls_in_half_row[j,h] ) endif;
 
 constraint if interconnected_plates then forall(j in Rows) (controls_in_row[j] == (controls_in_half_row[j,left] + controls_in_half_row[j,right])) endif;
 
@@ -1157,6 +1168,8 @@ constraint forall(i in Plates, j in Rows, c in 1..num_controls*max_control_conce
 
 constraint forall(i in Plates, j in Rows) (sum(controls_row_plates[i,j,..]) + experiments_in_plate_row[i,j] == numcols);
 
+constraint sum(controls_row_plates[..,..,0]) == emptywells;
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %% Balancing each type of control per column
 
@@ -1169,6 +1182,8 @@ constraint forall(i in Plates, k in Columns, c in 1..num_controls*max_control_co
 constraint forall(i in Plates, k in Columns, c in 1..num_controls*max_control_concentrations) (controls_column_plates[i,k,c] >= (min_controls_per_plate[c] div numcols));
 
 constraint forall(i in Plates, k in Columns) (sum(controls_column_plates[i,k,..]) + experiments_in_plate_column[i,k] == numrows);
+
+constraint sum(controls_column_plates[..,..,0]) == emptywells;
 
 %% Implied all_different constraint: all experiments/compounds are different
 constraint alldifferent_except(plates, {0} union experiments+1..experiments+num_controls*max_control_concentrations):: domain;
