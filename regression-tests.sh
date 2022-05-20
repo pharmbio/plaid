@@ -1,10 +1,10 @@
 #!/bin/sh
- 
-echo "Hello, world!"
+
+echo "\nHello, world! Let's check if our PLAID constraint model continues to behave as expected...\n"
 
 myUnitTests=( 'pl-example01' '4 plates' '3'
-	      'pl-example02' 'MiniZinc: evaluation error:' '1'
-	      'pl-example03' 'MiniZinc: evaluation error:' '1'
+	      'pl-example02' 'Error: assertion failed: Invalid data: the design is unsatisfiable. It is not possible to divide the compounds and controls evenly across the plates. (E01)' '1'
+	      'pl-example03' 'Error: assertion failed: Invalid data: the design is unsatisfiable. It is not possible to divide the compounds and controls evenly across the plates. (E01)' '1'
 	      'pl-example05' '2 plates' '1'
 	      'pl-example06' '2 plates' '1'
 	      'pl-example07-tiny' '4 plates' '1'
@@ -28,9 +28,9 @@ myUnitTests=( 'pl-example01' '4 plates' '3'
 	      'pl-example28' '4 plates' '9'
 	      'pl-example29' '2 plates' '4'
 	      'pl-example30' '1 plates' '5'
-	      'pl-example31' 'MiniZinc: evaluation error:' '1'
+	      'pl-example31' 'Error: assertion failed: Invalid datafile: There are too many controls of only one kind. This is not allowed at the moment. If you believe this is a mistake, please contact the developers.' '1'
 	      'pl-example35' '1 plates' '66'
-	      'pl-example36' 'MiniZinc: evaluation error:' '1'
+	      'pl-example36' 'Error: assertion failed: Invalid datafile: There are too many controls of only one kind. This is not allowed at the moment. If you believe this is a mistake, please contact the developers.' '1'
 	      'pl-example37' '1 plates' '1'
 	      'pl-example44' '2 plates' '150' #Testing sorted_compounds
 	      '2020-10-08-jonne-slack' '1 plates' '21'
