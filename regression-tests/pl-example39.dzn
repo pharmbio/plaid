@@ -42,7 +42,7 @@ control_concentrations = [ 1 | i in 1..num_controls];
 
 control_replicates = [ 2 | i in 1..num_controls];
 
-control_names = ["[sorbitol]","[I]","[II]","[III]","(M)"];
+control_names = ["[I]","[II]","[III]","[IV]","[V]"];
 
 control_concentration_names =  array2d(1..num_controls, 1..1,["cont\(i)-conc\(1)" | i in 1..num_controls]);    
 
