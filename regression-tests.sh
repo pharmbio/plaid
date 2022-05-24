@@ -2,59 +2,66 @@
 
 echo "\nHello, world! Let's check that our PLAID constraint model continues to behave as expected...\n"
 
-myUnitTests=( 'pl-example01' '4 plates' '5'
-	      'pl-example02' 'Error: assertion failed: Invalid data: the design is unsatisfiable. It is not possible to divide the compounds and controls evenly across the plates. (E01)' '1'
-	      'pl-example03' 'Error: assertion failed: Invalid data: the design is unsatisfiable. It is not possible to divide the compounds and controls evenly across the plates. (E01)' '1'
-	      'pl-example05' '2 plates' '1'
-	      'pl-example06' '2 plates' '1'
-	      'pl-example07-tiny' '4 plates' '1'
-	      'pl-example08-small' '2 plates' '3'
-	      'pl-example09' '2 plates' '2'
-	      'pl-example10' '4 plates' '10'
-	      'pl-example11' '2 plates' '385'
-	      'pl-example12' '2 plates' '1'
-	      'pl-example13' '1 plates' '5'
-	      'pl-example14' '1 plates' '1'
-	      'pl-example15' '1 plates' '1'
-	      'pl-example17' '1 plates' '1'
-	      'pl-example18' '1 plates' '1'
-	      'pl-example19' '1 plates' '3'
-	      'pl-example21' '1 plates' '1'
-	      'pl-example22' '4 plates' '1'
-	      #'pl-example23' '2 plates' '' #Duplicated example
-	      'pl-example24' '2 plates' '330'
-	      'pl-example25' '2 plates' '10'
-	      'pl-example27' '3 plates' '2'
-	      'pl-example28' '4 plates' '10'
-	      'pl-example29' '2 plates' '5'
-	      'pl-example30' '1 plates' '5'
-	      'pl-example31' 'Error: assertion failed: Invalid datafile: There are too many controls of only one kind. This is not allowed at the moment. If you believe this is a mistake, please contact the developers.' '1'
-	      'pl-example35' '1 plates' '65'
-	      'pl-example36' 'Error: assertion failed: Invalid datafile: There are too many controls of only one kind. This is not allowed at the moment. If you believe this is a mistake, please contact the developers.' '1'
-	      'pl-example37' '1 plates' '1'
-	      'pl-example42' '1 plates' '350'
-	      'pl-example44' '2 plates' '150' #Testing sorted_compounds
-	      'pl-example45' '1 plates' '11'
-	      '2020-10-08-jonne-slack' '1 plates' '20'
-	      '2020-11-13-jonne-slack' '1 plates' '3'
-	      #'compounds-10-9-3' #'1 plates' '' #'compounds-10-9-3'
-	      'dose-response-20-3-1' '1 plates' '100'
-	      'dose-response-20-3-2' '1 plates' '100'
-	      'dose-response-20-3-3' '1 plates' '100'
-	      'screening-8-8-1' '1 plates' '20'
-	      'pl-example04-jonne-doubled' '2 plates' '320'
-	      'pl-example42' '1 plates' '340'
-	      'pl-example20' '1 plates' '2221'
-	      #'2020-09-30-jonne-slack' #'1 plates'
+myUnitTests=( 'pl-example01' '5'
+	      'pl-example02' '1'
+	      'pl-example03' '1'
+	      'pl-example05' '1'
+	      'pl-example06' '1'
+	      'pl-example07-tiny' '1'
+	      'pl-example08-small' '3'
+	      'pl-example09' '2'
+	      'pl-example10' '10'
+	      'pl-example11' '385'
+	      'pl-example12' '1'
+	      'pl-example13' '5'
+	      'pl-example14' '1'
+	      'pl-example15' '1'
+	      'pl-example17' '1'
+	      'pl-example18' '1'
+	      'pl-example19' '3'
+	      'pl-example21' '1'
+	      'pl-example22' '1'
+	      #'pl-example23' '' #Duplicated example
+	      'pl-example24' '330'
+	      'pl-example25' '10'
+	      'pl-example27' '2'
+	      'pl-example28' '10'
+	      'pl-example29' '5'
+	      'pl-example30' '5'
+	      'pl-example31' '1'
+	      'pl-example35' '65'
+	      'pl-example36' '1'
+	      'pl-example37' '1'
+	      'pl-example38' '1'
+	      'pl-example39' '1'
+	      'pl-example42' '350'
+	      'pl-example43' '1'
+	      'pl-example44' '150' #Testing sorted_compounds
+	      'pl-example45' '11'
+	      '2020-10-08-jonne-slack' '20'
+	      '2020-11-13-jonne-slack' '3'
+	      'compounds-10-9-3' '-1' '' #'compounds-10-9-3'
+	      'dose-response-20-3-1' '100'
+	      'dose-response-20-3-2' '100'
+	      'dose-response-20-3-3' '100'
+	      'screening-8-8-1' '20'
+	      'pl-example04-jonne-doubled' '320'
+	      'pl-example42' '340'
+	      'pl-example20' '2200'
+	      '2020-09-30-jonne-slack' '-1'
 	    )
 
 len=${#myUnitTests[@]}
 
-for (( i=0; i<$len; i=i+3 ))
+for (( i=0; i<$len; i=i+2 ))
 do
     echo "Testing file ${myUnitTests[${i}]}.dzn"
-    echo "Expecting ${myUnitTests[${i}+1]}"
-    echo "Usually takes about ${myUnitTests[${i}+2]} sec."
+    
+    read -r line < regression-tests-expected-output/${myUnitTests[${i}]}.txt
+    
+    echo "Expecting $line"
+    
+    echo "Usually takes about ${myUnitTests[${i}+1]} sec."
 
     SECONDS=0
 
@@ -62,18 +69,18 @@ do
 #    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn ${myUnitTests[${i}]}.dzn --cmdline-data "testing=true"  &> ${myUnitTests[${i}]}.txt
 
     # Random and multi-thread
-    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn regression-tests/${myUnitTests[${i}]}.dzn -p 10 -r $RANDOM --cmdline-data "testing=true"  &> ${myUnitTests[${i}]}.txt
+    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn regression-tests/${myUnitTests[${i}]}.dzn -p 10 -r $RANDOM --cmdline-data "testing=true"  &> regression-tests-results/${myUnitTests[${i}]}.txt
 
     echo "It took about $SECONDS sec."
     
-    read -r line < ${myUnitTests[${i}]}.txt
+    read -r result_line < regression-tests-results/${myUnitTests[${i}]}.txt
     
     set -- ${myUnitTests[${i}+1]} 
 
     
     # Check that we have the expected number of plates or expected error
     
-    if [[ $line == ${myUnitTests[${i}+1]} || $1 == "assert" ]]
+    if [[ $result_line == $line || $1 == "assert" ]]
     then
 	echo "We are happy with the number of plates in ${myUnitTests[${i}]}.txt :-)"
     else
