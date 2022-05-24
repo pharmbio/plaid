@@ -5,7 +5,7 @@
 %% 2021/Mar/04: it takes about 383msec
 %% 2021/Apr/22: It takes about 342msec (with interconnected_plates = false)
 
-%% Plate dimentions: (this is a 96-well plate)
+%% Plate dimentions:
 num_rows = 4; %% height
 num_cols = 6; %% width
 
@@ -15,11 +15,10 @@ vertical_cell_lines = 1;
 allow_empty_wells = false;
 size_empty_edge = 1;
 
-% New and used!
 concentrations_on_different_rows = true;
 concentrations_on_different_columns = true;
 
-% New and unused! (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
+% Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false
 replicates_on_different_plates = true;
 replicates_on_same_plate = false;
 
