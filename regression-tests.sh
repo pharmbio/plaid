@@ -17,6 +17,7 @@ myUnitTests=( 'pl-example01' '5'
 	      'pl-example13' '5'
 	      'pl-example14' '1'
 	      'pl-example15' '1'
+	      'pl-example16' '1' #Currently not supported
 	      'pl-example17' '1'
 	      'pl-example18' '1'
 	      'pl-example19' '5'
