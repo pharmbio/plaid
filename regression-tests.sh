@@ -26,6 +26,7 @@ myUnitTests=( 'pl-example01' '5'
 	      #'pl-example23' '' #Duplicated example
 	      'pl-example24' '330'
 	      'pl-example25' '10'
+	      'pl-example26' '1' #Invalid datafile
 	      'pl-example27' '5'
 	      'pl-example28' '10'
 	      'pl-example29' '5'
