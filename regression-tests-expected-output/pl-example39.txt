@@ -1,0 +1,3 @@
+Error: assertion failed: Invalid datafile: Currently we only support plate sizes that have an inner area with an even number of columns.
+/Users/andreina/Documents/GitHub/multiplate-designer/plate-design.mzn:124.12-153
+  in call 'assert'

@@ -1,0 +1,285 @@
+1 plates
+plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL
+plate_1,B02,Drug 114,H,Drug 114_H
+plate_1,B03,Drug 34,H,Drug 34_H
+plate_1,B04,Drug 52,L,Drug 52_L
+plate_1,B05,Drug 75,H,Drug 75_H
+plate_1,B06,[a],1,[a]_1
+plate_1,B07,Drug 19,L,Drug 19_L
+plate_1,B08,Drug 41,H,Drug 41_H
+plate_1,B09,Drug 53,H,Drug 53_H
+plate_1,B11,Drug 100,H,Drug 100_H
+plate_1,B12,Drug 2,L,Drug 2_L
+plate_1,B13,Drug 98,L,Drug 98_L
+plate_1,B14,[b],1,[b]_1
+plate_1,B15,Drug 125,H,Drug 125_H
+plate_1,B16,Drug 94,L,Drug 94_L
+plate_1,B17,[DMSO],1,[DMSO]_1
+plate_1,B18,Drug 126,L,Drug 126_L
+plate_1,B19,Drug 3,H,Drug 3_H
+plate_1,B20,Drug 1,H,Drug 1_H
+plate_1,B21,Drug 124,L,Drug 124_L
+plate_1,B22,Drug 28,H,Drug 28_H
+plate_1,B23,Drug 122,H,Drug 122_H
+plate_1,C02,Drug 25,H,Drug 25_H
+plate_1,C03,[e],1,[e]_1
+plate_1,C04,Drug 83,H,Drug 83_H
+plate_1,C05,Drug 69,H,Drug 69_H
+plate_1,C06,Drug 103,L,Drug 103_L
+plate_1,C07,Drug 49,L,Drug 49_L
+plate_1,C08,Drug 74,H,Drug 74_H
+plate_1,C09,Drug 44,L,Drug 44_L
+plate_1,C10,Drug 60,H,Drug 60_H
+plate_1,C11,[DMSO],1,[DMSO]_1
+plate_1,C12,Drug 9,L,Drug 9_L
+plate_1,C13,Drug 88,L,Drug 88_L
+plate_1,C14,Drug 106,L,Drug 106_L
+plate_1,C15,Drug 31,L,Drug 31_L
+plate_1,C16,Drug 5,L,Drug 5_L
+plate_1,C17,Drug 90,L,Drug 90_L
+plate_1,C19,Drug 102,H,Drug 102_H
+plate_1,C20,Drug 78,L,Drug 78_L
+plate_1,C22,Drug 104,H,Drug 104_H
+plate_1,C23,Drug 15,H,Drug 15_H
+plate_1,D03,Drug 96,L,Drug 96_L
+plate_1,D04,Drug 70,H,Drug 70_H
+plate_1,D05,Drug 117,H,Drug 117_H
+plate_1,D06,Drug 118,L,Drug 118_L
+plate_1,D07,Drug 99,H,Drug 99_H
+plate_1,D08,Drug 29,H,Drug 29_H
+plate_1,D10,Drug 66,H,Drug 66_H
+plate_1,D11,Drug 72,L,Drug 72_L
+plate_1,D12,Drug 110,H,Drug 110_H
+plate_1,D13,Drug 95,L,Drug 95_L
+plate_1,D14,Drug 115,L,Drug 115_L
+plate_1,D15,Drug 67,H,Drug 67_H
+plate_1,D16,Drug 17,L,Drug 17_L
+plate_1,D17,Drug 79,H,Drug 79_H
+plate_1,D18,Drug 86,L,Drug 86_L
+plate_1,D19,Drug 10,L,Drug 10_L
+plate_1,D20,[DMSO],1,[DMSO]_1
+plate_1,D21,Drug 47,H,Drug 47_H
+plate_1,D22,Drug 22,L,Drug 22_L
+plate_1,D23,[DMSO],1,[DMSO]_1
+plate_1,E02,[DMSO],1,[DMSO]_1
+plate_1,E03,Drug 48,H,Drug 48_H
+plate_1,E04,Drug 112,H,Drug 112_H
+plate_1,E05,Drug 39,H,Drug 39_H
+plate_1,E06,Drug 23,H,Drug 23_H
+plate_1,E07,Drug 91,L,Drug 91_L
+plate_1,E08,Drug 18,H,Drug 18_H
+plate_1,E10,Drug 4,L,Drug 4_L
+plate_1,E11,Drug 119,L,Drug 119_L
+plate_1,E12,Drug 113,H,Drug 113_H
+plate_1,E13,Drug 7,L,Drug 7_L
+plate_1,E15,[d],1,[d]_1
+plate_1,E16,Drug 16,L,Drug 16_L
+plate_1,E17,Drug 65,H,Drug 65_H
+plate_1,E18,Drug 57,L,Drug 57_L
+plate_1,E19,Drug 121,L,Drug 121_L
+plate_1,E20,Drug 89,L,Drug 89_L
+plate_1,E21,Drug 93,L,Drug 93_L
+plate_1,E22,Drug 105,L,Drug 105_L
+plate_1,E23,Drug 58,L,Drug 58_L
+plate_1,F02,Drug 21,L,Drug 21_L
+plate_1,F03,Drug 56,H,Drug 56_H
+plate_1,F04,Drug 6,L,Drug 6_L
+plate_1,F05,[DMSO],1,[DMSO]_1
+plate_1,F06,Drug 97,H,Drug 97_H
+plate_1,F07,Drug 35,H,Drug 35_H
+plate_1,F08,[DMSO],1,[DMSO]_1
+plate_1,F09,Drug 32,L,Drug 32_L
+plate_1,F10,Drug 50,H,Drug 50_H
+plate_1,F11,Drug 85,L,Drug 85_L
+plate_1,F12,Drug 92,L,Drug 92_L
+plate_1,F13,Drug 108,H,Drug 108_H
+plate_1,F14,Drug 36,H,Drug 36_H
+plate_1,F15,Drug 77,H,Drug 77_H
+plate_1,F16,Drug 8,H,Drug 8_H
+plate_1,F17,Drug 109,H,Drug 109_H
+plate_1,F18,Drug 73,L,Drug 73_L
+plate_1,F19,Drug 81,L,Drug 81_L
+plate_1,F21,Drug 107,L,Drug 107_L
+plate_1,F22,Drug 54,L,Drug 54_L
+plate_1,G02,Drug 120,H,Drug 120_H
+plate_1,G03,Drug 33,H,Drug 33_H
+plate_1,G05,Drug 123,H,Drug 123_H
+plate_1,G06,Drug 51,H,Drug 51_H
+plate_1,G08,Drug 27,H,Drug 27_H
+plate_1,G09,Drug 84,H,Drug 84_H
+plate_1,G10,Drug 13,L,Drug 13_L
+plate_1,G11,Drug 111,H,Drug 111_H
+plate_1,G12,Drug 116,H,Drug 116_H
+plate_1,G13,Drug 101,L,Drug 101_L
+plate_1,G14,Drug 40,L,Drug 40_L
+plate_1,G15,Drug 38,L,Drug 38_L
+plate_1,G16,Drug 42,L,Drug 42_L
+plate_1,G17,Drug 30,L,Drug 30_L
+plate_1,G18,Drug 59,H,Drug 59_H
+plate_1,G19,[c],1,[c]_1
+plate_1,G20,Drug 46,H,Drug 46_H
+plate_1,G21,Drug 80,H,Drug 80_H
+plate_1,G22,[DMSO],1,[DMSO]_1
+plate_1,G23,Drug 37,H,Drug 37_H
+plate_1,H02,Drug 87,L,Drug 87_L
+plate_1,H04,Drug 11,L,Drug 11_L
+plate_1,H05,Drug 68,H,Drug 68_H
+plate_1,H06,Drug 14,L,Drug 14_L
+plate_1,H07,Drug 62,L,Drug 62_L
+plate_1,H08,Drug 76,H,Drug 76_H
+plate_1,H09,Drug 43,L,Drug 43_L
+plate_1,H10,Drug 12,H,Drug 12_H
+plate_1,H11,Drug 20,L,Drug 20_L
+plate_1,H12,[DMSO],1,[DMSO]_1
+plate_1,H14,Drug 24,H,Drug 24_H
+plate_1,H15,Drug 55,H,Drug 55_H
+plate_1,H16,[DMSO],1,[DMSO]_1
+plate_1,H17,Drug 82,H,Drug 82_H
+plate_1,H18,Drug 61,L,Drug 61_L
+plate_1,H19,Drug 45,L,Drug 45_L
+plate_1,H20,Drug 26,L,Drug 26_L
+plate_1,H21,Drug 64,L,Drug 64_L
+plate_1,H22,Drug 71,L,Drug 71_L
+plate_1,H23,Drug 63,H,Drug 63_H
+plate_1,I02,Drug 108,L,Drug 108_L
+plate_1,I03,Drug 24,L,Drug 24_L
+plate_1,I04,[DMSO],1,[DMSO]_1
+plate_1,I05,Drug 17,H,Drug 17_H
+plate_1,I06,Drug 64,H,Drug 64_H
+plate_1,I07,[DMSO],1,[DMSO]_1
+plate_1,I08,Drug 28,L,Drug 28_L
+plate_1,I09,Drug 81,H,Drug 81_H
+plate_1,I10,Drug 16,H,Drug 16_H
+plate_1,I11,Drug 125,L,Drug 125_L
+plate_1,I12,Drug 65,L,Drug 65_L
+plate_1,I13,Drug 52,H,Drug 52_H
+plate_1,I14,Drug 116,L,Drug 116_L
+plate_1,I15,Drug 120,L,Drug 120_L
+plate_1,I16,Drug 69,L,Drug 69_L
+plate_1,I18,Drug 43,H,Drug 43_H
+plate_1,I19,Drug 111,L,Drug 111_L
+plate_1,I20,Drug 9,H,Drug 9_H
+plate_1,I21,Drug 41,L,Drug 41_L
+plate_1,I23,Drug 68,L,Drug 68_L
+plate_1,J02,Drug 63,L,Drug 63_L
+plate_1,J03,Drug 88,H,Drug 88_H
+plate_1,J04,Drug 59,L,Drug 59_L
+plate_1,J05,Drug 73,H,Drug 73_H
+plate_1,J06,Drug 10,H,Drug 10_H
+plate_1,J07,Drug 1,L,Drug 1_L
+plate_1,J09,Drug 105,H,Drug 105_H
+plate_1,J10,Drug 77,L,Drug 77_L
+plate_1,J12,Drug 58,H,Drug 58_H
+plate_1,J13,Drug 118,H,Drug 118_H
+plate_1,J14,Drug 32,H,Drug 32_H
+plate_1,J15,Drug 19,H,Drug 19_H
+plate_1,J16,Drug 56,L,Drug 56_L
+plate_1,J17,Drug 27,L,Drug 27_L
+plate_1,J18,Drug 39,L,Drug 39_L
+plate_1,J19,[DMSO],1,[DMSO]_1
+plate_1,J20,Drug 23,L,Drug 23_L
+plate_1,J21,Drug 18,L,Drug 18_L
+plate_1,J22,[a],1,[a]_1
+plate_1,J23,Drug 60,L,Drug 60_L
+plate_1,K02,Drug 102,L,Drug 102_L
+plate_1,K03,Drug 101,H,Drug 101_H
+plate_1,K05,Drug 106,H,Drug 106_H
+plate_1,K06,Drug 89,H,Drug 89_H
+plate_1,K07,Drug 104,L,Drug 104_L
+plate_1,K08,Drug 3,L,Drug 3_L
+plate_1,K09,Drug 57,H,Drug 57_H
+plate_1,K10,Drug 26,H,Drug 26_H
+plate_1,K11,Drug 36,L,Drug 36_L
+plate_1,K12,[d],1,[d]_1
+plate_1,K13,Drug 66,L,Drug 66_L
+plate_1,K14,Drug 114,L,Drug 114_L
+plate_1,K15,[DMSO],1,[DMSO]_1
+plate_1,K16,Drug 33,L,Drug 33_L
+plate_1,K17,Drug 119,H,Drug 119_H
+plate_1,K18,Drug 20,H,Drug 20_H
+plate_1,K19,Drug 99,L,Drug 99_L
+plate_1,K21,Drug 83,L,Drug 83_L
+plate_1,K22,Drug 6,H,Drug 6_H
+plate_1,K23,Drug 11,H,Drug 11_H
+plate_1,L02,[c],1,[c]_1
+plate_1,L03,Drug 115,H,Drug 115_H
+plate_1,L04,Drug 93,H,Drug 93_H
+plate_1,L05,Drug 42,H,Drug 42_H
+plate_1,L06,Drug 90,H,Drug 90_H
+plate_1,L07,Drug 31,H,Drug 31_H
+plate_1,L08,Drug 5,H,Drug 5_H
+plate_1,L09,[DMSO],1,[DMSO]_1
+plate_1,L10,Drug 79,L,Drug 79_L
+plate_1,L11,Drug 95,H,Drug 95_H
+plate_1,L12,Drug 30,H,Drug 30_H
+plate_1,L13,Drug 110,L,Drug 110_L
+plate_1,L15,Drug 51,L,Drug 51_L
+plate_1,L17,Drug 112,L,Drug 112_L
+plate_1,L18,Drug 75,L,Drug 75_L
+plate_1,L19,Drug 34,L,Drug 34_L
+plate_1,L20,Drug 84,L,Drug 84_L
+plate_1,L21,Drug 85,H,Drug 85_H
+plate_1,L22,Drug 103,H,Drug 103_H
+plate_1,L23,Drug 123,L,Drug 123_L
+plate_1,M02,Drug 94,H,Drug 94_H
+plate_1,M03,Drug 40,H,Drug 40_H
+plate_1,M04,Drug 22,H,Drug 22_H
+plate_1,M05,Drug 54,H,Drug 54_H
+plate_1,M06,Drug 124,H,Drug 124_H
+plate_1,M07,Drug 109,L,Drug 109_L
+plate_1,M08,Drug 7,H,Drug 7_H
+plate_1,M09,Drug 126,H,Drug 126_H
+plate_1,M12,Drug 121,H,Drug 121_H
+plate_1,M13,Drug 96,H,Drug 96_H
+plate_1,M14,Drug 35,L,Drug 35_L
+plate_1,M15,Drug 117,L,Drug 117_L
+plate_1,M16,Drug 13,H,Drug 13_H
+plate_1,M17,Drug 72,H,Drug 72_H
+plate_1,M18,[DMSO],1,[DMSO]_1
+plate_1,M19,Drug 92,H,Drug 92_H
+plate_1,M20,Drug 113,L,Drug 113_L
+plate_1,M21,Drug 25,L,Drug 25_L
+plate_1,M22,Drug 62,H,Drug 62_H
+plate_1,M23,[e],1,[e]_1
+plate_1,N02,Drug 86,H,Drug 86_H
+plate_1,N03,[b],1,[b]_1
+plate_1,N04,Drug 71,H,Drug 71_H
+plate_1,N06,Drug 45,H,Drug 45_H
+plate_1,N07,Drug 55,L,Drug 55_L
+plate_1,N08,Drug 82,L,Drug 82_L
+plate_1,N09,Drug 122,L,Drug 122_L
+plate_1,N10,Drug 107,H,Drug 107_H
+plate_1,N11,Drug 38,H,Drug 38_H
+plate_1,N12,Drug 15,L,Drug 15_L
+plate_1,N13,[DMSO],1,[DMSO]_1
+plate_1,N14,Drug 44,H,Drug 44_H
+plate_1,N15,Drug 4,H,Drug 4_H
+plate_1,N16,Drug 29,L,Drug 29_L
+plate_1,N17,Drug 49,H,Drug 49_H
+plate_1,N18,Drug 53,L,Drug 53_L
+plate_1,N19,Drug 14,H,Drug 14_H
+plate_1,N20,Drug 74,L,Drug 74_L
+plate_1,N21,[DMSO],1,[DMSO]_1
+plate_1,N22,Drug 87,H,Drug 87_H
+plate_1,N23,Drug 100,L,Drug 100_L
+plate_1,O02,Drug 61,H,Drug 61_H
+plate_1,O03,Drug 46,L,Drug 46_L
+plate_1,O04,Drug 8,L,Drug 8_L
+plate_1,O05,Drug 78,H,Drug 78_H
+plate_1,O06,[DMSO],1,[DMSO]_1
+plate_1,O07,Drug 80,L,Drug 80_L
+plate_1,O08,Drug 37,L,Drug 37_L
+plate_1,O09,Drug 67,L,Drug 67_L
+plate_1,O10,[DMSO],1,[DMSO]_1
+plate_1,O11,Drug 98,H,Drug 98_H
+plate_1,O12,Drug 47,L,Drug 47_L
+plate_1,O13,Drug 48,L,Drug 48_L
+plate_1,O14,Drug 97,L,Drug 97_L
+plate_1,O15,Drug 76,L,Drug 76_L
+plate_1,O16,Drug 12,L,Drug 12_L
+plate_1,O17,Drug 21,H,Drug 21_H
+plate_1,O18,Drug 2,H,Drug 2_H
+plate_1,O20,Drug 91,H,Drug 91_H
+plate_1,O22,Drug 50,L,Drug 50_L
+plate_1,O23,Drug 70,L,Drug 70_L
+----------
