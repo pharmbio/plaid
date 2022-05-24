@@ -1,5 +1,0 @@
-MiniZinc: evaluation error: 
-  /Users/andreina/Documents/GitHub/multiplate-designer/plate-design.mzn:121:
-  in call 'assert'
-  Assertion failed: Invalid datafile: There are too many controls of only one kind. This is not allowed at the moment. If you believe this is a mistake, please contact the developers.
-
