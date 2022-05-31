@@ -41,15 +41,21 @@ myUnitTests=( 'pl-example01' '5'
 	      'pl-example43' '1'
 	      'pl-example44' '150' #Testing sorted_compounds
 	      'pl-example45' '15'
+	      'pl-example46' '330'
+	      'pl-example47' '1410' # 3 384-well plates
+	      'pl-example48' '6700' # 4 384-well plates
 	      '2020-09-30-jonne-slack' '20'
 	      '2020-10-08-jonne-slack' '45'
 	      '2020-11-13-jonne-slack' '3'
 	      'compounds-10-9-3' '20'
-	      'dose-response-20-3-1' '50'
-	      'dose-response-20-3-2' '50'
-	      'dose-response-20-3-3' '50'
+	      'dose-response-20-3-1' '30'
+	      'dose-response-20-3-2' '30'
+	      'dose-response-20-3-3' '30'
 	      'screening-8-8-1' '20'
-	      'pl-example20' '2200'
+	      'pl-example20' '1000'
+	      #'pl-example34' '4685' #MiniZinc ERROR
+	      #'pl-example33' '-1'
+	      #'pl-example32' '-1'
 	    )
 
 len=${#myUnitTests[@]}
