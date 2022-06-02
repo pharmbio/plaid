@@ -1,56 +1,74 @@
 #!/bin/sh
- 
-echo "Hello, world!"
 
-myUnitTests=( 'pl-example01' '4 plates' '16'
-	      'pl-example02' 'MiniZinc: evaluation error:' '1'
-	      'pl-example03' 'MiniZinc: evaluation error:' '1'
-	      'pl-example05' '2 plates' '1'
-	      'pl-example06' '2 plates' '1'
-	      'pl-example07-tiny' '4 plates' '1'
-	      'pl-example08-small' '2 plates' '3'
-	      'pl-example09' '2 plates' '2'
-	      'pl-example10' '4 plates' '14'
-	      'pl-example11' '2 plates' '230'
-	      'pl-example12' '2 plates' '1'
-	      'pl-example13' '1 plates' '5'
-	      'pl-example14' '1 plates' '1'
-	      'pl-example15' '1 plates' '1'
-	      'pl-example17' '1 plates' '1'
-	      'pl-example18' '1 plates' '1'
-	      'pl-example19' '1 plates' '3'
-	      'pl-example21' '1 plates' '1'
-	      'pl-example22' '4 plates' '1'
-	      #'pl-example23' '2 plates' '' #Duplicated example
-	      'pl-example24' '2 plates' '424'
-	      'pl-example25' '2 plates' '12'
-	      'pl-example27' '3 plates' '2'
-	      'pl-example28' '4 plates' '4'
-	      'pl-example29' '2 plates' '1'
-	      'pl-example30' '1 plates' '82'
-	      'pl-example31' 'MiniZinc: evaluation error:' '1'
-	      'pl-example35' '1 plates' '66'
-	      'pl-example36' 'MiniZinc: evaluation error:' '1'
-	      'pl-example37' '1 plates' '1'
-	      '2020-10-08-jonne-slack' '1 plates' '21'
-	      '2020-11-13-jonne-slack' '1 plates' '3'
-	      #'compounds-10-9-3' #'1 plates' '' #'compounds-10-9-3'
-	      'dose-response-20-3-1' '1 plates' '22'
-	      'dose-response-20-3-2' '1 plates' '21'
-	      'dose-response-20-3-3' '1 plates' '36'
-	      'pl-example04-jonne-doubled' '2 plates' '319'
-	      'pl-example42' '1 plates' '336'
-	      'pl-example20' '1 plates' ''
-	      #'2020-09-30-jonne-slack' #'1 plates'
+echo "\nHello, world! Let's check that our PLAID constraint model continues to behave as expected...\n"
+
+myUnitTests=( 'pl-example01' '5'
+	      'pl-example02' '1'
+	      'pl-example03' '1'
+	      'pl-example04-jonne-doubled' '320'
+	      'pl-example05' '1'
+	      'pl-example06' '1'
+	      'pl-example07' '1'
+	      'pl-example08' '3'
+	      'pl-example09' '2'
+	      'pl-example10' '10'
+	      'pl-example11' '385'
+	      'pl-example12' '1'
+	      'pl-example13' '5'
+	      'pl-example14' '1'
+	      'pl-example15' '1'
+	      'pl-example16' '1' #Currently not supported
+	      'pl-example17' '1'
+	      'pl-example18' '1'
+	      'pl-example19' '5'
+	      'pl-example21' '1'
+	      'pl-example22' '1'
+	      #'pl-example23' '' #Duplicated example
+	      'pl-example24' '330'
+	      'pl-example25' '10'
+	      'pl-example26' '1' #Invalid datafile
+	      'pl-example27' '5'
+	      'pl-example28' '10'
+	      'pl-example29' '5'
+	      'pl-example30' '5'
+	      'pl-example31' '1'
+	      'pl-example35' '60'
+	      'pl-example36' '1'
+	      'pl-example37' '1'
+	      'pl-example38' '1'
+	      'pl-example39' '1'
+	      'pl-example42' '300'
+	      'pl-example43' '1'
+	      'pl-example44' '150' #Testing sorted_compounds
+	      'pl-example45' '15'
+	      'pl-example46' '330'
+	      'pl-example47' '1410' # 3 384-well plates
+	      'pl-example48' '6700' # 4 384-well plates
+	      '2020-09-30-jonne-slack' '20'
+	      '2020-10-08-jonne-slack' '45'
+	      '2020-11-13-jonne-slack' '3'
+	      'compounds-10-9-3' '20'
+	      'dose-response-20-3-1' '30'
+	      'dose-response-20-3-2' '30'
+	      'dose-response-20-3-3' '30'
+	      'screening-8-8-1' '20'
+	      'pl-example20' '1000'
+	      #'pl-example34' '4685' #MiniZinc ERROR
+	      #'pl-example33' '-1'
+	      #'pl-example32' '-1'
 	    )
 
 len=${#myUnitTests[@]}
 
-for (( i=0; i<$len; i=i+3 ))
+for (( i=0; i<$len; i=i+2 ))
 do
     echo "Testing file ${myUnitTests[${i}]}.dzn"
-    echo "Expecting ${myUnitTests[${i}+1]}"
-    echo "Usually takes about ${myUnitTests[${i}+2]} sec."
+    
+    read -r line < regression-tests-expected-output/${myUnitTests[${i}]}.txt
+    
+    echo "Expecting $line"
+    
+    echo "Usually takes about ${myUnitTests[${i}+1]} sec."
 
     SECONDS=0
 
@@ -58,18 +76,18 @@ do
 #    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn ${myUnitTests[${i}]}.dzn --cmdline-data "testing=true"  &> ${myUnitTests[${i}]}.txt
 
     # Random and multi-thread
-    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn regression-tests/${myUnitTests[${i}]}.dzn -p 10 -r $RANDOM --cmdline-data "testing=true"  &> ${myUnitTests[${i}]}.txt
+    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn regression-tests/${myUnitTests[${i}]}.dzn -p 10 -r $RANDOM --cmdline-data "testing=true"  &> regression-tests-results/${myUnitTests[${i}]}.txt
 
     echo "It took about $SECONDS sec."
     
-    read -r line < ${myUnitTests[${i}]}.txt
+    read -r result_line < regression-tests-results/${myUnitTests[${i}]}.txt
     
     set -- ${myUnitTests[${i}+1]} 
 
     
     # Check that we have the expected number of plates or expected error
     
-    if [[ $line == ${myUnitTests[${i}+1]} || $1 == "assert" ]]
+    if [[ $result_line == $line || $1 == "assert" ]]
     then
 	echo "We are happy with the number of plates in ${myUnitTests[${i}]}.txt :-)"
     else
@@ -79,12 +97,12 @@ do
 
     # Compare that the solution is the same as before (so hopefully we haven't lost any solutions)
     
-#    if cmp "${myUnitTests[${i}]}.txt" "./output-regression-tests/${myUnitTests[${i}]}.txt";
- #   then
-#	echo "The solution has not changed :-)"
- #   else
-#	echo "WARNING: Check ${myUnitTests[${i}]}.dzn! Something changed!!!!!!!!\n"
- #   fi
+    #    if cmp "${myUnitTests[${i}]}.txt" "./output-regression-tests/${myUnitTests[${i}]}.txt";
+    #   then
+    #	echo "The solution has not changed :-)"
+    #   else
+    #	echo "WARNING: Check ${myUnitTests[${i}]}.dzn! Something changed!!!!!!!!\n"
+    #   fi
 
     echo "\n"
 done

@@ -1,0 +1,3 @@
+Error: assertion failed: Invalid datafile: There are too many controls of only one kind. This is not allowed at the moment. If you believe this is a mistake, please contact the developers.
+/Users/andreina/Documents/GitHub/multiplate-designer/plate-design.mzn:122.12-236
+  in call 'assert'

@@ -1,0 +1,55 @@
+%% Testing the sorted_compounds = true option
+
+num_rows = 16; %% height
+num_cols = 24; %% width
+
+vertical_cell_lines	 = 1;
+horizontal_cell_lines = 1;
+
+allow_empty_wells = false;
+size_empty_edge = 1;
+
+concentrations_on_different_rows = false;
+concentrations_on_different_columns = false;
+
+% Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false
+replicates_on_different_plates = false;
+replicates_on_same_plate = true;
+
+
+%%% Compounds %%%
+compounds = 44;
+
+compound_concentrations = [6 | i in 1..compounds];
+
+compound_concentration_indicators = [""|i in 1..6];
+
+compound_names = ["compound-00\(i)" | i in 1..9] ++ ["compound-0\(i)" | i in 10..compounds];
+
+
+compound_replicates	 = [2| i in 1..compounds];
+
+compound_concentration_names = [|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|"a","b","c","d","e","f"|];
+
+
+
+%% Controls %%
+num_controls = 6;
+control_concentrations = [1 | i in 1..6];
+
+control_replicates = [2*24]++[2*4|i in 1..5];
+control_concentration_names = array2d(1..num_controls,1..1,["X"]++["Z" | i in 1..5]);
+
+control_names = ["[dmso]","[1]","[2]","[3]","[4]","[5]"];
+
+sorted_compounds = true;
+
+ 
+ 
+ 
+%%% Combinations (Deprecated!) %%%
+
+combinations = 0; 
+combination_names = [];
+combination_concentration_names = [];
+combination_concentrations	 = 0; 

@@ -1,0 +1,49 @@
+%% Not supported. Odd number of columns
+%% 2021/Sep/22: it takes about ...
+
+num_rows = 16; %% height
+num_cols = 13; %% width
+
+vertical_cell_lines	 = 1;
+horizontal_cell_lines = 1;
+
+allow_empty_wells = false;
+size_empty_edge = 1;
+
+concentrations_on_different_rows = true;
+concentrations_on_different_columns = true;
+
+% Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false
+replicates_on_different_plates = true;
+replicates_on_same_plate = false;
+
+%%% Compounds %%%
+compounds = 29; %% number of drugs/compounds
+compound_concentrations	 = [ 2 | i in 1..compounds];
+compound_replicates	 = [ 2 | i in 1..compounds];
+
+compound_names =  ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29"];
+compound_concentration_names = [|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|"A","B"|];
+
+
+compound_concentration_indicators = ["",""];
+ 
+
+
+%%% Combinations %%%
+combinations = 0;
+combination_concentrations = 0;
+combination_names = [];
+combination_concentration_names = [];
+
+
+%% Controls %%
+num_controls = 7;
+control_concentrations = [2,2,2,2,2,2,1];
+
+control_replicates = [2,2,2,2,2,2,14];
+control_concentration_names = [|"D","E"|"D","E"|"D","E"|"D","E"|"D","E"|"D","E"|"F",""|];
+
+control_names = ["I","II","III","IV V","VI","VII","VIII"];
+
+ 
