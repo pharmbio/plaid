@@ -842,8 +842,6 @@ constraint if at_least_compounds <= at_most_compounds then global_cardinality_lo
 
 %% Implied constraints 
 %% These constraints are too weak when the number of plates increases
-%%% CHECK! This constraints came from the another version of the code. Need to check that these are still valid.
-%% ANDRY
 constraint if concentrations_on_different_rows then global_cardinality_low_up(experiment_row, [i | i in Rows], [numplates*(at_least_compounds div numrows)| i in Rows], [numplates*numcols| i in Rows]) endif;
 
 constraint if concentrations_on_different_columns then global_cardinality_low_up(experiment_column, [i | i in Columns], [numplates*floor(at_least_compounds/numcols)| i in Columns], [numplates*numrows| i in Columns]) endif;
@@ -874,7 +872,6 @@ constraint if concentrations_on_different_rows /\ even_rows then forall(i in Pla
 constraint if concentrations_on_different_rows /\ even_rows then forall(i in Plates)(sum(experiments_in_plate_row[i,(numrows div 2)+1..numrows]) == ul_half_plates[i,lower]) endif;
 
 %% The following constraints should be redundant when using the two constraints above.
-%% CHECK LATER!
 constraint (among(sum(i in Plates)(ul_half_plates[i,upper]),experiment_row, 1..(numrows div 2))::domain);
 constraint (among(sum(i in Plates)(ul_half_plates[i,lower]),experiment_row, (numrows div 2)+1..numrows)::domain);
 
@@ -884,7 +881,6 @@ constraint (among(sum(i in Plates)(lr_half_plates[i,right]),experiment_column, (
 
 constraint if even_rows then (forall(i in Plates)(abs(ul_half_plates[i,upper]-ul_half_plates[i,lower])<=1)) endif;
 
-%% ANDRY
 %%% Counting the number of experiments in the left and right half-plates
 constraint forall(i in Plates) (among(lr_half_plates[i,left],plates[i,..,1..numcols div 2], 1..experiments)::domain);
 constraint forall(i in Plates) (among(lr_half_plates[i,right],plates[i,..,(numcols div 2)+1..numcols], 1..experiments)::domain);
@@ -925,9 +921,6 @@ constraint sum(lr_half_plates) == sum([compound_concentrations[i]*compound_repli
 
 constraint forall(v in Vertical)(sum(ul_half_plates[..,v]) <= ceil(sum([compound_concentrations[i]*compound_replicates[i] | i in 1..compounds])/2));
 constraint forall(h in Horizontal)(sum(lr_half_plates[..,h]) <= ceil(sum([compound_concentrations[i]*compound_replicates[i] | i in 1..compounds])/2));
-
-%% HERE
-
 
 constraint forall(i in Plates, v in Vertical) ( ul_half_plates[i,v] <= ((sum([ (experiment_plate[c] == i) | c in 1..experiments]) + 1) div 2));
 constraint forall(i in Plates, h in Horizontal) ( lr_half_plates[i,h] <= ((sum([ (experiment_plate[c] == i) | c in 1..experiments]) + 1) div 2));
@@ -971,7 +964,6 @@ constraint forall(i in Plates)(global_cardinality_low_up([plates[i,j,k] | j in R
 
 
 
-%% HERE!!!
 %% I need to work on these constraints, which seem to be quite ineficient. I believe I need to use variables for halves plates, maybe even for quarter plates.
 
 array [Plates,Vertical,1..num_controls*max_control_concentrations] of var int: controls_ul_plates;
