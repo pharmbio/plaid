@@ -58,7 +58,7 @@ def __add_bowlshaped_errors_to_columns_nl(plate, error):
     
     for row_index in range(num_rows):
         for col_index in range(num_columns):
-            plate_array[row_index][col_index] = plate[row_index][col_index] * (1 + error*abs(col_index - translation_const))
+            plate_array[row_index][col_index] = max(plate[row_index][col_index] * (1 + error*abs(col_index - translation_const)),0.0)
 #            plate_array[row_index][col_index] += (np.random.random()-0.5)*error*abs(col_index - translation_const)
             
     return plate_array
@@ -73,7 +73,7 @@ def __add_bowlshaped_errors_to_rows_nl(plate, error):
     
     for row_index in range(num_rows):
         for col_index in range(num_columns):
-            plate_array[row_index][col_index] = plate[row_index][col_index] * (1 + error*abs(row_index - translation_const))
+            plate_array[row_index][col_index] = max(plate[row_index][col_index] * (1 + error*abs(row_index - translation_const)),0.0)
 #            plate_array[row_index][col_index] += (np.random.random()-0.5)*error*abs(col_index - translation_const)
             
     return plate_array
