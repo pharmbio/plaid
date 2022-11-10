@@ -160,7 +160,7 @@ force_spread_controls = (ceil(inner_plate_size/9)*numplates >= total_controls) ;
 
 
 % TODO: There are many other cases here that could be considered, for example, individual compounds with fewer concentrations/replicates.
-force_spread_concentrations = if replicates_on_different_plates /\ replicates <= numplates then (ceil(inner_plate_size/9) >= max_compound_concentrations) else (ceil(inner_plate_size/9) >= replicates*max_compound_concentrations) endif ;
+force_spread_concentrations = if replicates_on_different_plates /\ replicates <= numplates then ((inner_plate_size div 5) >= max_compound_concentrations) else (ceil(inner_plate_size/5) >= replicates*max_compound_concentrations) endif ;
 
 %force_spread_controls = false;
 
@@ -319,6 +319,18 @@ constraint forall(i in Plates, j in Rows, k in Columns) ((0 < plates[i,j,k] /\ p
 constraint if concentrations_on_different_rows then (forall(l in 1..compounds) (forall(r in 0..(compound_replicates[l]-1)) (
 alldifferent([experiment_row[r*compounds*max_compound_concentrations+(l-1)*max_compound_concentrations+i]| i in 1..min(compound_concentrations[l],numrows)]):: domain
 ))) endif; 
+
+constraint if concentrations_on_different_rows then (forall(l in 1..compounds) (forall(r in 0..(compound_replicates[l]-1)) (
+alldifferent([experiment_row[r*compounds*max_compound_concentrations+(l-1)*max_compound_concentrations+i]| i in 1..min(compound_concentrations[l],numrows)]):: domain
+))) endif; 
+
+%% HERE!!! NOW!
+%% 
+%constraint if force_spread_concentrations then forall(i in Plates, j in 1..numrows-1, k in 1..numcols-1, c in 1..compounds) (
+%2 > among([plates[i,j,k],plates[i,j+1,k],plates[i,j,k+1],plates[i,j+1,k+1]],
+%array_union([(c-1)*max_compound_concentrations+1 + r*compounds*max_compound_concentrations..c*max_compound_concentrations + r*compounds*max_compound_concentrations | r in 0..replicates-1]) 
+%)::domain) endif;   
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% WORK AREA!!!
