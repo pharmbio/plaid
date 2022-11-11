@@ -1,0 +1,17 @@
+Compound,Source plate,Source well,Destination plate,Destination well,Transfer Volume,Source Plate Type
+PD173074,source_1,B02,plate_1,B02,48.375,384PP_DMSO2
+PD173074,source_1,B02,plate_1,C05,22.5,384PP_DMSO2
+PD173074,source_1,B02,plate_1,E08,22.5,384PP_DMSO2
+PD173074,source_1,B02,plate_1,F11,48.375,384PP_DMSO2
+AZD4547,source_1,B03,plate_1,B03,5.0,384PP_DMSO2
+AZD4547,source_1,B03,plate_1,B10,7.5,384PP_DMSO2
+AZD4547,source_1,B03,plate_1,D04,5.0,384PP_DMSO2
+AZD4547,source_1,B03,plate_1,E06,7.5,384PP_DMSO2
+DMSO,source_1,B02,plate_1,B02,101.625,384PP_DMSO2
+DMSO,source_1,B02,plate_1,C05,127.5,384PP_DMSO2
+DMSO,source_1,B02,plate_1,E08,127.5,384PP_DMSO2
+DMSO,source_1,B02,plate_1,F11,101.625,384PP_DMSO2
+DMSO,source_1,B03,plate_1,B03,145.0,384PP_DMSO2
+DMSO,source_1,B03,plate_1,B10,142.5,384PP_DMSO2
+DMSO,source_1,B03,plate_1,D04,145.0,384PP_DMSO2
+DMSO,source_1,B03,plate_1,E06,142.5,384PP_DMSO2
