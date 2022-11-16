@@ -7,7 +7,14 @@ import os
 import re
 from statannotations.Annotator import Annotator # to add p-values to plots
 from scipy import stats
+from random import randrange
 
+
+box_pairs_erb = [("Effective", "Random"), ("Random", "Border"), ("Effective", "Border")]
+box_pairs_bre = [("Random", "Effective"), ("Border", "Random"), ("Border", "Effective")]
+
+order_erb = ["Effective","Random","Border"]
+order_bre = ["Border","Random","Effective"]
 
 def plot_plate(plate_array, title="", mask=None, filename=None, vmin=None, vmax=None):
     fig, ax = plt.subplots(figsize=(11, 7))
@@ -458,9 +465,9 @@ def plot_barplot_replicate_data(data_1rep, data_2rep, data_3rep, fig_name='', fi
         dose-response 4PL sigmoid curve.
     
     Args:
-        residuals_1rep:
-        residuals_2rep:
-        residuals_3rep:
+        data_1rep:
+        data_2rep:
+        data_3rep:
         fig_name: string added to the image file name.
         fig_type: string. "relic50" for relative IC50, "absic50" for absolute IC50, 
                   "diff_d" for difference in the maximum (d) value
@@ -789,3 +796,359 @@ def create_latex_table_pvalues_wide(data_1rep, data_2rep, data_3rep, tex_filenam
         
     # Close file
     latex_f.close()
+
+    
+    
+def plotting_ssmd_scores(screening_scores_data_filename, fig_name, y_min=None, y_max=None):
+    screening_scores_df = pd.read_csv(screening_scores_data_filename)
+
+    ## No rows lost!
+    screening_scores_df = screening_scores_df[screening_scores_df['lost_rows']<1]
+
+    screening_scores_df['Zfactor_expected'] = pd.to_numeric(screening_scores_df['Zfactor_expected'], errors='coerce')
+    screening_scores_df['Zfactor_norm'] = pd.to_numeric(screening_scores_df['Zfactor_norm'], errors='coerce')
+    screening_scores_df['Zfactor_raw'] = pd.to_numeric(screening_scores_df['Zfactor_raw'], errors='coerce')
+
+    screening_scores_df['SSMD_expected'] = pd.to_numeric(screening_scores_df['SSMD_expected'], errors='coerce')
+    screening_scores_df['SSMD_norm'] = pd.to_numeric(screening_scores_df['SSMD_norm'], errors='coerce')
+    screening_scores_df['SSMD_raw'] = pd.to_numeric(screening_scores_df['SSMD_raw'], errors='coerce')
+
+    screening_scores_df['SSMD_abs'] = np.abs(screening_scores_df['SSMD_raw'])
+    screening_scores_df['SSMD_norm_abs'] = np.abs(screening_scores_df['SSMD_norm'])
+    
+    ### This is only needed when the specific layout name is stored in 'layout' ###
+    screening_scores_df.loc[(screening_scores_df['layout'] >= "plate_layout_rand"), 'layout'] = "RANDOM"
+    screening_scores_df.loc[(screening_scores_df['layout'] >= "plate_layout_border") & (screening_scores_df['layout'] != "RANDOM"), 'layout'] = "BORDER"
+    screening_scores_df.loc[(screening_scores_df['layout'] >= "plate_layout") & (screening_scores_df['layout'] != "RANDOM") & (screening_scores_df['layout'] != "BORDER"), 'layout'] = "PLAID"
+
+    # Plotting
+    plotting_ssmd_scores_df = screening_scores_df[['layout','SSMD_norm_abs','lost_rows']]
+    plotting_ssmd_scores_df = plotting_ssmd_scores_df.rename(columns={'SSMD_norm_abs': 'SSMD'})
+
+    plotting_ssmd_scores_df.insert(0, 'type', 'Normalised')
+
+
+    plotting_ssmd_scores_temp_df = screening_scores_df[['layout','SSMD_abs','lost_rows']]
+    plotting_ssmd_scores_temp_df = plotting_ssmd_scores_temp_df.rename(columns={'SSMD_abs': 'SSMD'})
+
+    plotting_ssmd_scores_temp_df.insert(0, 'type', 'Raw')
+
+    plotting_ssmd_scores_df = plotting_ssmd_scores_df.append(plotting_ssmd_scores_temp_df)
+
+    plotting_ssmd_scores_df.loc[(plotting_ssmd_scores_df['layout'] == "RANDOM"), 'layout'] = "Random"
+    plotting_ssmd_scores_df.loc[(plotting_ssmd_scores_df['layout'] == "BORDER"), 'layout'] = "Border"
+    plotting_ssmd_scores_df.loc[(plotting_ssmd_scores_df['layout'] == "PLAID"), 'layout'] = "Effective"
+
+    sns.set_style("whitegrid", {'axes.grid' : False})
+
+    #palette = sns.color_palette("BuPu",3)
+    palette = sns.color_palette("BuPu",4)
+
+    fig, ax = plt.subplots(figsize=(4, 3))
+
+    if y_min:
+        ax.set_ylim(bottom = y_min)
+    if y_max:
+        ax.set_ylim(top = y_max)
+        
+    ax = sns.barplot(x='type', y="SSMD", data=plotting_ssmd_scores_df[plotting_ssmd_scores_df.lost_rows<1], palette=palette,hue='layout', order = ['Raw','Normalised'])#,showfliers = False)
+    ax.set(xlabel='', ylabel='SSMD')
+    plt.legend(ncol=3, loc="lower center", fontsize = 8)
+    plt.ylabel("Mean SSMD", fontsize = 10)
+    plt.tick_params(axis='both', which='major', labelsize=10)
+    #plt.yticks([i for i in range(1,8)])
+    
+    pvalue_thresholds = [[1e-4, "***"], [1e-2, "**"], [0.05, "*"],[1, "ns"]]
+    box_pairs = [(("Raw","Effective"),("Raw","Random")),(("Normalised","Effective"),("Normalised","Random")),(("Normalised","Random"),("Normalised","Border")),(("Normalised","Effective"),("Normalised","Border")),(("Raw","Random"),("Raw","Border")),(("Raw","Effective"),("Raw","Border"))]
+
+    annotator = Annotator(ax, pairs=box_pairs, data=plotting_ssmd_scores_df[plotting_ssmd_scores_df.lost_rows<1], x='type', y="SSMD",hue='layout', order=['Raw','Normalised'],hue_order=["Effective","Random","Border"])
+    annotator.configure(test='t-test_ind', text_format='star', loc='inside', pvalue_thresholds=pvalue_thresholds,text_offset=-1)
+    annotator.apply_and_annotate()
+
+    plt.show()
+    fig.savefig("screening-ssmd-"+fig_name+".png",bbox_inches='tight',dpi=800)
+
+
+    
+    
+def plotting_z_scores(screening_scores_data_filename, fig_name, y_min=None, y_max=None):
+    screening_scores_df = pd.read_csv(screening_scores_data_filename)
+
+    ## No rows lost!
+    screening_scores_df = screening_scores_df[screening_scores_df['lost_rows']<1]
+
+    screening_scores_df['Zfactor_expected'] = pd.to_numeric(screening_scores_df['Zfactor_expected'], errors='coerce')
+    screening_scores_df['Zfactor_norm'] = pd.to_numeric(screening_scores_df['Zfactor_norm'], errors='coerce')
+    screening_scores_df['Zfactor_raw'] = pd.to_numeric(screening_scores_df['Zfactor_raw'], errors='coerce')
+
+    screening_scores_df['SSMD_expected'] = pd.to_numeric(screening_scores_df['SSMD_expected'], errors='coerce')
+    screening_scores_df['SSMD_norm'] = pd.to_numeric(screening_scores_df['SSMD_norm'], errors='coerce')
+    screening_scores_df['SSMD_raw'] = pd.to_numeric(screening_scores_df['SSMD_raw'], errors='coerce')
+
+    ### This is only needed when the specific layout name is stored in 'layout' ###
+    screening_scores_df.loc[(screening_scores_df['layout'] >= "plate_layout_rand"), 'layout'] = "RANDOM"
+    screening_scores_df.loc[(screening_scores_df['layout'] >= "plate_layout_border") & (screening_scores_df['layout'] != "RANDOM"), 'layout'] = "BORDER"
+    screening_scores_df.loc[(screening_scores_df['layout'] >= "plate_layout") & (screening_scores_df['layout'] != "RANDOM") & (screening_scores_df['layout'] != "BORDER"), 'layout'] = "PLAID"
+
+    ## Plotting
+    plotting_z_scores_df = screening_scores_df[['layout','Zfactor_norm']]
+    plotting_z_scores_df = plotting_z_scores_df.rename(columns={'Zfactor_norm': 'Zfactor'})
+
+    plotting_z_scores_df.insert(0, 'type', 'Normalised')
+
+    plotting_z_scores_temp_df = screening_scores_df[['layout','Zfactor_raw']]
+    plotting_z_scores_temp_df = plotting_z_scores_temp_df.rename(columns={'Zfactor_raw': 'Zfactor'})
+
+    plotting_z_scores_temp_df.insert(0, 'type', 'Raw')
+
+    plotting_z_scores_df = plotting_z_scores_df.append(plotting_z_scores_temp_df)
+
+    plotting_z_scores_df.loc[(plotting_z_scores_df['layout'] == "RANDOM"), 'layout'] = "Random"
+    plotting_z_scores_df.loc[(plotting_z_scores_df['layout'] == "BORDER"), 'layout'] = "Border"
+    plotting_z_scores_df.loc[(plotting_z_scores_df['layout'] == "PLAID"), 'layout'] = "Effective"
+
+    sns.set_style("whitegrid", {'axes.grid' : False})
+
+    palette = sns.color_palette("Greens",5)
+
+    fig, ax = plt.subplots(figsize=(4, 3))
+    
+    if y_min:
+        ax.set_ylim(bottom = y_min)
+    if y_max:
+        ax.set_ylim(top = y_max)
+
+    ax = sns.barplot(x='type', y="Zfactor", data=plotting_z_scores_df, palette=palette,hue='layout', order = ['Raw','Normalised'])
+    ax.set(xlabel="", ylabel="Z' factor")
+    plt.tick_params(axis='both', which='major', labelsize=10)
+    plt.legend(ncol=3, loc="upper center", fontsize = 8)
+    plt.ylabel("Mean Z' factor", fontsize = 10)
+
+    pvalue_thresholds = [[1e-4, "***"], [1e-2, "**"], [0.05, "*"],[1, "ns"]]
+    box_pairs = [(("Raw","Effective"),("Raw","Random")),(("Normalised","Effective"),("Normalised","Random")),(("Normalised","Random"),("Normalised","Border")),(("Normalised","Effective"),("Normalised","Border")),(("Raw","Random"),("Raw","Border")),(("Raw","Effective"),("Raw","Border"))]
+
+    annotator = Annotator(ax, pairs=box_pairs, data=plotting_z_scores_df, x='type', y="Zfactor",hue='layout', order=['Raw','Normalised'],hue_order=["Effective","Random","Border"])
+    annotator.configure(test='t-test_ind', text_format='star', loc='inside', pvalue_thresholds=pvalue_thresholds,text_offset=-1)
+    annotator.apply_and_annotate()
+
+    plt.show()
+    fig.savefig("screening-zpfactor-"+fig_name+".png",bbox_inches='tight',dpi=800)
+    
+    
+def plotting_ssmd_scores_norm(screening_scores_data_filename, fig_name, y_min=None, y_max=None):
+    screening_scores_df = pd.read_csv(screening_scores_data_filename)
+
+    ## No rows lost!
+    screening_scores_df = screening_scores_df[screening_scores_df['lost_rows']<1]
+
+    screening_scores_df['SSMD_expected'] = pd.to_numeric(screening_scores_df['SSMD_expected'], errors='coerce')
+    screening_scores_df['SSMD_norm'] = pd.to_numeric(screening_scores_df['SSMD_norm'], errors='coerce')
+    screening_scores_df['SSMD_raw'] = pd.to_numeric(screening_scores_df['SSMD_raw'], errors='coerce')
+
+    screening_scores_df['SSMD_abs'] = np.abs(screening_scores_df['SSMD_raw'])
+    screening_scores_df['SSMD_norm_abs'] = np.abs(screening_scores_df['SSMD_norm'])
+    
+    ### This is only needed when the specific layout name is stored in 'layout' ###
+    screening_scores_df.loc[(screening_scores_df['layout'] >= "plate_layout_rand"), 'layout'] = "RANDOM"
+    screening_scores_df.loc[(screening_scores_df['layout'] >= "plate_layout_border") & (screening_scores_df['layout'] != "RANDOM"), 'layout'] = "BORDER"
+    screening_scores_df.loc[(screening_scores_df['layout'] >= "plate_layout") & (screening_scores_df['layout'] != "RANDOM") & (screening_scores_df['layout'] != "BORDER"), 'layout'] = "PLAID"
+
+    screening_scores_df.loc[(screening_scores_df['layout'] == "RANDOM"), 'layout'] = "Random"
+    screening_scores_df.loc[(screening_scores_df['layout'] == "BORDER"), 'layout'] = "Border"
+    screening_scores_df.loc[(screening_scores_df['layout'] == "PLAID"), 'layout'] = "Effective"
+
+    sns.set_style("whitegrid", {'axes.grid' : True})
+
+    palette = sns.color_palette("BuPu",4)
+
+    fig, ax = plt.subplots(figsize=(3, 3))
+
+    if y_min:
+        ax.set_ylim(bottom = y_min)
+    if y_max:
+        ax.set_ylim(top = y_max)
+
+        
+    ax = sns.barplot(x='layout', y="SSMD_norm_abs", data=screening_scores_df, palette=palette)#,showfliers = False)
+    ax.set(xlabel='', ylabel='SSMD')
+    #plt.legend(ncol=3, loc="lower center", fontsize = 8)
+    plt.ylabel("Mean SSMD", fontsize = 10)
+    plt.tick_params(axis='both', which='major', labelsize=10)
+    #plt.yticks([i for i in range(1,8)])
+    
+    pvalue_thresholds = [[1e-4, "***"], [1e-2, "**"], [0.05, "*"],[1, "ns"]]
+    box_pairs = [("Effective", "Random"), ("Random", "Border"), ("Effective", "Border")]
+
+    annotator = Annotator(ax, pairs=box_pairs, data=screening_scores_df, x='layout', y="SSMD_norm_abs", order=["Effective","Random","Border"])
+    annotator.configure(test='t-test_ind', text_format='star', loc='inside', pvalue_thresholds=pvalue_thresholds,text_offset=-1)
+    annotator.apply_and_annotate()
+
+    plt.show()
+    fig.savefig("screening-ssmd-"+fig_name+".png",bbox_inches='tight',dpi=800)
+
+
+    
+def plotting_z_scores_norm(screening_scores_data_filename, fig_name, y_min=None, y_max=None):
+    screening_scores_df = pd.read_csv(screening_scores_data_filename)
+
+    ## No rows lost!
+    screening_scores_df = screening_scores_df[screening_scores_df['lost_rows']<1]
+
+    screening_scores_df['Zfactor_expected'] = pd.to_numeric(screening_scores_df['Zfactor_expected'], errors='coerce')
+    screening_scores_df['Zfactor_norm'] = pd.to_numeric(screening_scores_df['Zfactor_norm'], errors='coerce')
+    screening_scores_df['Zfactor_raw'] = pd.to_numeric(screening_scores_df['Zfactor_raw'], errors='coerce')
+
+    ### This is only needed when the specific layout name is stored in 'layout' ###
+    screening_scores_df.loc[(screening_scores_df['layout'] >= "plate_layout_rand"), 'layout'] = "RANDOM"
+    screening_scores_df.loc[(screening_scores_df['layout'] >= "plate_layout_border") & (screening_scores_df['layout'] != "RANDOM"), 'layout'] = "BORDER"
+    screening_scores_df.loc[(screening_scores_df['layout'] >= "plate_layout") & (screening_scores_df['layout'] != "RANDOM") & (screening_scores_df['layout'] != "BORDER"), 'layout'] = "PLAID"
+
+    screening_scores_df.loc[(screening_scores_df['layout'] == "RANDOM"), 'layout'] = "Random"
+    screening_scores_df.loc[(screening_scores_df['layout'] == "BORDER"), 'layout'] = "Border"
+    screening_scores_df.loc[(screening_scores_df['layout'] == "PLAID"), 'layout'] = "Effective"
+
+    
+    sns.set_style("whitegrid", {'axes.grid' : True})
+
+    palette = sns.color_palette("Greens",5)
+
+    fig, ax = plt.subplots(figsize=(3, 3))
+    
+    if y_min:
+        ax.set_ylim(bottom = y_min)
+    if y_max:
+        ax.set_ylim(top = y_max)
+    else:
+        ax.set_ylim(top = 1)
+
+
+    ax = sns.barplot(x='layout', y="Zfactor_norm", data=screening_scores_df, palette=palette)
+    ax.set(xlabel="", ylabel="Z' factor")
+    plt.tick_params(axis='both', which='major', labelsize=10)
+    #plt.legend(ncol=3, loc="upper center", fontsize = 8)
+    plt.ylabel("Mean Z' factor", fontsize = 10)
+
+    pvalue_thresholds = [[1e-4, "***"], [1e-2, "**"], [0.05, "*"],[1, "ns"]]
+    box_pairs = [("Effective", "Random"), ("Random", "Border"), ("Effective", "Border")]
+
+    annotator = Annotator(ax, pairs=box_pairs, data=screening_scores_df, x='layout', y="Zfactor_norm", order=["Effective","Random","Border"])
+    annotator.configure(test='t-test_ind', text_format='star', loc='inside', pvalue_thresholds=pvalue_thresholds,text_offset=-1)
+    annotator.apply_and_annotate()
+
+    plt.show()
+    fig.savefig("screening-zpfactor-"+fig_name+".png",bbox_inches='tight',dpi=800)
+    
+    
+    
+## Functions used to create the screening/control layouts for the quality assessment metrics experiments
+
+def full_controls_layout(layout, activity_layout, neg_control_id, pos_control_id):
+    extended_controls_layout = np.copy(layout)
+    num_rows, num_columns = layout.shape
+    
+    for row_index in range(num_rows):
+        for col_index in range(num_columns):
+            if (layout[row_index][col_index] > 0 and activity_layout[row_index][col_index] == 0):
+                extended_controls_layout[row_index][col_index] = neg_control_id
+                            
+            elif (layout[row_index][col_index] > 0 and activity_layout[row_index][col_index] == 1):
+                 extended_controls_layout[row_index][col_index] = pos_control_id
+                    
+    return extended_controls_layout
+
+
+def plate_to_random_layout(layout, activity_layout, num_neg_controls, num_pos_controls, neg_control_id, pos_control_id):
+    num_rows, num_columns = layout.shape
+    random_layout = np.full((num_rows, num_columns), 0)
+    
+    while num_neg_controls>0:
+        rand_row = randrange(num_rows)
+        rand_col = randrange(num_columns)
+        
+        if (layout[rand_row][rand_col] > 0) and (random_layout[rand_row][rand_col] == 0) and (activity_layout[rand_row][rand_col] == 0):
+            random_layout[rand_row][rand_col] = neg_control_id
+            num_neg_controls = num_neg_controls - 1
+
+    while num_pos_controls>0:
+        rand_row = randrange(num_rows)
+        rand_col = randrange(num_columns)
+        
+        if (layout[rand_row][rand_col] > 0) and (random_layout[rand_row][rand_col] == 0) and (activity_layout[rand_row][rand_col] == 1):
+            random_layout[rand_row][rand_col] = pos_control_id
+            num_pos_controls = num_pos_controls - 1
+            
+    
+    return random_layout
+
+
+def plate_to_border_layout(layout, activity_layout, num_neg_controls, num_pos_controls, neg_control_id, pos_control_id):
+    num_rows, num_columns = layout.shape
+    border_layout = np.full((num_rows, num_columns), 0)
+
+    for col_i in range(num_columns):
+        for row_i in range(num_rows):
+            for j in [col_i,num_columns-col_i-1]:
+                if (layout[row_i][j] > 0) and (border_layout[row_i][j] == 0):
+                    if num_neg_controls > 0 and (activity_layout[row_i][j] == 0):
+                        border_layout[row_i][j] = neg_control_id
+                        num_neg_controls = num_neg_controls - 1
+
+                    elif num_pos_controls > 0 and (activity_layout[row_i][j] == 1):
+                        border_layout[row_i][j] = pos_control_id
+                        num_pos_controls = num_pos_controls - 1
+        
+        if num_neg_controls == 0 and num_pos_controls == 0: break
+    
+    return border_layout
+
+
+
+def plotting_residual_metrics(screening_scores_data_filename, metric='Zfactor', fig_name=None, y_min=None, y_max=None, palette=None, plots_directory = '',box_pairs=box_pairs_bre, order=order_bre ):
+    print(screening_scores_data_filename)
+    screening_scores_df = pd.read_csv(screening_scores_data_filename)
+
+    screening_scores_df[metric+'_expected'] = pd.to_numeric(screening_scores_df[metric+'_expected'], errors='coerce')
+    screening_scores_df[metric+'_plaid'] = pd.to_numeric(screening_scores_df[metric+'_plaid'], errors='coerce')
+    screening_scores_df[metric+'_rand'] = pd.to_numeric(screening_scores_df[metric+'_rand'], errors='coerce')
+    screening_scores_df[metric+'_border'] = pd.to_numeric(screening_scores_df[metric+'_border'], errors='coerce')
+    
+    results_df = pd.DataFrame(np.square(screening_scores_df[metric+'_expected'] - screening_scores_df[metric+'_plaid']), columns = ['MSE'])
+    rand_df = pd.DataFrame(np.square(screening_scores_df[metric+'_expected'] - screening_scores_df[metric+'_rand']), columns = ['MSE'])
+    border_df = pd.DataFrame(np.square(screening_scores_df[metric+'_expected'] - screening_scores_df[metric+'_border']), columns = ['MSE'])
+    
+    results_df.insert(0, 'layout', 'Effective')
+    rand_df.insert(0, 'layout', 'Random')
+    border_df.insert(0, 'layout', 'Border')
+
+    results_df = results_df.append(rand_df)
+    results_df = results_df.append(border_df)
+    
+    sns.set_style("whitegrid", {'axes.grid' : True})
+
+    if palette is None:
+        palette = sns.color_palette("Greens",5)
+
+    fig, ax = plt.subplots(figsize=(4,3))
+    
+    if y_min:
+        ax.set_ylim(bottom = y_min)
+    if y_max:
+        ax.set_ylim(top = y_max)
+
+
+    ax = sns.barplot(x='layout', y="MSE", data=results_df, palette=palette, order=order)
+    plt.tick_params(axis='both', which='major', labelsize=10)
+    plt.ylabel("MSE", fontsize = 10)
+
+    #pvalue_thresholds = [[1e-4, "***"], [1e-2, "**"], [0.05, "*"],[1, "ns"]]
+    
+
+    annotator = Annotator(ax, pairs=box_pairs, data=results_df, x='layout', y="MSE", order=order)
+    annotator.configure(test='t-test_ind', text_format='star', loc='inside', text_offset=-1)
+    annotator.apply_and_annotate()
+
+    plt.show()
+    
+    if fig_name:
+        fig.savefig(plots_directory+"screening-"+metric+"-mse-"+fig_name+".png",bbox_inches='tight',dpi=800)
+

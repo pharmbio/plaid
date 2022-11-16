@@ -17,7 +17,7 @@
 %
 % Authors: Maria Andreina FRANCISCO RODRIGUEZ (maria.andreina.francisco@farmbio.uu.se)
 % Version: 1.0
-% Last Revision: May 2022
+% Last Revision: September 2022
 %
 
 include "globals.mzn";
@@ -156,7 +156,12 @@ constraint assert(min(compound_concentrations++[0]) <= inner_plate_size, "Invali
 int: numplates = max(ceil(total_wells/inner_plate_size),1);         
               
 force_spread_controls = (ceil(inner_plate_size/9)*numplates >= total_controls) ;
-force_spread_concentrations = (ceil(inner_plate_size/9) >= max_compound_concentrations) ;
+%force_spread_concentrations = if replicates_on_same_plate \/ replicates <= numplates then (ceil(inner_plate_size/9) >= replicates*max_compound_concentrations) else (ceil(inner_plate_size/9) >= max_compound_concentrations) endif ;
+
+
+% TODO: There are many other cases here that could be considered, for example, individual compounds with fewer concentrations/replicates.
+force_spread_concentrations = if replicates_on_different_plates /\ replicates <= numplates then ((inner_plate_size div 5) >= max_compound_concentrations) else (ceil(inner_plate_size/5) >= replicates*max_compound_concentrations) endif ;
+
 %force_spread_controls = false;
 
 
@@ -203,7 +208,7 @@ array [1..experiments] of var {0} union Columns: experiment_column;
 
 
 %%%% CONSTRAINTS %%%%
-
+%% Place only the exact amount of compounds, controls, and empty wells.
 constraint global_cardinality(plates,[0]++[ i | i in 1..experiments]++[i | i in experiments+1..experiments]++[ experiments+i | i in 1..num_controls*max_control_concentrations],[emptywells]++[(floor((i-1)/(compounds*max_compound_concentrations))<compound_replicates[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1]) /\ ((floor((i-1))) mod max_compound_concentrations) < compound_concentrations[(floor(((i-1)/max_compound_concentrations)) mod compounds)+1] | i in 1..experiments]++[1|i in experiments+1..experiments]++[control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1]) | i in 1..num_controls*max_control_concentrations]);
 
 %% Experiments that do not exists are not located in any plate, row, or column.
@@ -257,9 +262,29 @@ constraint forall(l in 1..experiments where ((l mod max_compound_concentrations)
 %     var 0..1: num_concentrations;
 %    } in among(num_concentrations,[plates[i,j,k],plates[i,j+1,k],plates[i,j,k+1],plates[i,j+1,k+1]],(l..(l+compound_concentrations[(floor(((l-1)/max_compound_concentrations)) mod compounds)+1]-1)))::domain) endif;
 
-constraint if force_spread_concentrations then forall(i in Plates, j in 1..numrows-1, k in 1..numcols-1,l in 1..experiments where ((l mod max_compound_concentrations) == 1)) (
-2 > among([plates[i,j,k],plates[i,j+1,k],plates[i,j,k+1],plates[i,j+1,k+1]],(l..(l+compound_concentrations[(floor(((l-1)/max_compound_concentrations)) mod compounds)+1]-1)))::domain) endif;
-   
+% Replaced by constraint below for clarity (less index math)
+%constraint if force_spread_concentrations then forall(i in Plates, j in 1..numrows-1, k in 1..numcols-1,l in 1..experiments where ((l mod max_compound_concentrations) == 1)) (
+%2 > among([plates[i,j,k],plates[i,j+1,k],plates[i,j,k+1],plates[i,j+1,k+1]],(l..(l+compound_concentrations[(floor(((l-1)/max_compound_concentrations)) mod compounds)+1]-1)))::domain) endif;
+
+
+% Replaced by constraint below to in order to include replicates
+%constraint if force_spread_concentrations then forall(i in Plates, j in 1..numrows-1, k in 1..numcols-1, c in 1..compounds, r in 0..replicates-1) (
+%2 > among([plates[i,j,k],plates[i,j+1,k],plates[i,j,k+1],plates[i,j+1,k+1]],((c-1)*r*max_compound_concentrations+1..c*r*max_compound_concentrations))::domain) endif;   
+
+      
+constraint if force_spread_concentrations then forall(i in Plates, j in 1..numrows-1, k in 1..numcols-1, c in 1..compounds) (
+2 > among([plates[i,j,k],plates[i,j+1,k],plates[i,j,k+1],plates[i,j+1,k+1]],
+array_union([(c-1)*max_compound_concentrations+1 + r*compounds*max_compound_concentrations..c*max_compound_concentrations + r*compounds*max_compound_concentrations | r in 0..replicates-1]) 
+)::domain) endif;   
+
+                                    
+%%array [1..experiments] of var {0} union Plates: experiment_plate; array_union
+      
+array [1..replicates] of set of int: tt = [r*max_compound_concentrations+1..r*max_compound_concentrations | r in 0..replicates-1]   ;   
+      
+%compound_replicates[(floor(((l-1)/max_compound_concentrations)) mod compounds)+1]  
+
+
 % constraint forall(i in Plates, j in Rows) (
 %   let{
 %     var int: exprInRow;
@@ -294,6 +319,18 @@ constraint forall(i in Plates, j in Rows, k in Columns) ((0 < plates[i,j,k] /\ p
 constraint if concentrations_on_different_rows then (forall(l in 1..compounds) (forall(r in 0..(compound_replicates[l]-1)) (
 alldifferent([experiment_row[r*compounds*max_compound_concentrations+(l-1)*max_compound_concentrations+i]| i in 1..min(compound_concentrations[l],numrows)]):: domain
 ))) endif; 
+
+constraint if concentrations_on_different_rows then (forall(l in 1..compounds) (forall(r in 0..(compound_replicates[l]-1)) (
+alldifferent([experiment_row[r*compounds*max_compound_concentrations+(l-1)*max_compound_concentrations+i]| i in 1..min(compound_concentrations[l],numrows)]):: domain
+))) endif; 
+
+%% HERE!!! NOW!
+%% 
+%constraint if force_spread_concentrations then forall(i in Plates, j in 1..numrows-1, k in 1..numcols-1, c in 1..compounds) (
+%2 > among([plates[i,j,k],plates[i,j+1,k],plates[i,j,k+1],plates[i,j+1,k+1]],
+%array_union([(c-1)*max_compound_concentrations+1 + r*compounds*max_compound_concentrations..c*max_compound_concentrations + r*compounds*max_compound_concentrations | r in 0..replicates-1]) 
+%)::domain) endif;   
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% WORK AREA!!!
@@ -842,8 +879,6 @@ constraint if at_least_compounds <= at_most_compounds then global_cardinality_lo
 
 %% Implied constraints 
 %% These constraints are too weak when the number of plates increases
-%%% CHECK! This constraints came from the another version of the code. Need to check that these are still valid.
-%% ANDRY
 constraint if concentrations_on_different_rows then global_cardinality_low_up(experiment_row, [i | i in Rows], [numplates*(at_least_compounds div numrows)| i in Rows], [numplates*numcols| i in Rows]) endif;
 
 constraint if concentrations_on_different_columns then global_cardinality_low_up(experiment_column, [i | i in Columns], [numplates*floor(at_least_compounds/numcols)| i in Columns], [numplates*numrows| i in Columns]) endif;
@@ -874,7 +909,6 @@ constraint if concentrations_on_different_rows /\ even_rows then forall(i in Pla
 constraint if concentrations_on_different_rows /\ even_rows then forall(i in Plates)(sum(experiments_in_plate_row[i,(numrows div 2)+1..numrows]) == ul_half_plates[i,lower]) endif;
 
 %% The following constraints should be redundant when using the two constraints above.
-%% CHECK LATER!
 constraint (among(sum(i in Plates)(ul_half_plates[i,upper]),experiment_row, 1..(numrows div 2))::domain);
 constraint (among(sum(i in Plates)(ul_half_plates[i,lower]),experiment_row, (numrows div 2)+1..numrows)::domain);
 
@@ -884,7 +918,6 @@ constraint (among(sum(i in Plates)(lr_half_plates[i,right]),experiment_column, (
 
 constraint if even_rows then (forall(i in Plates)(abs(ul_half_plates[i,upper]-ul_half_plates[i,lower])<=1)) endif;
 
-%% ANDRY
 %%% Counting the number of experiments in the left and right half-plates
 constraint forall(i in Plates) (among(lr_half_plates[i,left],plates[i,..,1..numcols div 2], 1..experiments)::domain);
 constraint forall(i in Plates) (among(lr_half_plates[i,right],plates[i,..,(numcols div 2)+1..numcols], 1..experiments)::domain);
@@ -925,9 +958,6 @@ constraint sum(lr_half_plates) == sum([compound_concentrations[i]*compound_repli
 
 constraint forall(v in Vertical)(sum(ul_half_plates[..,v]) <= ceil(sum([compound_concentrations[i]*compound_replicates[i] | i in 1..compounds])/2));
 constraint forall(h in Horizontal)(sum(lr_half_plates[..,h]) <= ceil(sum([compound_concentrations[i]*compound_replicates[i] | i in 1..compounds])/2));
-
-%% HERE
-
 
 constraint forall(i in Plates, v in Vertical) ( ul_half_plates[i,v] <= ((sum([ (experiment_plate[c] == i) | c in 1..experiments]) + 1) div 2));
 constraint forall(i in Plates, h in Horizontal) ( lr_half_plates[i,h] <= ((sum([ (experiment_plate[c] == i) | c in 1..experiments]) + 1) div 2));
@@ -971,7 +1001,6 @@ constraint forall(i in Plates)(global_cardinality_low_up([plates[i,j,k] | j in R
 
 
 
-%% HERE!!!
 %% I need to work on these constraints, which seem to be quite ineficient. I believe I need to use variables for halves plates, maybe even for quarter plates.
 
 array [Plates,Vertical,1..num_controls*max_control_concentrations] of var int: controls_ul_plates;
