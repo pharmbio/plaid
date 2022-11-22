@@ -124,6 +124,16 @@ M. A. Francisco Rodríguez, J. Carreras Puigvert, and
 O. Spjuth. *Designing Microplate Layouts Using Artificial
 Intelligence* April, 2022. DOI: 10.1101/2022.03.31.486595 [[PDF](https://doi.org/10.1101/2022.03.31.486595)]
 
+```bibtex
+@article{PLAID2022,
+	author = {Francisco Rodr\'iguez, Mar\'ia Andre\'ina and Carreras Puigvert, Jordi and Spjuth, Ola},
+	title = {Designing Microplate Layouts Using Artificial Intelligence},
+	year = {2022},
+	doi = {10.1101/2022.03.31.486595},
+	URL = {https://www.biorxiv.org/content/10.1101/2022.03.31.486595v1},
+	journal = {bioRxiv}
+}
+```
 
 <a name="publications"></a>
 ## Other Publications
