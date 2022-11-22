@@ -40,7 +40,7 @@ Users just need to write down the necessary information such as number
 of compounds, combinations, controls, etc in a simple text file and
 click run!
 
-The output is a list in .csv format containing plate ID, well, content
+The output is a list in CSV format containing plate ID, well, content
 (compound, combination or control), concentration, and latex name,
 meant to be used as input for automatic tools. (TODO: visualize the
 layout using latex)
