@@ -12,7 +12,7 @@ layouts.
 **PLAID** was developed with the goal of helping
 researchers plan well-designed experiments by creating robust
 microplate layouts<sup>[1](#RefModRef2020)</sup> and thus improving
-the quality of the data obtained from an experiment.
+the quality of the data obtained from an experiment. A web version is available at (plaid.pharmb.io).
 
 **PLAID**  is easy and straightforward to use. The current
 model allows:
