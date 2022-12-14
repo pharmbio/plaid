@@ -5,6 +5,9 @@
 # PLAID: Plate Layouts using Artificial Intelligence Design
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Project Status: Active – The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
 **PLAID** is a flexible
 constraint-programming model for creating highly-effective microplate
@@ -12,7 +15,7 @@ layouts.
 **PLAID** was developed with the goal of helping
 researchers plan well-designed experiments by creating robust
 microplate layouts<sup>[1](#RefModRef2020)</sup> and thus improving
-the quality of the data obtained from an experiment. A web version is available at [plaid.pharmb.io](plaid.pharmb.io).
+the quality of the data obtained from an experiment. A web version is available at [plaid.pharmb.io](https://plaid.pharmb.io/). 
 
 **PLAID**  is easy and straightforward to use. The current
 model allows:
@@ -37,7 +40,7 @@ Users just need to write down the necessary information such as number
 of compounds, combinations, controls, etc in a simple text file and
 click run!
 
-The output is a list in .csv format containing plate ID, well, content
+The output is a list in CSV format containing plate ID, well, content
 (compound, combination or control), concentration, and latex name,
 meant to be used as input for automatic tools. (TODO: visualize the
 layout using latex)
@@ -121,6 +124,16 @@ M. A. Francisco Rodríguez, J. Carreras Puigvert, and
 O. Spjuth. *Designing Microplate Layouts Using Artificial
 Intelligence* April, 2022. DOI: 10.1101/2022.03.31.486595 [[PDF](https://doi.org/10.1101/2022.03.31.486595)]
 
+```bibtex
+@article{PLAID2022,
+	author = {Francisco Rodr\'iguez, Mar\'ia Andre\'ina and Carreras Puigvert, Jordi and Spjuth, Ola},
+	title = {Designing Microplate Layouts Using Artificial Intelligence},
+	year = {2022},
+	doi = {10.1101/2022.03.31.486595},
+	URL = {https://www.biorxiv.org/content/10.1101/2022.03.31.486595v1},
+	journal = {bioRxiv}
+}
+```
 
 <a name="publications"></a>
 ## Other Publications

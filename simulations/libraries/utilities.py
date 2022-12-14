@@ -16,6 +16,11 @@ box_pairs_bre = [("Random", "Effective"), ("Border", "Random"), ("Border", "Effe
 order_erb = ["Effective","Random","Border"]
 order_bre = ["Border","Random","Effective"]
 
+box_pairs_erb_3 = [((3,"Effective"),(3,"Random")),((1,"Effective"),(1,"Random")),((1,"Random"),(1,"Border")),((1,"Effective"),(1,"Border")),((2,"Random"),(2,"Border")),((2,"Effective"),(2,"Border")),((3,"Random"),(3,"Border")),((3,"Effective"),(3,"Border"))]
+
+box_pairs_bre_3 = [((3,"Random"),(3,"Effective")),((3,"Border"),(3,"Random")),((1,"Random"),(1,"Effective")),((1,"Border"),(1,"Random")),((1,"Border"),(1,"Effective")),((2,"Border"),(2,"Random")),((2,"Border"),(2,"Effective")),((3,"Border"),(3,"Effective"))]
+
+
 def plot_plate(plate_array, title="", mask=None, filename=None, vmin=None, vmax=None):
     fig, ax = plt.subplots(figsize=(11, 7))
     ax.xaxis.tick_top()
@@ -391,7 +396,7 @@ def plot_well_series(plate_array, norm_plate, layout, neg_control_id, pos_contro
 
     
     
-def plot_barplot_residuals_data(residuals_1rep, residuals_2rep, residuals_3rep, fig_name, y_max=None, leg_loc="lower center", leg_ncol=3, leg_fontsize=8, pvalue_thresholds = [[1e-43, "***"], [1e-12, "**"], [1e-4, "*"], [1, "ns"]]):
+def plot_barplot_residuals_data(residuals_1rep, residuals_2rep, residuals_3rep, fig_name, y_max=None, leg_loc="lower center", leg_ncol=3, leg_fontsize=8, pvalue_thresholds = [[1e-43, "***"], [1e-12, "**"], [1e-4, "*"], [1, "ns"]], hue_order = order_bre, box_pairs = box_pairs_bre_3,fig_dir=''):
     """ Plots residual plots for dose response experiments as in the manuscript.
     
     Args:
@@ -433,7 +438,7 @@ def plot_barplot_residuals_data(residuals_1rep, residuals_2rep, residuals_3rep, 
         ax.set(ylim=(0,y_max))
 
     palette = ["#b7a2d8", "#765591", "#37185d"] #Dark purple
-    ax = sns.barplot(x='replicates', y="true_residuals", data=residuals_df, hue="layout", palette=sns.color_palette(palette, 3))#'rocket_r')
+    ax = sns.barplot(x='replicates', y="true_residuals", data=residuals_df, hue="layout", hue_order= hue_order, palette=sns.color_palette(palette, 3))#'rocket_r')
     plt.ylabel("Mean residuals", fontsize = 10)
     plt.legend(ncol=leg_ncol, loc=leg_loc, fontsize = leg_fontsize)
         
@@ -441,25 +446,25 @@ def plot_barplot_residuals_data(residuals_1rep, residuals_2rep, residuals_3rep, 
     #ax = sns.barplot(x='replicates', y="residuals", data=residuals_df, hue="layout", palette=sns.color_palette(palette, 3))#'rocket_r')
     #plt.ylabel("Fit Residuals")
 
-    box_pairs = [((3,"Effective"),(3,"Random")),((1,"Effective"),(1,"Random")),((1,"Random"),(1,"Border")),((1,"Effective"),(1,"Border")),((2,"Random"),(2,"Border")),((2,"Effective"),(2,"Border")),((3,"Random"),(3,"Border")),((3,"Effective"),(3,"Border"))]
+    #box_pairs = [((3,"Effective"),(3,"Random")),((1,"Effective"),(1,"Random")),((1,"Random"),(1,"Border")),((1,"Effective"),(1,"Border")),((2,"Random"),(2,"Border")),((2,"Effective"),(2,"Border")),((3,"Random"),(3,"Border")),((3,"Effective"),(3,"Border"))]
     
     ## Add annotations to the plot
-    annotator = Annotator(ax, pairs=[((2,"Effective"),(2,"Random"))], data=residuals_df, x='replicates', y="true_residuals",hue='layout', order=[1,2,3],hue_order=["Effective","Random","Border"])
-    annotator.configure(test='t-test_ind', text_format='star', loc='inside',pvalue_thresholds=pvalue_thresholds, text_offset=-1)
-    annotator.apply_and_annotate()
+#    annotator = Annotator(ax, pairs=[((2,"Effective"),(2,"Random"))], data=residuals_df, x='replicates', y="true_residuals",hue='layout', order=[1,2,3],hue_order=["Effective","Random","Border"])
+ #   annotator.configure(test='t-test_ind', text_format='star', loc='inside',pvalue_thresholds=pvalue_thresholds, text_offset=-1)
+  #  annotator.apply_and_annotate()
 
-    annotator = Annotator(ax, pairs=box_pairs, data=residuals_df, x='replicates', y="true_residuals",hue='layout', order=[1,2,3],hue_order=["Effective","Random","Border"])
+    annotator = Annotator(ax, pairs=box_pairs, data=residuals_df, x='replicates', y="true_residuals",hue='layout', order=[1,2,3],hue_order=hue_order)
     annotator.configure(test='t-test_ind', text_format='star', loc='inside',pvalue_thresholds=pvalue_thresholds, text_offset=-1)
     annotator.apply_and_annotate()
     
 
     plt.show()
-    fig.savefig("residuals"+fig_name+".png",bbox_inches='tight',dpi=800)
+    fig.savefig(fig_dir+"residuals"+fig_name+".png",bbox_inches='tight',dpi=800)
 
   
 
     
-def plot_barplot_replicate_data(data_1rep, data_2rep, data_3rep, fig_name='', fig_type='', plot_mse = True, y_max=None, leg_ncol=None, leg_loc=None, leg_fontsize=8, pvalue_thresholds=None):
+def plot_barplot_replicate_data(data_1rep, data_2rep, data_3rep, fig_name='', fig_dir = '', fig_type='', plot_mse = True, y_max=None, leg_ncol=1, leg_loc="best", leg_fontsize=8, box_pairs3 = box_pairs_bre_3, pvalue_thresholds=None, hue_order = order_bre):
     """ Plots barplots for absolute and relative EC50/IC50 for dose response experiments as in the manuscript. 
         It also plots d_diff, that is, the average difference between the expected and obtained maximum (d) of the
         dose-response 4PL sigmoid curve.
@@ -502,11 +507,6 @@ def plot_barplot_replicate_data(data_1rep, data_2rep, data_3rep, fig_name='', fi
 
     results_df = results_df[np.logical_not(np.isnan(results_df['MSE']))]
 
-    #results_df = results_df[(results_df["error type"]!="bowl") & (results_df["error type"]!="left")]
-
-    #results_df = results_df[(results_df["error type"]=="right-half")]
-    #results_df = results_df[(results_df["E"]<90)]
-    #results_df = results_df[(results_df["E"]>10)]
 
     results_df.loc[(results_df['layout'] >= "plate_layout_rand"), 'layout'] = "Random"
     results_df.loc[(results_df['layout'] >= "plate_layout_border") & (results_df['layout'] != "Random"), 'layout'] = "Border"
@@ -518,7 +518,7 @@ def plot_barplot_replicate_data(data_1rep, data_2rep, data_3rep, fig_name='', fi
         # * indicates p < 10−4, ** indicates p < 10−12, *** indicates p < 10−43.
         pvalue_thresholds = [[1e-43, "***"], [1e-12, "**"], [1e-4, "*"], [1, "ns"]] #[1e-64, "****"], 
 
-    box_pairs = [((3,"Effective"),(3,"Random")),((1,"Effective"),(1,"Random")),((1,"Random"),(1,"Border")),((1,"Effective"),(1,"Border")),((2,"Random"),(2,"Border")),((2,"Effective"),(2,"Border")),((3,"Random"),(3,"Border")),((3,"Effective"),(3,"Border"))]
+    box_pairs = box_pairs3
 
     if y_max:
         ax.set_ylim(top = y_max)
@@ -526,32 +526,28 @@ def plot_barplot_replicate_data(data_1rep, data_2rep, data_3rep, fig_name='', fi
     ## Plotting
     if fig_type == "relic50":
         relic50_palette = ["#91d1c2", "#00A087", "#236e56"] #"#3bccaa", 
-        ax = sns.barplot(x='replicates', y="MSE", data=results_df[results_df['MSE']!=np.inf], hue="layout", palette=relic50_palette)
+        ax = sns.barplot(x='replicates', y="MSE", data=results_df[results_df['MSE']!=np.inf], hue="layout", hue_order=hue_order, palette=relic50_palette)
         plt.ylabel("Mean absolute log10 difference", fontsize = 10)
                
     elif fig_type == "absic50":
-        ax = sns.barplot(x='replicates', y="MSE", data=results_df[results_df['MSE']!=np.inf], hue="layout", palette='YlOrBr')
+        ax = sns.barplot(x='replicates', y="MSE", data=results_df[results_df['MSE']!=np.inf], hue="layout", hue_order=hue_order, palette='YlOrBr')
         plt.ylabel("Mean absolute log10 difference", fontsize = 10)
         
     else:
-        ax = sns.barplot(x='replicates', y="diff_d", data=results_df, hue="layout", palette = "GnBu")#, palette='YlOrBr')
+        ax = sns.barplot(x='replicates', y="diff_d", data=results_df, hue="layout", hue_order=hue_order, palette = "GnBu")#, palette='YlOrBr')
         plt.ylabel("Mean absolute d difference", fontsize = 10)
         fig_type = "d_diff"
         
 
-    plt.legend(fontsize = leg_fontsize)
+    plt.legend(fontsize = leg_fontsize, loc = leg_loc, ncol = leg_ncol)
     
-    if leg_ncol:
-        plt.legend(ncol=leg_ncol)
-    if leg_loc:
-        plt.legend(loc=leg_loc)
 
-    annotator = Annotator(ax, pairs=[((2,"Effective"),(2,"Random"))], data=results_df[results_df['MSE']!=np.inf], x='replicates', y="MSE",hue='layout', order=[1,2,3],hue_order=["Effective","Random","Border"])
+    annotator = Annotator(ax, pairs=[((2,"Random"),(2,"Effective"))], data=results_df[results_df['MSE']!=np.inf], x='replicates', y="MSE",hue='layout', order=[1,2,3],hue_order=hue_order)
     annotator.configure(test='t-test_ind', text_format='star', loc='inside',pvalue_thresholds=pvalue_thresholds, text_offset=-1)
     annotator.apply_and_annotate()
 
 
-    annotator = Annotator(ax, pairs=box_pairs, data=results_df[results_df['MSE']!=np.inf], x='replicates', y="MSE",hue='layout', order=[1,2,3],hue_order=["Effective","Random","Border"])
+    annotator = Annotator(ax, pairs=box_pairs, data=results_df[results_df['MSE']!=np.inf], x='replicates', y="MSE",hue='layout', order=[1,2,3],hue_order=hue_order)
     annotator.configure(test='t-test_ind', text_format='star', loc='inside',pvalue_thresholds=pvalue_thresholds, text_offset=-1)
     annotator.apply_and_annotate()
 
@@ -559,7 +555,7 @@ def plot_barplot_replicate_data(data_1rep, data_2rep, data_3rep, fig_name='', fi
     #plt.legend().set_title(None)
     plt.show()
 
-    fig.savefig("dose-response-"+fig_type+fig_name+".png",bbox_inches='tight',dpi=800)
+    fig.savefig(fig_dir+"dose-response-"+fig_type+fig_name+".png",bbox_inches='tight',dpi=800)
     
     
     
@@ -567,7 +563,7 @@ def plot_barplot_replicate_data(data_1rep, data_2rep, data_3rep, fig_name='', fi
     
     
     
-def plot_r2_percentage(data_1rep, data_2rep, data_3rep, fig_name='', y_max=None, leg_loc="upper left", leg_ncol=1, leg_fontsize=8):
+def plot_r2_percentage(data_1rep, data_2rep, data_3rep, fig_name='', fig_dir = '', y_max=None, leg_loc="upper left", leg_ncol=1, leg_fontsize=8, hue_order=order_bre):
     """
     Plotting the percentage of low-quality curves for dose-response simulations as in the manuscript.
     
@@ -639,7 +635,7 @@ def plot_r2_percentage(data_1rep, data_2rep, data_3rep, fig_name='', y_max=None,
         ax.set(ylim=(0,y_max))
         
     palette = ["#bc5090", "#ff6361", "#ffa600"]
-    ax = sns.barplot(x='replicates', y="percent", data=percentage_data_df, hue="layout", palette=sns.color_palette(palette, 3))    
+    ax = sns.barplot(x='replicates', y="percent", data=percentage_data_df, hue="layout", hue_order=hue_order, palette=sns.color_palette(palette, 3))    
     
     plt.ylabel("Percentage", fontsize = 10)
     plt.legend(ncol=leg_ncol, loc=leg_loc, fontsize = leg_fontsize)
@@ -647,7 +643,7 @@ def plot_r2_percentage(data_1rep, data_2rep, data_3rep, fig_name='', y_max=None,
     
     # Show and save figure!
     plt.show()
-    fig.savefig("percentage-low-r2-curves"+fig_name+".png",bbox_inches='tight')
+    fig.savefig(fig_dir+"percentage-low-r2-curves-1-2-3"+fig_name+".png",bbox_inches='tight')
 
     
     
@@ -674,7 +670,7 @@ def create_latex_table(data, tex_filename, column_name="MSE"):
     random_description = results_df[results_df['layout']=='Random'].describe()
     border_description = results_df[results_df['layout']=='Border'].describe()
 
-    latex_f.write(" & Effective & Random & Border \\\\ ")
+    latex_f.write(" & Border & Random & Effective \\\\ ")
     latex_f.write("\n\\hline\n")
     
     rows = [{'row_id':'count', 'row_name':'\\tabCount{}'},
@@ -687,7 +683,7 @@ def create_latex_table(data, tex_filename, column_name="MSE"):
             {'row_id':'max',   'row_name':'\\tabMax{}'}]
     
     for row in rows:
-        latex_f.write(row['row_name']+" & "+str(round(plaid_description.loc[row['row_id'],column_name],2))+" & "+str(round(random_description.loc[row['row_id'],column_name],2))+" & "+str(round(border_description.loc[row['row_id'],column_name],2))+"\\\\ \n")
+        latex_f.write(row['row_name']+" & "+str(round(border_description.loc[row['row_id'],column_name],2))+" & "+str(round(random_description.loc[row['row_id'],column_name],2))+" & "+str(round(plaid_description.loc[row['row_id'],column_name],2))+"\\\\ \n")
     
     latex_f.write("\\hline")
         
@@ -725,7 +721,7 @@ def create_latex_table_wide(data_1rep, data_2rep, data_3rep, tex_filename, table
 #    latex_f.write(" & Effective & Random & Border \\\\ ")
 #    latex_f.write("\n\\hline\n")
 
-    layouts = ['Effective','Random','Border']
+    layouts = order_bre
     
     latex_f.write("\\multirow{4}{*}{"+table_text+"}")
     
@@ -1152,3 +1148,27 @@ def plotting_residual_metrics(screening_scores_data_filename, metric='Zfactor', 
     if fig_name:
         fig.savefig(plots_directory+"screening-"+metric+"-mse-"+fig_name+".png",bbox_inches='tight',dpi=800)
 
+
+        
+def generate_absic50_ddiff_tables(absolute_ic50_data_1rep, absolute_ic50_data_2rep, absolute_ic50_data_3rep, fig_name, figures_dir, tables_dir, y_max_absic = None, y_max_d_diff = None, leg_ncol_d_diff=3, leg_loc_d_diff="upper center"):
+    plot_barplot_replicate_data(absolute_ic50_data_1rep, absolute_ic50_data_2rep, absolute_ic50_data_3rep, fig_name="-1-2-3"+fig_name, fig_dir = figures_dir, fig_type='absic50', y_max=y_max_absic)
+    plot_barplot_replicate_data(absolute_ic50_data_1rep, absolute_ic50_data_2rep, absolute_ic50_data_3rep, fig_name="-1-2-3"+fig_name, fig_dir = figures_dir, fig_type='d_diff', y_max=y_max_d_diff, leg_ncol=leg_ncol_d_diff, leg_loc=leg_loc_d_diff)
+
+    create_latex_table(absolute_ic50_data_1rep, tables_dir+"absic50-table-1rep"+fig_name+".tex", column_name="MSE")
+    create_latex_table(absolute_ic50_data_2rep, tables_dir+"absic50-table-2rep"+fig_name+".tex", column_name="MSE")
+    create_latex_table(absolute_ic50_data_3rep, tables_dir+"absic50-table-3rep"+fig_name+".tex", column_name="MSE")
+
+    create_latex_table(absolute_ic50_data_1rep, tables_dir+"diff_d-table-1rep"+fig_name+".tex", column_name="diff_d")
+    create_latex_table(absolute_ic50_data_2rep, tables_dir+"diff_d-table-2rep"+fig_name+".tex", column_name="diff_d")
+    create_latex_table(absolute_ic50_data_3rep, tables_dir+"diff_d-table-3rep"+fig_name+".tex", column_name="diff_d")
+        
+        
+def generate_relic50_r2(relative_ic50_data_1rep, relative_ic50_data_2rep, relative_ic50_data_3rep, fig_name, figures_dir, y_max_relic = None, y_max_r2 = None, pvalue_thresholds=None):
+    
+    if pvalue_thresholds is None:
+        plot_barplot_replicate_data(relative_ic50_data_1rep, relative_ic50_data_2rep, relative_ic50_data_3rep, fig_name="-1-2-3"+fig_name, fig_dir = figures_dir, fig_type='relic50', y_max = y_max_relic)
+    
+    else:
+        plot_barplot_replicate_data(relative_ic50_data_1rep, relative_ic50_data_2rep, relative_ic50_data_3rep, fig_name="-1-2-3"+fig_name, fig_dir = figures_dir, fig_type='relic50', y_max = y_max_relic, pvalue_thresholds=pvalue_thresholds)
+    
+    plot_r2_percentage(relative_ic50_data_1rep, relative_ic50_data_2rep, relative_ic50_data_3rep, fig_name=fig_name, fig_dir = figures_dir, y_max=y_max_r2)

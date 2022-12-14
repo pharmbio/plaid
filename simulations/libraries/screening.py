@@ -135,7 +135,6 @@ def test_quality_assessment_metrics(plate_type,error_types,error,id_text,neg_con
     # Write headers
     scores_writer = csv.writer(screening_scores_data_f)
 
-    # Write file header
     scores_writer.writerow(['batch', 'plaid_plate', 'error_type', 'error', 'Zfactor_expected', 'SSMD_expected', 'Zfactor_plaid', 'SSMD_plaid', 'Zfactor_rand', 'SSMD_rand', 'Zfactor_border', 'SSMD_border'])
 
     for batch in range(batches):

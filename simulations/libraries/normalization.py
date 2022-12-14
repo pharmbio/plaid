@@ -265,7 +265,6 @@ def normalize_plate_lowess_deprecated(plate_array, layout, neg_control_id=None, 
     
 
     #return unstacked_adjusted_df.to_numpy()
-    
     return normalize_plate_mean(unstacked_adjusted_df.to_numpy(), layout, neg_control_id)
 
 
@@ -274,10 +273,6 @@ def normalize_plate_lowess_deprecated(plate_array, layout, neg_control_id=None, 
 # This is the preferred method of smoothing!
 def normalize_plate_lowess_2d(plate_array_in, layout, neg_control_id, min_dist=None, frac = 1.0):
     """ Smoothing using loess_2d """
-
-    #warnings.filterwarnings("error")
-    
-    #plate_array = plate_array_in
     
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", message="divide by zero encountered in log10")
@@ -331,9 +326,6 @@ def normalize_plate_lowess_2d(plate_array_in, layout, neg_control_id, min_dist=N
     
     
 def normalize_plate_linear(plate_array_in, layout, neg_control_id, min_dist=None):
-    #neg_control_id = np.max(layout)
-    
-    #plate_array = plate_array_in
     
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", message="divide by zero encountered in log10")
@@ -404,6 +396,7 @@ def normalize_plate_linear(plate_array_in, layout, neg_control_id, min_dist=None
 
 
 # apply the z-score method in Pandas using the .mean() and .std() methods
+# Incomplete. Never used.
 def z_score(df):
     # copy the dataframe
     df_std = df.copy()

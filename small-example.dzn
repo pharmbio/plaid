@@ -1,0 +1,55 @@
+%%% Small Example File %%%
+
+%% Plate dimentions:
+num_rows = 4; %% height
+num_cols = 6; %% width
+
+% Number of times a plate is divided horizontally (with horizontal lines).
+% 1 corresponds to using the whole plate,
+% 2 corresponds to dividing the plate into 2 halves, one on top of the other. Both cells have the same layout.
+horizontal_cell_lines = 1;
+
+% Number of times a plate is divided vertically (with vertical lines).
+% 1 corresponds to using the whole plate,
+% 2 corresponds to dividing the plate into 2 halves, left and right. Both cells have the same layout.
+vertical_cell_lines = 1;
+
+allow_empty_wells = false; % Used as validation
+size_empty_edge = 1;
+
+% Turning on/off some constraints
+concentrations_on_different_rows = true;
+concentrations_on_different_columns = true;
+
+% Restriction: either replicates_on_different_plates or replicates_on_same_plate must be false (or both)
+replicates_on_different_plates = true;
+replicates_on_same_plate = false;
+
+
+%%% Compounds %%%
+compounds = 5; %% number of drugs/compounds
+compound_names = ["comp 1", "comp 2", "comp 3", "comp 4", "comp 5" ];
+compound_replicates = [2,2,2,2,2];
+compound_concentrations = [2,2,2,2,2];
+
+
+compound_concentration_names = [|"c11","c12"|"c21","c22"|"c31","c32"|"c41","c42"|"c51","c52"|];   
+
+%%% Used for drawing layouts in LaTeX %%%
+compound_concentration_indicators = ["",""]; 
+
+
+%%% Controls %%%
+num_controls = 4;
+control_replicates = [6,2,2,2];
+control_concentrations = [1,1,1,1];
+control_names = ["pos","neg","blank","DMSO"];
+control_concentration_names =  [|"100"|"100"|"100"|"100"|];
+
+
+%%% Combinations %%% 
+% DEPRECATED! Do not modify!
+combinations = 0;
+combination_concentrations	 = 0; 
+combination_names = []; 
+combination_concentration_names = [];

@@ -3,3 +3,4 @@ simulations/.ipynb_checkpoints/*
 simulations/*/.ipynb_checkpoints/*
 *.pyc
 regression-tests-results/*.txt
+utilities/.ipynb_checkpoints/plaid-to-idot-example-checkpoint.ipynb
