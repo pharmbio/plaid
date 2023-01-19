@@ -11,3 +11,5 @@ If you get a permission denied error, you should execute
 ```bash
 $ sudo chmod 755 generate-layouts.sh
 ```
+
+The script assumes that you're running it on this directory (with respect to the plate-design.mzn file). If you want to change that, change the location of that file in the script (search for ../../plate-design.mzn and give the new location).
