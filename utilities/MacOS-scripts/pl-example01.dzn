@@ -1,0 +1,66 @@
+%%% Exp_DoseResponse conditions	%%%
+%% Produces 4 plates.
+%% 2020: It takes about 9 sec
+%% 2021/Mar/10: It takes about 3m 22s
+%% 2021/Mar/11: It takes about 6s
+%% 2021/Apr/22: It takes about 1m 29s (with interconnected_plates = false)
+%% 2021/Jul/02: It takes about 3s 341msec (with interconnected_plates = false)
+
+%% Plate dimentions: (this is a 96-well plate)
+num_rows = 8; %% height
+num_cols = 12; %% width
+
+
+horizontal_cell_lines = 1;
+vertical_cell_lines = 1;
+
+allow_empty_wells = false;
+
+% New and used!
+concentrations_on_different_rows = true;
+concentrations_on_different_columns = true;
+
+% New and unused! (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
+replicates_on_different_plates = true;
+replicates_on_same_plate = false;
+
+size_empty_edge = 1;
+
+
+%%% Compounds %%%
+compounds = 10; %% number of drugs/compounds
+compound_concentrations	 = [8| i in 1..compounds]; 
+
+compound_names = ["comp\(i)" | i in 1..compounds];
+
+compound_replicates	 = [2| i in 1..compounds]; 
+
+compound_concentration_names = [|"a0.3", "a1", "a3", "a5", "a10", "a15", "a30", "a100"
+|"b0.3", "b1", "b3", "b5", "b10", "b15", "b30", "b100"
+|"c0.3", "c1", "c3", "c5", "c10", "c15", "c30", "c100"
+|"d0.3", "d1", "d3", "d5", "d10", "d15", "d30", "d100"
+|"e0.3", "e1", "e3", "e5", "e10", "e15", "e30", "e100"
+|"f0.3", "f1", "f3", "f5", "f10", "f15", "f30", "f100"
+|"g0.3", "g1", "g3", "g5", "g10", "g15", "g30", "g100"
+|"h0.3", "h1", "h3", "h5", "h10", "h15", "h30", "h100"
+|"i0.3", "i1", "i3", "i5", "i10", "i15", "i30", "i100"
+|"j0.3", "j1", "j3", "j5", "j10", "j15", "j30", "j100"|];
+
+compound_concentration_indicators = ["" | i in 1..8]; 
+
+
+%%% Combinations %%%
+combinations = 	0;
+combination_names = [];
+combination_concentration_names = [];
+combination_concentrations = 0;
+
+
+%%% Controls %%%
+num_controls = 4;
+control_replicates = [32,16,16,16];
+control_concentrations = [1 | i in 1..num_controls];
+control_names = ["pos","neg","blank","dmso"];
+
+control_concentration_names =  array2d(1..num_controls, 1..1,["cont\(floor(i/1))-conc\((i mod 1) + 1)" | i in 1..num_controls*1]);  
+  
