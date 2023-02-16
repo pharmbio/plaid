@@ -43,7 +43,7 @@ def plaid_to_echo(plaid_filename, source_plate_filename,total_volume, echo_filen
 
     
 
-def plaid_to_idot(plaid_filename, source_plate_filename, total_volume,idot_filename, cmpdname_src_column='Compound', backfill_compound='DMSO', protocol_name = "My_First_Experiment", software = "1.7.2021.1019", user_name = "pharmb_io", sourceplate_type = "S.100 Plate", sourceplate_name = "source_name", max_volume = 8e-5, target_plate_type = "MWP 384", targetplate_name = "target_name", waste_well = "Waste Tube", dispense_to_waste = True, dispense_to_waste_cycles = 3, dispense_to_waste_volume = 1e-7, use_deionisation = True, optimization_level = "ReorderAndParallel", waste_error_handling_level = "Ask", save_liquids = "Ask"):
+def plaid_to_idot(plaid_filename, source_plate_filename, total_volume, dmso_max_perc, idot_filename, cmpdname_src_column='Compound', backfill_compound='DMSO', protocol_name = "My_First_Experiment", software = "1.7.2021.1019", user_name = "pharmb_io", sourceplate_type = "S.100 Plate", sourceplate_name = "source_name", max_volume = 8e-5, target_plate_type = "MWP 384", targetplate_name = "target_name", waste_well = "Waste Tube", dispense_to_waste = True, dispense_to_waste_cycles = 3, dispense_to_waste_volume = 1e-7, use_deionisation = True, optimization_level = "ReorderAndParallel", waste_error_handling_level = "Ask", save_liquids = "Ask"):
     
     # Open PLAID file
     plaid_df = pd.read_csv(plaid_filename)
@@ -61,10 +61,13 @@ def plaid_to_idot(plaid_filename, source_plate_filename, total_volume,idot_filen
     source_df['well'] = source_df['well'].map(strip_zeros)
     
     idot_df = plaid_df.merge(source_df, left_on='cmpdname', right_on=cmpdname_src_column, suffixes=('_plaid','_source'))
-        
+
+    # Calculate dmso volume per well in µL
+    dmso_vol = (dmso_max_perc / 100) * (total_volume)
+
     # Calculate transfer volume
     idot_df['Transfer Volume'] = idot_df['CONCuM_plaid']*total_volume/idot_df['CONCuM_source']
-    idot_df['Backfill Volume'] = total_volume - idot_df['Transfer Volume']
+    idot_df['Backfill Volume'] = dmso_vol - idot_df['Transfer Volume']
     idot_df['Backfill Compound'] = backfill_compound
     idot_df['X'] = ''
     idot_df['Y'] = ''
