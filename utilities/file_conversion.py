@@ -1,5 +1,7 @@
 import pandas as pd
-import csv 
+import numpy as np
+import csv
+import re
 from datetime import datetime
 
 def plaid_to_echo(plaid_filename, source_plate_filename,total_volume, echo_filename,cmpdname_src_column='Compound', backfill_compound='DMSO'):
@@ -69,6 +71,8 @@ def plaid_to_idot(plaid_filename, source_plate_filename, total_volume, dmso_max_
     idot_df['Transfer Volume'] = idot_df['CONCuM_plaid']*total_volume/idot_df['CONCuM_source']
     idot_df['Backfill Volume'] = dmso_vol - idot_df['Transfer Volume']
     idot_df['Backfill Compound'] = backfill_compound
+    wells_backfill = source_df.loc[source_df[cmpdname_src_column] == backfill_compound, 'well']
+    idot_df['well_backfill'] = np.resize(wells_backfill, len(idot_df))
     idot_df['X'] = ''
     idot_df['Y'] = ''
     idot_df['New Array'] = ''
@@ -97,7 +101,7 @@ def plaid_to_idot(plaid_filename, source_plate_filename, total_volume, dmso_max_
     idot_df.to_csv(idot_output_f,index=False, header=False, columns=['well_source','well_plaid','Transfer Volume','cmpdname','X','Y','New Array','New Array'],mode='a')
     
     # Write DMSO Backfill
-    idot_df.to_csv(idot_output_f,index=False, header=False, columns=['well_source','well_plaid','Backfill Volume','Backfill Compound','X','Y','New Array','New Array'],mode='a')
+    idot_df.to_csv(idot_output_f,index=False, header=False, columns=['well_backfill','well_plaid','Backfill Volume','Backfill Compound','X','Y','New Array','New Array'],mode='a')
     
     ## Close file before the end
     idot_output_f.close()
@@ -105,7 +109,7 @@ def plaid_to_idot(plaid_filename, source_plate_filename, total_volume, dmso_max_
 
 
 def strip_zeros(well):
-    import re
+
     number = re.split('(\d+)', well)[1].lstrip('0')
     letter = re.split('(\d+)', well)[0]
     new_well = letter + number
