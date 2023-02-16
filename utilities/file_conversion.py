@@ -54,9 +54,11 @@ def plaid_to_idot(plaid_filename, source_plate_filename, total_volume,idot_filen
     # Clean units
     plaid_df[['CONCuM','unit']] = plaid_df['CONCuM'].str.split(' ',expand=True)
     plaid_df['CONCuM'] = pd.to_numeric(plaid_df['CONCuM'], errors='coerce')
+    plaid_df['well'] = plaid_df['well'].map(strip_zeros)
     
     source_df[['CONCuM','unit']] = source_df['CONCuM'].str.split(' ',expand=True)
     source_df['CONCuM'] = pd.to_numeric(source_df['CONCuM'], errors='coerce')
+    source_df['well'] = source_df['well'].map(strip_zeros)
     
     idot_df = plaid_df.merge(source_df, left_on='cmpdname', right_on=cmpdname_src_column, suffixes=('_plaid','_source'))
         
@@ -83,16 +85,25 @@ def plaid_to_idot(plaid_filename, source_plate_filename, total_volume,idot_filen
     idot_writer.writerow([sourceplate_type, sourceplate_name, "",max_volume, target_plate_type, targetplate_name, "",waste_well])
 
     # Write parameters
-    idot_writer.writerow(['DispenseToWaste='+str(dispense_to_waste), 'DispenseToWasteCycles='+ str(dispense_to_waste_cycles), 'DispenseToWasteVolume='+str(dispense_to_waste_volume), 'UseDeionisation='+ str(use_deionisation), 'OptimizationLevel='+optimization_level, 'WasteErrorHandlingLevel='+ waste_error_handling_level, 'SaveLiquids='+ save_liquids])
+    idot_writer.writerow(['DispenseToWaste='+str(dispense_to_waste), 'DispenseToWasteCycles='+ str(dispense_to_waste_cycles), 'DispenseToWasteVolume='+str(dispense_to_waste_volume), 'UseDeionisation='+ str(use_deionisation), 'OptimizationLevel='+optimization_level, 'WasteErrorHandlingLevel='+ waste_error_handling_level, 'SaveLiquids='+ save_liquids, ""])
     
     # Write headers
-    idot_writer.writerow(['Source Well', 'Target Well', 'Volume [uL]', 'Liquid Name'])
+    idot_writer.writerow(['Source Well', 'Target Well', 'Volume [uL]', 'Liquid Name',"","","",""])
 
     # Write compounds
-    idot_df.to_csv(idot_output_f,index=False, header=False, columns=['well_source','well_plaid','Transfer Volume','cmpdname','X','Y','New Array'],mode='a')
+    idot_df.to_csv(idot_output_f,index=False, header=False, columns=['well_source','well_plaid','Transfer Volume','cmpdname','X','Y','New Array','New Array'],mode='a')
     
     # Write DMSO Backfill
-    idot_df.to_csv(idot_output_f,index=False, header=False, columns=['well_source','well_plaid','Backfill Volume','Backfill Compound','X','Y','New Array'],mode='a')
+    idot_df.to_csv(idot_output_f,index=False, header=False, columns=['well_source','well_plaid','Backfill Volume','Backfill Compound','X','Y','New Array','New Array'],mode='a')
     
     ## Close file before the end
     idot_output_f.close()
+    
+
+
+def strip_zeros(well):
+    import re
+    number = re.split('(\d+)', well)[1].lstrip('0')
+    letter = re.split('(\d+)', well)[0]
+    new_well = letter + number
+    return new_well
