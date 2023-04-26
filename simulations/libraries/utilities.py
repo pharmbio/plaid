@@ -798,7 +798,7 @@ def create_latex_table_pvalues_wide(data_1rep, data_2rep, data_3rep, tex_filenam
 
     
     
-def plotting_ssmd_scores(screening_scores_data_filename, fig_name, y_min=None, y_max=None):
+def plotting_ssmd_scores(screening_scores_data_filename, fig_name, y_min=None, y_max=None, fig_dir=''):
     screening_scores_df = pd.read_csv(screening_scores_data_filename)
 
     ## No rows lost!
@@ -870,7 +870,7 @@ def plotting_ssmd_scores(screening_scores_data_filename, fig_name, y_min=None, y
 
     
     
-def plotting_z_scores(screening_scores_data_filename, fig_name, y_min=None, y_max=None):
+def plotting_z_scores(screening_scores_data_filename, fig_name, y_min=None, y_max=None, fig_dir=''):
     screening_scores_df = pd.read_csv(screening_scores_data_filename)
 
     ## No rows lost!
@@ -934,7 +934,7 @@ def plotting_z_scores(screening_scores_data_filename, fig_name, y_min=None, y_ma
     fig.savefig("screening-zpfactor-"+fig_name+".png",bbox_inches='tight',dpi=800)
     
     
-def plotting_ssmd_scores_norm(screening_scores_data_filename, fig_name, y_min=None, y_max=None):
+def plotting_ssmd_scores_norm(screening_scores_data_filename, fig_name, y_min=None, y_max=None, fig_dir=''):
     screening_scores_df = pd.read_csv(screening_scores_data_filename)
 
     ## No rows lost!
@@ -987,7 +987,7 @@ def plotting_ssmd_scores_norm(screening_scores_data_filename, fig_name, y_min=No
 
 
     
-def plotting_z_scores_norm(screening_scores_data_filename, fig_name, y_min=None, y_max=None):
+def plotting_z_scores_norm(screening_scores_data_filename, fig_name, y_min=None, y_max=None, fig_dir=''):
     screening_scores_df = pd.read_csv(screening_scores_data_filename)
 
     ## No rows lost!
