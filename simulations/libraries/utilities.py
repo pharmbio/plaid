@@ -865,7 +865,7 @@ def plotting_ssmd_scores(screening_scores_data_filename, fig_name, y_min=None, y
     annotator.apply_and_annotate()
 
     plt.show()
-    fig.savefig("screening-ssmd-"+fig_name+".png",bbox_inches='tight',dpi=800)
+    fig.savefig(fig_dir+"screening-ssmd-"+fig_name+".png",bbox_inches='tight',dpi=800)
 
 
     
@@ -931,7 +931,7 @@ def plotting_z_scores(screening_scores_data_filename, fig_name, y_min=None, y_ma
     annotator.apply_and_annotate()
 
     plt.show()
-    fig.savefig("screening-zpfactor-"+fig_name+".png",bbox_inches='tight',dpi=800)
+    fig.savefig(fig_dir+"screening-zpfactor-"+fig_name+".png",bbox_inches='tight',dpi=800)
     
     
 def plotting_ssmd_scores_norm(screening_scores_data_filename, fig_name, y_min=None, y_max=None, fig_dir=''):
@@ -983,7 +983,7 @@ def plotting_ssmd_scores_norm(screening_scores_data_filename, fig_name, y_min=No
     annotator.apply_and_annotate()
 
     plt.show()
-    fig.savefig("screening-ssmd-"+fig_name+".png",bbox_inches='tight',dpi=800)
+    fig.savefig(fig_dir+"screening-ssmd-"+fig_name+".png",bbox_inches='tight',dpi=800)
 
 
     
@@ -1035,7 +1035,7 @@ def plotting_z_scores_norm(screening_scores_data_filename, fig_name, y_min=None,
     annotator.apply_and_annotate()
 
     plt.show()
-    fig.savefig("screening-zpfactor-"+fig_name+".png",bbox_inches='tight',dpi=800)
+    fig.savefig(fig_dir+"screening-zpfactor-"+fig_name+".png",bbox_inches='tight',dpi=800)
     
     
     
