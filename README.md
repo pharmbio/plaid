@@ -125,7 +125,7 @@ O. Spjuth. *Designing Microplate Layouts Using Artificial
 Intelligence*, Volume 3, 2023. DOI: 10.1016/j.ailsci.2023.100073 [[PDF](https://doi.org/10.1016/j.ailsci.2023.100073)]
 
 ```bibtex
-@article{PLAID2022,
+@article{PLAID2023,
 	author = {Francisco Rodr\'iguez, Mar\'ia Andre\'ina and Carreras Puigvert, Jordi and Spjuth, Ola},
 	title = {Designing Microplate Layouts Using Artificial Intelligence},
 	year = {2023},
