@@ -8,6 +8,7 @@
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![GitHub Repo stars](https://img.shields.io/github/stars/pharmbio/plaid?style=social)](https://github.com/pharmbio/plaid/stargazers)
 
 **PLAID** is a flexible
 constraint-programming model for creating highly-effective microplate
