@@ -51,6 +51,7 @@ array [1..compounds] of int: compound_concentrations;
 int: max_compound_concentrations = max(compound_concentrations++[0]);
 
 array[1..compounds] of string: compound_names;
+array[1..compounds,1..max_compound_concentrations] of string: compound_concentration_names;
 
 %% Combinations (Deprecated) %%
 int: combinations;
@@ -101,7 +102,6 @@ int: numcols = if inner_empty_edge then floor(num_cols/vertical_cell_lines)-2*si
 %% TODO: add latex indicators for controls 
 %array[1..compound_concentrations] of string: compound_concentration_names;
 
-array[1..compounds,1..max_compound_concentrations] of string: compound_concentration_names;
 
 %% FIX ME!! (Deprecated?)
 array[1..max_compound_concentrations] of string: compound_concentration_indicators;
@@ -145,9 +145,9 @@ int: inner_plate_size = numcols*numrows;
 
 
 %%%%% Data validation %%%%%
-constraint assert(total_wells > 0, "Invalid datafile: the plates cannot be completely empty.");
-constraint assert(inner_plate_size>0, "Invalid datafile: There are no wells on the plate!");
-constraint assert(min(compound_concentrations++[0]) <= inner_plate_size, "Invalid datafile: Number of concentrations does not fit in one plate. If you think this is a mistake, please contact the development team.");
+constraint assert(total_wells > 0, "Invalid data: the plates cannot be completely empty.");
+constraint assert(inner_plate_size>0, "Invalid data: There are no wells on the plate.");
+constraint assert(min(compound_concentrations++[0]) <= inner_plate_size, "Invalid data: Number of concentrations does not fit in one plate. If you think this is a mistake, please contact the development team.");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
