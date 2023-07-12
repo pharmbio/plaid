@@ -120,8 +120,8 @@ bool: debugging = print_all \/ true;
 opt bool: sorted_compounds;
 
 
-int: numplates = min_numplates + ((ceil(sum(compound_replicates)/min_numplates)*min(compound_concentrations++[infinity]) > wells_for_compounds) \/
-              (((sum(compound_replicates) div min_numplates)-1)*min(compound_concentrations++[infinity]) + max_compound_concentrations > wells_for_compounds)) ;
+int: numplates = max(min_numplates + ((ceil(sum(compound_replicates)/min_numplates)*min(compound_concentrations++[infinity]) > wells_for_compounds) \/
+              (((sum(compound_replicates) div min_numplates)-1)*min(compound_concentrations++[infinity]) + max_compound_concentrations > wells_for_compounds)), max_compound_replicates);
 
 
 
@@ -147,6 +147,9 @@ constraint assert(min(compound_concentrations++[0]) <= inner_plate_size, "Invali
 
 
 %%%%%%% Detecting some unsatisfiable cases & Data validation %%%%%%%%%%
+%% This condition is not needed. The number of plates will be at least the number of replicates.
+%constraint assert(not(replicates_on_different_plates /\ max_compound_replicates > numplates),"Invalid datafile: Replicates cannot be put on different plates because the number of plates is too small. If you believe this is a mistake, please contact the developers.");
+
 %constraint assert(ceil(sum(compound_replicates)/numplates)*min(compound_concentrations++[infinity]) <= wells_for_compounds, "Invalid data: the design is unsatisfiable. It is not possible to divide the compounds across the plates. (E01)");  
                                                                 
 %constraint assert(((sum(compound_replicates) div numplates)-1)*min(compound_concentrations++[infinity]) + max_compound_concentrations <= wells_for_compounds, "Invalid data: the design is unsatisfiable. It is not possible to divide the compounds across the plates. (E02)");  
@@ -168,8 +171,8 @@ array [Plates,Rows,Columns] of var 0..(control_ids + compound_ids): plates;
 
 %% Alternative (extra) model
 array [1..num_compounds, Plates] of var 0..max_compound_replicates: compound_plate;
-
-
+array [1..compound_ids, Rows] of var 0..max_compound_replicates: compound_row;
+array [1..compound_ids, Plates, Rows] of var 0..max_compound_replicates: compound_plate_row;
 
 %%%% Main constraint model %%%%
 %% Place only the exact amount of compounds, controls, and empty wells across all plates
@@ -181,7 +184,7 @@ constraint forall (p in Plates) (global_cardinality(plates[p,..,..],[ i | i in 0
 
 
 
-% The plate(s) where each compound is
+% Compounds appear on plates exactly their number of replicates
 constraint forall (c in 1..num_compounds) (
         sum(compound_plate[c,..]) == compound_replicates[c]
     );
@@ -191,7 +194,7 @@ constraint forall (p in Plates) (
         sum([compound_concentrations[c]*compound_plate[c,p] | c in 1..num_compounds]) <= wells_for_compounds
     );
 
-%% Place the exact amount of compounds on each plate 
+%% Place the exact amount of compounds on each plate (and that's their plate)
 constraint forall (p in Plates) (
         global_cardinality(plates[p,..,..],
                           [ i + control_ids | i in 1..compound_ids],
@@ -199,9 +202,9 @@ constraint forall (p in Plates) (
         ));
 
 
-% Replicates on the same plate, different plates, or does not matter?
+% Replicates on the same plate, different plates, or anywhere
 constraint if replicates_on_different_plates then
-        forall (c in 1..num_compounds, p in Plates) (compound_plate[c,p] <= 1)
+        true %forall (c in 1..num_compounds, p in Plates) (compound_plate[c,p] <= 1)
     elseif replicates_on_same_plate then 
         forall (c in 1..num_compounds) (global_cardinality(compound_plate[c,..],[0,compound_replicates[c]],[numplates-1,1]))
     else 
@@ -211,8 +214,47 @@ constraint if replicates_on_different_plates then
 
 
 
-%all_different_except(array [$X] of var int: vs,
- %                              set of int: S)
+% Compounds appear on rows exactly their number of replicates
+constraint forall (c in 1..compound_ids) (
+        sum(compound_row[c,..]) == compound_replicates[floor((c-1)/max_compound_concentrations)+1]
+    );
+
+% The number of compounds per row is limited by the available space
+constraint forall (r in Rows) (
+        sum(compound_row[..,r]) <= numplates*numcols
+    );
+    
+%% Place the exact amount of compounds on each row (and that's their row)
+constraint forall (r in Rows) (
+        global_cardinality(plates[..,r,..],
+                          [ i + control_ids | i in 1..compound_ids],
+                          [compound_row[i,r]*(((i-1) mod max_compound_concentrations)<compound_concentrations[floor((i-1)/max_compound_concentrations)+1]) | i in 1..compound_ids]
+        ));
+
+%%% NEW
+% Replicates are placed on different rows
+constraint if concentrations_on_different_rows then
+        forall (c in 1..compound_ids, r in Rows) (compound_row[c,r] <= 1)
+    endif
+    ;
+
+
+constraint if concentrations_on_different_rows then
+        forall (c in 1..num_compounds, r in Rows) (sum(compound_row[(c-1)*max_compound_concentrations+1..c*max_compound_concentrations,r]) <= ceil(compound_concentrations[c]*compound_replicates[c]/numrows))
+    endif
+    ;
+
+
+
+
+%% Implied constraints
+constraint forall(c in 1..compound_ids, p in Plates, r in Rows) (count_eq(plates[p,r,..],control_ids+c,compound_plate_row[c,p,r]));
+constraint forall(p in Plates, r in Rows) (sum(compound_plate_row[..,p,r])<=numcols);
+constraint forall(c in 1..compound_ids, r in Rows) (compound_row[c,r]==sum(compound_plate_row[c,..,r]));
+constraint forall(c in 1..compound_ids, p in Plates) (compound_plate[floor((c-1)/max_compound_concentrations)+1,p]==sum(compound_plate_row[c,p,..]));
+
+
+
 
 solve satisfy;
 
@@ -220,10 +262,10 @@ solve satisfy;
 
 
 
-
+output [if debugging then "\nPlates:\n" else "" endif, if debugging then show(plates) else "" endif];
 output [if debugging then "\nCompound's plate:\n" else "" endif, if debugging then show(compound_plate) else "" endif];
-
-
+output [if debugging then "\nCompound's row:\n" else "" endif, if debugging then show(compound_row) else "" endif];
+output [if debugging then "\nCompound's plate & row:\n" else "" endif, if debugging then show(compound_plate_row) else "" endif];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% CSV Ouput %%%%
