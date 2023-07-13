@@ -105,7 +105,8 @@ set of int: Plates = 1..numplates;
 enum Vertical = {upper,lower};
 enum Horizontal = {left,right};
 
-
+bool: even_columns = ((numcols mod 2) == 0);
+bool: even_rows = ((numrows mod 2) == 0);
 
 %bool: force_spread_controls;
 %bool: force_spread_concentrations;
@@ -174,6 +175,9 @@ array [1..num_compounds, Plates] of var 0..max_compound_replicates: compound_pla
 array [1..compound_ids, Rows] of var 0..max_compound_replicates: compound_row;
 array [1..compound_ids, Plates, Rows] of var 0..max_compound_replicates: compound_plate_row;
 
+array [0..control_ids, Rows] of var int: control_row;
+array [0..control_ids, Plates, Rows] of var int: control_plate_row;
+
 %%%% Main constraint model %%%%
 %% Place only the exact amount of compounds, controls, and empty wells across all plates
 constraint global_cardinality(plates,[ i | i in 0..control_ids+num_compounds*max_compound_concentrations],[emptywells]++[numplates*control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1]) | i in 1..control_ids]++[compound_replicates[floor((i-1)/max_compound_concentrations)+1]*(((i-1) mod max_compound_concentrations)<compound_concentrations[floor((i-1)/max_compound_concentrations)+1]) | i in 1..num_compounds*max_compound_concentrations]);
@@ -213,7 +217,7 @@ constraint if replicates_on_different_plates then
     ;
 
 
-
+%%% Compounds %%%
 % Compounds appear on rows exactly their number of replicates
 constraint forall (c in 1..compound_ids) (
         sum(compound_row[c,..]) == compound_replicates[floor((c-1)/max_compound_concentrations)+1]
@@ -231,7 +235,7 @@ constraint forall (r in Rows) (
                           [compound_row[i,r]*(((i-1) mod max_compound_concentrations)<compound_concentrations[floor((i-1)/max_compound_concentrations)+1]) | i in 1..compound_ids]
         ));
 
-%%% NEW
+
 % Replicates are placed on different rows
 constraint if concentrations_on_different_rows then
         forall (c in 1..compound_ids, r in Rows) (compound_row[c,r] <= 1)
@@ -245,6 +249,17 @@ constraint if concentrations_on_different_rows then
     ;
 
 
+constraint if concentrations_on_different_rows /\ even_rows then
+        forall (c in 1..num_compounds) (sum(compound_row[(c-1)*max_compound_concentrations+1..c*max_compound_concentrations,1..numrows div 2]) <= ceil(compound_concentrations[c]*compound_replicates[c]/2)) /\
+        forall (c in 1..num_compounds) (sum(compound_row[(c-1)*max_compound_concentrations+1..c*max_compound_concentrations,1..numrows div 2]) >= compound_concentrations[c]*compound_replicates[c] div 2)
+    endif
+    ;
+
+constraint if concentrations_on_different_rows /\ even_rows then
+        forall (c in 1..num_compounds) (sum(compound_row[(c-1)*max_compound_concentrations+1..c*max_compound_concentrations,(numrows div 2)+1..numrows]) <= ceil(compound_concentrations[c]*compound_replicates[c]/2)) /\
+        forall (c in 1..num_compounds) (sum(compound_row[(c-1)*max_compound_concentrations+1..c*max_compound_concentrations,(numrows div 2)+1..numrows]) >= compound_concentrations[c]*compound_replicates[c] div 2)
+    endif
+    ;
 
 
 %% Implied constraints
@@ -255,6 +270,102 @@ constraint forall(c in 1..compound_ids, p in Plates) (compound_plate[floor((c-1)
 
 
 
+%%% Controls %%%
+
+constraint sum(control_row[0,..]) == emptywells;
+constraint forall (r in Rows) (count_eq(plates[..,r,..],0,control_row[0,r]));
+
+
+% Controls appear on rows exactly their number of replicates
+constraint forall (c in 1..control_ids) (
+        sum(control_row[c,..]) == numplates*control_replicates[floor((c-1)/max_control_concentrations)+1]
+    );
+
+
+% The number of controls per row is limited by the available space
+constraint forall (r in Rows) (
+        sum(compound_row[..,r]) + sum(control_row[..,r]) == numplates*numcols /\
+        sum(control_row[..,r]) <= numplates*numcols 
+    );
+    
+%% Place the exact amount of compounds on each row (and that's their row)
+constraint forall (r in Rows) (
+        global_cardinality(plates[..,r,..],
+                          [ i | i in 1..control_ids],
+                          [control_row[i,r]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1]) | i in 1..control_ids]
+        ));
+
+
+
+constraint if concentrations_on_different_rows then
+        forall (c in 1..num_controls, r in Rows) (sum(control_row[(c-1)*max_control_concentrations+1..c*max_control_concentrations,r]) <= numplates*ceil(control_concentrations[c]*control_replicates[c]/numrows)) /\
+        forall (c in 1..num_controls, p in Plates, r in Rows) (sum(control_plate_row[(c-1)*max_control_concentrations+1..c*max_control_concentrations,p,r]) <= ceil(control_concentrations[c]*control_replicates[c]/numrows))
+    endif
+    ;
+
+
+constraint if concentrations_on_different_rows /\ even_rows then
+        forall (c in 1..num_controls) (sum(control_row[(c-1)*max_control_concentrations+1..c*max_control_concentrations,1..numrows div 2]) <= numplates*ceil(control_concentrations[c]*control_replicates[c]/2)) /\
+        forall (c in 1..num_controls) (sum(control_row[(c-1)*max_control_concentrations+1..c*max_control_concentrations,1..numrows div 2]) >= numplates*(control_concentrations[c]*control_replicates[c] div 2))
+    endif
+    ;
+
+constraint if concentrations_on_different_rows /\ even_rows then
+        forall (c in 1..num_controls) (sum(control_row[(c-1)*max_control_concentrations+1..c*max_control_concentrations,(numrows div 2)+1..numrows]) <= numplates*ceil(control_concentrations[c]*control_replicates[c]/2)) /\
+        forall (c in 1..num_controls) (sum(control_row[(c-1)*max_control_concentrations+1..c*max_control_concentrations,(numrows div 2)+1..numrows]) >= numplates*(control_concentrations[c]*control_replicates[c] div 2))
+    endif
+    ;
+
+
+
+
+
+constraint if concentrations_on_different_rows /\ even_rows then
+        forall (c in 1..num_controls, p in Plates) (sum(control_plate_row[(c-1)*max_control_concentrations+1..c*max_control_concentrations,p,1..numrows div 2]) <= ceil(control_concentrations[c]*control_replicates[c]/2)) /\
+        forall (c in 1..num_controls, p in Plates) (sum(control_plate_row[(c-1)*max_control_concentrations+1..c*max_control_concentrations,p,1..numrows div 2]) >= control_concentrations[c]*control_replicates[c] div 2)
+    endif
+    ;
+
+constraint if concentrations_on_different_rows /\ even_rows then
+        forall (c in 1..num_controls, p in Plates) (sum(control_plate_row[(c-1)*max_control_concentrations+1..c*max_control_concentrations,p,(numrows div 2)+1..numrows]) <= ceil(control_concentrations[c]*control_replicates[c]/2)) /\
+        forall (c in 1..num_controls, p in Plates) (sum(control_plate_row[(c-1)*max_control_concentrations+1..c*max_control_concentrations,p,(numrows div 2)+1..numrows]) >= control_concentrations[c]*control_replicates[c] div 2)
+    endif
+    ;
+
+
+
+%% TODO: tighten constraints depending on the empty wells 
+
+
+%% Implied constraints
+constraint forall(c in 0..control_ids, p in Plates, r in Rows) (count_eq(plates[p,r,..],c,control_plate_row[c,p,r]));
+constraint forall(p in Plates, r in Rows) (sum(control_plate_row[..,p,r])<=numcols);
+constraint forall(c in 0..control_ids, r in Rows) (control_row[c,r]==sum(control_plate_row[c,..,r]));
+constraint forall(c in 1..control_ids, p in Plates) (control_replicates[floor((c-1)/max_control_concentrations)+1]==sum(control_plate_row[c,p,..]));
+
+
+constraint forall(p in Plates, r in Rows) (sum(control_plate_row[..,p,r]) + sum(compound_plate_row[..,p,r]) == numcols);
+
+
+%constraint forall (p in Plates) (global_cardinality(plates[p,..,..],[ i | i in 0..control_ids],[wells_for_compounds-sum([compound_plate[c,p]*compound_concentrations[c]|c in 1..num_compounds])]++[control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1]) | i in 1..control_ids]));
+
+
+%(wells_for_compounds-sum([compound_plate[c,p]*compound_concentrations[c]|c in 1..num_compounds]))
+
+constraint forall (p in Plates) (sum(control_plate_row[0,p,..])==(wells_for_compounds-sum([compound_plate[c,p]*compound_concentrations[c]|c in 1..num_compounds])));
+
+constraint if concentrations_on_different_rows /\ even_rows then
+        forall (p in Plates) (sum(control_plate_row[0,p,1..numrows div 2]) <= ceil((wells_for_compounds-sum([compound_plate[c,p]*compound_concentrations[c]|c in 1..num_compounds]))/2)) /\
+        forall (p in Plates) (sum(control_plate_row[0,p,1..numrows div 2]) >= (wells_for_compounds-sum([compound_plate[c,p]*compound_concentrations[c]|c in 1..num_compounds])) div 2)
+    endif
+    ;
+
+constraint if concentrations_on_different_rows /\ even_rows then
+        forall (p in Plates) (sum(control_plate_row[0,p,(numrows div 2)+1..numrows]) <= ceil((wells_for_compounds-sum([compound_plate[c,p]*compound_concentrations[c]|c in 1..num_compounds]))/2)) /\
+        forall (p in Plates) (sum(control_plate_row[0,p,(numrows div 2)+1..numrows]) >= (wells_for_compounds-sum([compound_plate[c,p]*compound_concentrations[c]|c in 1..num_compounds])) div 2)
+    endif
+    ;
+
 
 solve satisfy;
 
@@ -262,12 +373,21 @@ solve satisfy;
 
 
 
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Pretty printing for testing & debugging %%%%
+
 output [if debugging then "\nPlates:\n" else "" endif, if debugging then show(plates) else "" endif];
 output [if debugging then "\nCompound's plate:\n" else "" endif, if debugging then show(compound_plate) else "" endif];
 output [if debugging then "\nCompound's row:\n" else "" endif, if debugging then show(compound_row) else "" endif];
 output [if debugging then "\nCompound's plate & row:\n" else "" endif, if debugging then show(compound_plate_row) else "" endif];
+output [if debugging then "\nControl's row:\n" else "" endif, if debugging then show(control_row) else "" endif];
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% CSV Ouput %%%%
 
 array[int] of string: letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
