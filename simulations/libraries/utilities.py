@@ -8,7 +8,10 @@ import re
 from statannotations.Annotator import Annotator # to add p-values to plots
 from scipy import stats
 from random import randrange
-
+from sklearn import metrics
+import statistics
+from moepy import lowess, eda
+from scipy.interpolate import interp1d
 
 box_pairs_erb = [("Effective", "Random"), ("Random", "Border"), ("Effective", "Border")]
 box_pairs_bre = [("Random", "Effective"), ("Border", "Random"), ("Border", "Effective")]
@@ -795,7 +798,7 @@ def create_latex_table_pvalues_wide(data_1rep, data_2rep, data_3rep, tex_filenam
 
     
     
-def plotting_ssmd_scores(screening_scores_data_filename, fig_name, y_min=None, y_max=None):
+def plotting_ssmd_scores(screening_scores_data_filename, fig_name, y_min=None, y_max=None, fig_dir=''):
     screening_scores_df = pd.read_csv(screening_scores_data_filename)
 
     ## No rows lost!
@@ -862,12 +865,12 @@ def plotting_ssmd_scores(screening_scores_data_filename, fig_name, y_min=None, y
     annotator.apply_and_annotate()
 
     plt.show()
-    fig.savefig("screening-ssmd-"+fig_name+".png",bbox_inches='tight',dpi=800)
+    fig.savefig(fig_dir+"screening-ssmd-"+fig_name+".png",bbox_inches='tight',dpi=800)
 
 
     
     
-def plotting_z_scores(screening_scores_data_filename, fig_name, y_min=None, y_max=None):
+def plotting_z_scores(screening_scores_data_filename, fig_name, y_min=None, y_max=None, fig_dir=''):
     screening_scores_df = pd.read_csv(screening_scores_data_filename)
 
     ## No rows lost!
@@ -928,10 +931,10 @@ def plotting_z_scores(screening_scores_data_filename, fig_name, y_min=None, y_ma
     annotator.apply_and_annotate()
 
     plt.show()
-    fig.savefig("screening-zpfactor-"+fig_name+".png",bbox_inches='tight',dpi=800)
+    fig.savefig(fig_dir+"screening-zpfactor-"+fig_name+".png",bbox_inches='tight',dpi=800)
     
     
-def plotting_ssmd_scores_norm(screening_scores_data_filename, fig_name, y_min=None, y_max=None):
+def plotting_ssmd_scores_norm(screening_scores_data_filename, fig_name, y_min=None, y_max=None, fig_dir=''):
     screening_scores_df = pd.read_csv(screening_scores_data_filename)
 
     ## No rows lost!
@@ -980,11 +983,11 @@ def plotting_ssmd_scores_norm(screening_scores_data_filename, fig_name, y_min=No
     annotator.apply_and_annotate()
 
     plt.show()
-    fig.savefig("screening-ssmd-"+fig_name+".png",bbox_inches='tight',dpi=800)
+    fig.savefig(fig_dir+"screening-ssmd-"+fig_name+".png",bbox_inches='tight',dpi=800)
 
 
     
-def plotting_z_scores_norm(screening_scores_data_filename, fig_name, y_min=None, y_max=None):
+def plotting_z_scores_norm(screening_scores_data_filename, fig_name, y_min=None, y_max=None, fig_dir=''):
     screening_scores_df = pd.read_csv(screening_scores_data_filename)
 
     ## No rows lost!
@@ -1032,7 +1035,7 @@ def plotting_z_scores_norm(screening_scores_data_filename, fig_name, y_min=None,
     annotator.apply_and_annotate()
 
     plt.show()
-    fig.savefig("screening-zpfactor-"+fig_name+".png",bbox_inches='tight',dpi=800)
+    fig.savefig(fig_dir+"screening-zpfactor-"+fig_name+".png",bbox_inches='tight',dpi=800)
     
     
     
@@ -1172,3 +1175,338 @@ def generate_relic50_r2(relative_ic50_data_1rep, relative_ic50_data_2rep, relati
         plot_barplot_replicate_data(relative_ic50_data_1rep, relative_ic50_data_2rep, relative_ic50_data_3rep, fig_name="-1-2-3"+fig_name, fig_dir = figures_dir, fig_type='relic50', y_max = y_max_relic, pvalue_thresholds=pvalue_thresholds)
     
     plot_r2_percentage(relative_ic50_data_1rep, relative_ic50_data_2rep, relative_ic50_data_3rep, fig_name=fig_name, fig_dir = figures_dir, y_max=y_max_r2)
+
+
+    
+    
+def plot_roc_curves(residuals_filename, fig_name=None, fig_dir='', batch=0, batches=10):
+
+    screening_residuals_df = pd.read_csv(residuals_filename)
+
+    screening_residuals_df = screening_residuals_df[screening_residuals_df.lost_rows<1]
+
+    screening_residuals_df.loc[(screening_residuals_df['layout'] == "RANDOM"), 'layout'] = "Random"
+    screening_residuals_df.loc[(screening_residuals_df['layout'] == "BORDER"), 'layout'] = "Border"
+    screening_residuals_df.loc[(screening_residuals_df['layout'] == "PLAID"), 'layout'] = "Effective"
+
+    screening_residuals_df['obtained_result_inv'] = -screening_residuals_df.obtained_result
+
+    colors = ['#59296e','#cc0253','#e68302']
+
+    results_plaid = screening_residuals_df[(screening_residuals_df.layout=='Effective') ]
+    results_random = screening_residuals_df[(screening_residuals_df.layout=='Random') ]
+    results_border = screening_residuals_df[(screening_residuals_df.layout=='Border') ]
+
+
+    fig, ax = plt.subplots(figsize=(3, 2))
+
+
+    ## Border
+    fpr, tpr, thresholds = metrics.roc_curve(results_border.loc[results_border.batch==batch,'activity'],  results_border.loc[results_border.batch==batch,'obtained_result_inv'])
+    auc_border = metrics.roc_auc_score(results_border.loc[results_border.batch==batch,'activity'],  results_border.loc[results_border.batch==batch,'obtained_result_inv'])
+
+    #create ROC curve
+    plt.plot(fpr,tpr,color=colors[2])
+
+
+    ## Random
+    fpr, tpr, thresholds = metrics.roc_curve(results_random.loc[results_random.batch==batch,'activity'],  results_random.loc[results_random.batch==batch,'obtained_result_inv'])
+    auc_random = metrics.roc_auc_score(results_random.loc[results_random.batch==batch,'activity'],  results_random.loc[results_random.batch==batch,'obtained_result_inv'])
+
+    #create ROC curve
+    plt.plot(fpr,tpr,color=colors[1])
+
+
+    ## PLAID
+    fpr, tpr, thresholds = metrics.roc_curve(results_plaid.loc[results_plaid.batch==batch,'activity'],  results_plaid.loc[results_plaid.batch==batch,'obtained_result_inv'])
+    auc_plaid = metrics.roc_auc_score(results_plaid.loc[results_plaid.batch==batch,'activity'],  results_plaid.loc[results_plaid.batch==batch,'obtained_result_inv'])
+    auc_plaid_str = '{0:.2g}'.format(auc_plaid)
+
+    #create ROC curve
+    plt.plot(fpr,tpr,color=colors[0])
+
+    plt.ylabel('True Positive Rate', fontsize = 10)
+    plt.xlabel('False Positive Rate', fontsize = 10)
+    plt.legend(labels=['Border (AUC = '+str(round(auc_border,2))+')','Random (AUC = '+str(round(auc_random,2))+')','Effective (AUC = '+auc_plaid_str+')'],loc='lower right', fontsize = 8)
+    plt.xticks(fontsize=8)
+    plt.yticks(fontsize=8)
+    plt.show()
+
+    if fig_name:
+        fig.savefig(fig_dir+fig_name,bbox_inches='tight',dpi=300)
+    
+
+    
+def plot_pr_curves(residuals_filename, fig_name=None, fig_dir='', batch=0, batches=10):
+
+    #plt.rcParams['text.usetex'] = True
+
+    screening_residuals_df = pd.read_csv(residuals_filename)
+
+    screening_residuals_df = screening_residuals_df[screening_residuals_df.lost_rows<1]
+
+    screening_residuals_df.loc[(screening_residuals_df['layout'] == "RANDOM"), 'layout'] = "Random"
+    screening_residuals_df.loc[(screening_residuals_df['layout'] == "BORDER"), 'layout'] = "Border"
+    screening_residuals_df.loc[(screening_residuals_df['layout'] == "PLAID"), 'layout'] = "Effective"
+
+    screening_residuals_df['obtained_result_inv'] = -screening_residuals_df.obtained_result
+
+    colors = ['#59296e','#cc0253','#e68302']
+
+    results_plaid = screening_residuals_df[(screening_residuals_df.layout=='Effective') ]
+    results_random = screening_residuals_df[(screening_residuals_df.layout=='Random') ]
+    results_border = screening_residuals_df[(screening_residuals_df.layout=='Border') ]
+
+
+    fig, ax = plt.subplots(figsize=(3, 2))
+
+
+    ## Border
+    precision, recall, thresholds = metrics.precision_recall_curve(results_border.loc[results_border.batch==batch,'activity'],  results_border.loc[results_border.batch==batch,'obtained_result_inv'])
+    auc_border = metrics.auc(recall,precision)
+
+    #draw PR curve
+    plt.plot(recall,precision,color=colors[2])
+
+
+    ## Random
+    precision, recall, thresholds = metrics.precision_recall_curve(results_random.loc[results_random.batch==batch,'activity'],  results_random.loc[results_random.batch==batch,'obtained_result_inv'])
+    auc_random = metrics.auc(recall,precision)
+
+    #draw PR curve
+    plt.plot(recall,precision,color=colors[1])
+
+
+    ## PLAID
+    precision, recall, thresholds = metrics.precision_recall_curve(results_plaid.loc[results_plaid.batch==batch,'activity'],  results_plaid.loc[results_plaid.batch==batch,'obtained_result_inv'])
+    auc_plaid = metrics.auc(recall,precision)
+    auc_plaid_str = '{0:.2g}'.format(auc_plaid)
+
+    #draw PR curve
+    plt.plot(recall,precision,color=colors[0])
+
+    plt.ylabel('Precision', fontsize = 10)
+    plt.xlabel('Recall', fontsize = 10)
+    plt.legend(labels=['Border (AUC = '+str(round(auc_border,2))+')','Random (AUC = '+str(round(auc_random,2))+')','Effective (AUC = '+auc_plaid_str+')'],loc='lower left', fontsize = 8)
+    plt.xticks(fontsize=8)
+    plt.yticks(fontsize=8)
+    plt.show()
+
+    if fig_name:
+        fig.savefig(fig_dir+fig_name,bbox_inches='tight',dpi=300)
+    
+
+    
+def pr_auc_score(y_true, y_score):
+    precision, recall, thresholds = metrics.precision_recall_curve(y_true, y_score)
+    
+    return metrics.auc(recall,precision)
+
+def pr_table_code(residuals_filename, batches=10):
+    screening_residuals_df = pd.read_csv(residuals_filename)
+
+    screening_residuals_df = screening_residuals_df[screening_residuals_df.lost_rows<1]
+
+    screening_residuals_df.loc[(screening_residuals_df['layout'] == "RANDOM"), 'layout'] = "Random"
+    screening_residuals_df.loc[(screening_residuals_df['layout'] == "BORDER"), 'layout'] = "Border"
+    screening_residuals_df.loc[(screening_residuals_df['layout'] == "PLAID"), 'layout'] = "Effective"
+
+    screening_residuals_df['obtained_result_inv'] = -screening_residuals_df.obtained_result
+    
+    results_plaid = screening_residuals_df[(screening_residuals_df.layout=='Effective') ]
+    results_random = screening_residuals_df[(screening_residuals_df.layout=='Random') ]
+    results_border = screening_residuals_df[(screening_residuals_df.layout=='Border') ]
+
+    plaid_auc_list = [pr_auc_score(results_plaid.loc[results_plaid.batch==b,'activity'],  results_plaid.loc[results_plaid.batch==b,'obtained_result_inv']) for b in range(batches)]
+    random_auc_list = [pr_auc_score(results_random.loc[results_random.batch==b,'activity'],  results_random.loc[results_random.batch==b,'obtained_result_inv']) for b in range(batches)]
+    border_auc_list = [pr_auc_score(results_border.loc[results_border.batch==b,'activity'],  results_border.loc[results_border.batch==b,'obtained_result_inv']) for b in range(batches)]
+
+    print("Mean and std of PLAID layouts:", round(statistics.mean(plaid_auc_list),2)," $\\pm$ ("+str(round(statistics.stdev(plaid_auc_list),3))+")")
+    print("Mean and std of RANDOM layouts:", round(statistics.mean(random_auc_list),2)," $\\pm$ ("+str(round(statistics.stdev(random_auc_list),3))+")")
+    print("Mean and std of BORDER layouts:", round(statistics.mean(border_auc_list),2)," $\\pm$ ("+str(round(statistics.stdev(border_auc_list),3))+")\n")
+
+
+    print("Variance of PLAID layouts:", statistics.variance(plaid_auc_list))
+    print("Variance of RANDOM layouts:", statistics.variance(random_auc_list))
+    print("Variance of BORDER layouts:", statistics.variance(border_auc_list),"\n")
+
+
+    print("Case of equal variance:")
+    print("PLAID vs RANDOM layouts:", stats.ttest_ind(plaid_auc_list,random_auc_list,equal_var = True))
+    print("RANDOM vs BORDER layouts:", stats.ttest_ind(border_auc_list,random_auc_list,equal_var = True))
+    print("PLAID vs BORDER layouts:", stats.ttest_ind(plaid_auc_list,border_auc_list,equal_var = True),"\n")
+
+    print("Case of not equal variance:")
+    print("PLAID vs RANDOM layouts:", stats.ttest_ind(plaid_auc_list,random_auc_list,equal_var = False))
+    print("RANDOM vs BORDER layouts:", stats.ttest_ind(border_auc_list,random_auc_list,equal_var = False))
+    print("PLAID vs BORDER layouts:", stats.ttest_ind(plaid_auc_list,border_auc_list,equal_var = False))
+    
+    
+def plot_screening_plates(residuals_filename, fig_name=None, fig_dir='',max_value=300):
+    screening_residuals_df = pd.read_csv(residuals_filename)
+
+    screening_residuals_df = screening_residuals_df[screening_residuals_df.lost_rows<1]
+
+    screening_residuals_df.loc[(screening_residuals_df['layout'] == "RANDOM"), 'layout'] = "Random"
+    screening_residuals_df.loc[(screening_residuals_df['layout'] == "BORDER"), 'layout'] = "Border"
+    screening_residuals_df.loc[(screening_residuals_df['layout'] == "PLAID"), 'layout'] = "Effective"
+
+    neg_control_id = np.max(screening_residuals_df.comp_id)
+    pos_control_id = neg_control_id -1 
+
+    sns.set_theme(style="whitegrid")
+
+    #max_value = max(screening_residuals_df.obtained_result)+45
+    #max_value = 300
+    min_value = min(screening_residuals_df.obtained_result)-10
+
+    fig, ax = plt.subplots(figsize=(4, 3))
+    ax.set(ylim=(min_value,max_value))
+    #plt.yscale('log', base=2)
+
+    #'expected_result','obtained_result'
+    ax = sns.scatterplot(x="plate_id", y="expected_result", data=screening_residuals_df.loc[(screening_residuals_df.layout=='Effective') & (screening_residuals_df.activity <1)], color='#d998b1', s=14)
+    ax = sns.scatterplot(x="plate_id", y="expected_result", data=screening_residuals_df.loc[(screening_residuals_df.layout=='Effective') & (screening_residuals_df.comp_id==neg_control_id)],color='#bf1f5f', s=14)
+    ax = sns.scatterplot(x="plate_id", y="expected_result", data=screening_residuals_df.loc[(screening_residuals_df.layout=='Effective') & (screening_residuals_df.activity > 0) & (screening_residuals_df.comp_id<pos_control_id)],color='#a8bfe6', s=14)
+    ax = sns.scatterplot(x="plate_id", y="expected_result", data=screening_residuals_df.loc[(screening_residuals_df.layout=='Effective') & (screening_residuals_df.comp_id==pos_control_id)], color='#3c7ef0', s=14)
+    plt.xlabel('Plate number', fontsize = 10)
+    plt.ylabel('Response', fontsize = 10)
+    plt.xticks([i for i in range(5,41,5)])
+    plt.legend(labels=['Negative samples','Negative control','Positive samples','Positive control'],ncol=2, loc="upper center", fontsize = 8)
+    plt.show()
+
+    if fig_name:
+        fig.savefig(fig_dir+"screening-bowl-"+fig_name+"-expected.png",bbox_inches='tight',dpi=1200)
+
+    fig, ax = plt.subplots(figsize=(4, 3))
+    ax.set(ylim=(min_value,max_value))
+    #plt.yscale('log', base=2)
+
+    ax = sns.scatterplot(x="plate_id", y="obtained_result", data=screening_residuals_df.loc[(screening_residuals_df.layout=='Effective') & (screening_residuals_df.activity <1)], color='#d998b1', s=14)
+    ax = sns.scatterplot(x="plate_id", y="obtained_result", data=screening_residuals_df.loc[(screening_residuals_df.layout=='Effective') & (screening_residuals_df.comp_id==neg_control_id)],color='#bf1f5f', s=14)
+    ax = sns.scatterplot(x="plate_id", y="obtained_result", data=screening_residuals_df.loc[(screening_residuals_df.layout=='Effective') & (screening_residuals_df.activity > 0) & (screening_residuals_df.comp_id<pos_control_id)],color='#a8bfe6', s=14)
+    ax = sns.scatterplot(x="plate_id", y="obtained_result", data=screening_residuals_df.loc[(screening_residuals_df.layout=='Effective') & (screening_residuals_df.comp_id==pos_control_id)], color='#3c7ef0', s=14)
+    plt.xlabel('Plate number', fontsize = 10)
+    plt.ylabel('Response', fontsize = 10)
+    plt.xticks([i for i in range(5,41,5)])
+    plt.legend(labels=['Negative samples','Negative control','Positive samples','Positive control'],ncol=2, loc="upper center", fontsize = 8)
+    plt.show()
+
+    if fig_name:
+        fig.savefig(fig_dir+"screening-bowl-"+fig_name+"-plaid.png",bbox_inches='tight',dpi=1200)
+
+
+    fig, ax = plt.subplots(figsize=(4,3))
+    ax.set(ylim=(min_value,max_value))
+    #plt.yscale('log', base=2)
+
+    ax = sns.scatterplot(x="plate_id", y="obtained_result", data=screening_residuals_df.loc[(screening_residuals_df.layout=='Random') & (screening_residuals_df.activity <1)], color='#d998b1', s=14)
+    ax = sns.scatterplot(x="plate_id", y="obtained_result", data=screening_residuals_df.loc[(screening_residuals_df.layout=='Random') & (screening_residuals_df.comp_id==neg_control_id)],color='#bf1f5f', s=14)
+    ax = sns.scatterplot(x="plate_id", y="obtained_result", data=screening_residuals_df.loc[(screening_residuals_df.layout=='Random') & (screening_residuals_df.activity > 0) & (screening_residuals_df.comp_id<pos_control_id)],color='#a8bfe6', s=14)
+    ax = sns.scatterplot(x="plate_id", y="obtained_result", data=screening_residuals_df.loc[(screening_residuals_df.layout=='Random') & (screening_residuals_df.comp_id==pos_control_id)], color='#3c7ef0', s=14)
+    plt.xlabel('Plate number', fontsize = 10)
+    plt.ylabel('Response', fontsize = 10)
+    plt.xticks([i for i in range(5,41,5)])
+    plt.legend(labels=['Negative samples','Negative control','Positive samples','Positive control'],ncol=2, loc="upper center", fontsize = 8)
+    plt.show()
+
+    if fig_name:
+        fig.savefig(fig_dir+"screening-bowl-"+fig_name+"-random.png",bbox_inches='tight',dpi=1200)
+
+
+    fig, ax = plt.subplots(figsize=(4, 3))
+    ax.set(ylim=(min_value,max_value))
+
+    ax = sns.scatterplot(x="plate_id", y="obtained_result", data=screening_residuals_df.loc[(screening_residuals_df.layout=='Border') & (screening_residuals_df.activity <1)], color='#d998b1', s=14)
+    ax = sns.scatterplot(x="plate_id", y="obtained_result", data=screening_residuals_df.loc[(screening_residuals_df.layout=='Border') & (screening_residuals_df.comp_id==neg_control_id)],color='#bf1f5f', s=14)
+    ax = sns.scatterplot(x="plate_id", y="obtained_result", data=screening_residuals_df.loc[(screening_residuals_df.layout=='Border') & (screening_residuals_df.activity > 0) & (screening_residuals_df.comp_id<pos_control_id)],color='#a8bfe6', s=14)
+    ax = sns.scatterplot(x="plate_id", y="obtained_result", data=screening_residuals_df.loc[(screening_residuals_df.layout=='Border') & (screening_residuals_df.comp_id==pos_control_id)], color='#3c7ef0', s=14)
+    plt.xlabel('Plate number', fontsize = 10)
+    plt.ylabel('Response', fontsize = 10)
+    plt.xticks([i for i in range(5,41,5)])
+    plt.legend(labels=['Negative samples','Negative control','Positive samples','Positive control'],ncol=2, loc="upper center", fontsize = 8)
+    plt.show()
+
+    if fig_name:
+        fig.savefig(fig_dir+"screening-bowl-"+fig_name+"-border.png",bbox_inches='tight',dpi=1200)
+        
+
+
+def plot_well_series(plate_array, layout, neg_control_id=-1, pos_control_id=-1,order=0,vmin=None,vmax=None,filename=None):
+    
+    plate_df = pd.DataFrame(plate_array)
+    
+    intensity_df = plate_df.stack().reset_index() ##
+    intensity_df.columns = ["Rows","Columns","Intensity"] ##
+    
+    types_df = pd.DataFrame(layout).stack().reset_index() ##
+    types_df.columns = ["Rows","Columns","Type"] ##
+    
+    combined_df = pd.merge(intensity_df, types_df,  how='left', on=['Rows','Columns']) ##
+    
+    
+    #### Test unstack
+    
+    unstack_df = combined_df[["Rows","Columns","Intensity"]].copy()
+    
+    unstacked_df = pd.pivot_table(unstack_df, values='Intensity', index=['Rows'],columns=['Columns'], aggfunc=np.sum)
+    
+    plot_plate(unstacked_df, title="Input",filename=filename+'heatmap-before')
+    
+    ####
+        
+    ## Before ###
+    
+    y_adjusted = combined_df.copy()
+    y_adjusted.reset_index() ##
+    
+    
+    ## CALL NORM
+    
+    ### Adjust rows
+    lowess_rows_model = lowess.Lowess()
+    lowess_rows_model.fit(y_adjusted[y_adjusted.Type==neg_control_id].Rows.to_numpy(),y_adjusted[y_adjusted.Type==neg_control_id].Intensity.to_numpy(),frac=1,num_fits=5000)
+
+    xnew_rows = np.array([i for i in range(0,16)])
+    y_pred_rows = lowess_rows_model.predict(xnew_rows)
+    
+    y_adjusted.loc[y_adjusted['Type']>0, ['Intensity']] -= y_pred_rows[y_adjusted.loc[y_adjusted['Type']>0,['Rows']]] 
+    y_adjusted.loc[y_adjusted['Type']>0, ['Intensity']] += np.nanmean(y_pred_rows)
+    
+    # Model fitting Columns
+    lowess_model = lowess.Lowess()
+    lowess_model.fit(y_adjusted[y_adjusted.Type==neg_control_id].Columns.to_numpy(),y_adjusted[y_adjusted.Type==neg_control_id].Intensity.to_numpy(),frac=1,num_fits=5000)
+
+    xnew = np.array([i for i in range(0,24)])
+
+    y_pred = lowess_model.predict(xnew)
+
+    
+    y_adjusted.loc[y_adjusted['Type']>0, ['Intensity']] -= y_pred[y_adjusted.loc[y_adjusted['Type']>0,['Columns']]] 
+    y_adjusted.loc[y_adjusted['Type']>0, ['Intensity']] += np.nanmean(y_pred)
+    
+    
+    fig, ax = plt.subplots(figsize=(10,6))
+    
+    ax.set(xlim=(0,25))
+    ax = sns.regplot(data=combined_df[(combined_df.Type!=pos_control_id) & (combined_df.Type!=neg_control_id)], x="Columns", y="Intensity", x_jitter=0.3, fit_reg=False, scatter_kws={"color":"orange","alpha":0.3})
+    ax = sns.regplot(data=combined_df[combined_df.Type==pos_control_id], x="Columns", y="Intensity", x_jitter=0.3, fit_reg=False, marker="+",scatter_kws={"color":"blue"})
+    ax = sns.regplot(data=combined_df[combined_df.Type==neg_control_id], x="Columns", y="Intensity", x_jitter=0.3, fit_reg=False, marker='*',scatter_kws={"color":"purple"}, truncate=False, order=order) 
+    ax = sns.regplot(data=y_adjusted, x="Columns", y="Intensity", x_jitter=0.3, fit_reg=True, marker='x',scatter_kws={"color":"blue"}, truncate=False, order=order)
+    
+    #ax = sns.regplot(data=y_adjusted, x="Columns", y="Intensity", x_jitter=0.3, fit_reg=True, marker='x',scatter_kws={"color":"blue"}, truncate=False, order=order)
+    
+    plt.plot(xnew, y_pred, '--', label='Estimate', color='k', zorder=3)
+    
+    ax.set_xticks(range(1,25))
+    
+    plt.show()
+    
+    if (filename):
+        fig.savefig(filename)
+        
+    unstack_adjusted_df = y_adjusted[["Rows","Columns","Intensity"]].copy()
+    
+    unstacked_adjusted_df = pd.pivot_table(unstack_adjusted_df, values='Intensity', index=['Rows'],columns=['Columns'], aggfunc=np.sum)
+    
+    return unstacked_adjusted_df.to_numpy()

@@ -7,7 +7,7 @@ echo "\nHello, world! Let's generate some plate layouts...\n"
 
 echo "\nFirst, we are going to split the experiment into individual plates...\n"
 
-/Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode ../../plate-split/plate-split.mzn $myBigExperimentFile.dzn -p 10 -r $RANDOM --soln-sep '' &> $myBigExperimentFile.txt
+/Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode ../../plate-split.mzn $myBigExperimentFile.dzn -p 10 -r $RANDOM --soln-sep '' &> $myBigExperimentFile.txt
 
 split -d -p '^%%% Experiment.*' $myBigExperimentFile.txt $myBigExperimentFile-plate-
 

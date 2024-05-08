@@ -8,6 +8,7 @@
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![GitHub Repo stars](https://img.shields.io/github/stars/pharmbio/plaid?style=social)](https://github.com/pharmbio/plaid/stargazers)
 
 **PLAID** is a flexible
 constraint-programming model for creating highly-effective microplate
@@ -118,20 +119,21 @@ Got ideas for improvement? We would love to hear about your suggestions!
 <a name="citation"></a>
 ## Citation
 
-Our bioRxiv preprint can be used to cite this project:
+The following manuscript in [Artificial Intelligence in the Life Sciences](https://doi.org/10.1016/j.ailsci.2023.100073) can be used to cite this project:
 
 M. A. Francisco Rodríguez, J. Carreras Puigvert, and
 O. Spjuth. *Designing Microplate Layouts Using Artificial
-Intelligence* April, 2022. DOI: 10.1101/2022.03.31.486595 [[PDF](https://doi.org/10.1101/2022.03.31.486595)]
+Intelligence*, Volume 3, 2023. DOI: 10.1016/j.ailsci.2023.100073 [[PDF](https://doi.org/10.1016/j.ailsci.2023.100073)]
 
 ```bibtex
-@article{PLAID2022,
+@article{PLAID2023,
 	author = {Francisco Rodr\'iguez, Mar\'ia Andre\'ina and Carreras Puigvert, Jordi and Spjuth, Ola},
 	title = {Designing Microplate Layouts Using Artificial Intelligence},
-	year = {2022},
-	doi = {10.1101/2022.03.31.486595},
-	URL = {https://www.biorxiv.org/content/10.1101/2022.03.31.486595v1},
-	journal = {bioRxiv}
+	year = {2023},
+	doi = {10.1016/j.ailsci.2023.100073},
+	URL = {https://doi.org/10.1016/j.ailsci.2023.100073},
+	journal = {Artificial Intelligence in the Life Sciences},
+	volume = {3}
 }
 ```
 

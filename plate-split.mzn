@@ -22,7 +22,7 @@
 
 include "globals.mzn";
 include "gecode.mzn";
-include "../layout_predicates.mzn";
+%include "../layout_predicates.mzn";
  
 
 %%%% Input Data  %%%%
@@ -282,14 +282,15 @@ int: min_compounds_plate = max(floor((sum([compound_concentrations[i]*compound_r
 
 constraint global_cardinality_low_up(experiment_plate,[ i | i in Plates],[ min_compounds_plate | i in Plates],[ inner_plate_size | i in Plates]);
 
+%%% NOTE: sorted compounds is removed for now
 %% TODO: Think more about this constraint and what happens when there are replicates, etc.
 %% This option is possibly going to make some plans unfeasible (when there are different numbers of replicates, etc).
-constraint if sorted_compounds == true /\ max(compound_replicates)<=1 then sorted_except_0(experiment_plate,numplates,at_least_compounds,at_most_compounds) endif;
+%constraint if sorted_compounds == true /\ max(compound_replicates)<=1 then sorted_except_0(experiment_plate,numplates,at_least_compounds,at_most_compounds) endif;
 
 %% WARNING! This option assumes that compounds can be placed on plates in order! This works, for example, when all compounds have the same 
 % number of replicates and concentrations and one would like to generate several layouts with the compounds on the exact same plates.
 % Otherwise, experiment_plate needs to be given as input
-constraint if sorted_compounds == true /\ replicates_on_same_plate == true  then sorted_except_0(experiment_plate[1..compounds*max(compound_concentrations)],numplates,at_least_compounds div numplates,at_most_compounds div numplates) endif;
+%constraint if sorted_compounds == true /\ replicates_on_same_plate == true  then sorted_except_0(experiment_plate[1..compounds*max(compound_concentrations)],numplates,at_least_compounds div numplates,at_most_compounds div numplates) endif;
 
 
 
