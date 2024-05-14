@@ -154,8 +154,12 @@ constraint assert(min(compound_concentrations++[0]) <= inner_plate_size, "Invali
 %% Number of plates needed
 %% max is used to avoid division-by-zero errors
 int: numplates = max(ceil(total_wells/inner_plate_size),1);         
-              
-force_spread_controls = (ceil(inner_plate_size/9)*numplates >= total_controls) ;
+
+% TODO: temporal fix. This makes the problem too difficult for the borderline case in large plates.
+% Probably because it tries to prove if that optimal solution exists.
+%force_spread_controls = (ceil(inner_plate_size/9)*numplates >= total_controls);
+force_spread_controls = if inner_plate_size <= 96 then (ceil(inner_plate_size/9)*numplates >= total_controls) else (floor(inner_plate_size/9)*numplates >= total_controls) endif;
+
 %force_spread_concentrations = if replicates_on_same_plate \/ replicates <= numplates then (ceil(inner_plate_size/9) >= replicates*max_compound_concentrations) else (ceil(inner_plate_size/9) >= max_compound_concentrations) endif ;
 
 
