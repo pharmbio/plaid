@@ -1686,6 +1686,7 @@ constraint if force_spread_controls then forall(i in Plates, j in 3..numrows-2, 
             plates[i,j+2,k-2] <= experiments /\
             plates[i,j+2,k-1]  <= experiments /\
             plates[i,j+2,k]  <= experiments /\
+            plates[i,j+2,k+1]  <= experiments /\
             plates[i,j+2,k+2] <= experiments
             ) endif;
                       
@@ -1700,6 +1701,7 @@ constraint if force_spread_controls then forall(i in Plates, j = 2, k in 3..numc
             plates[i,j+2,k-2] <= experiments /\
             plates[i,j+2,k-1]  <= experiments /\
             plates[i,j+2,k]  <= experiments /\
+            plates[i,j+2,k+1]  <= experiments /\
             plates[i,j+2,k+2] <= experiments
             ) endif;
                       
@@ -1712,6 +1714,7 @@ constraint if force_spread_controls then forall(i in Plates, j = 1, k in 3..numc
             plates[i,j+2,k-2] <= experiments /\
             plates[i,j+2,k-1]  <= experiments /\
             plates[i,j+2,k]  <= experiments /\
+            plates[i,j+2,k+1]  <= experiments /\
             plates[i,j+2,k+2] <= experiments
             ) endif;
                         
