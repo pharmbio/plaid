@@ -1,0 +1,54 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Produces 1 plate.
+%% Debugging issues with pl-example49.dzn
+%% 2024/May/14: It takes about 1s 84msec.
+
+
+%% Plate dimentions: 
+num_rows = 8; %% height
+num_cols = 12; %% width
+
+
+horizontal_cell_lines = 1;
+vertical_cell_lines = 1;
+
+allow_empty_wells = true;
+
+concentrations_on_different_rows = false;
+concentrations_on_different_columns = false;
+
+% (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
+replicates_on_different_plates = false;
+replicates_on_same_plate = false;
+
+size_empty_edge = 0;
+
+
+%%% Compounds %%%
+compounds = 4; %% number of drugs/compounds
+compound_concentrations	 = [1| i in 1..compounds]; 
+
+compound_names = ["comp\(i)" | i in 1..compounds];
+
+compound_replicates = [1| i in 1..compounds]; 
+
+compound_concentration_names = array2d(1..compounds,1..1,[""| i in 1..compounds]);
+
+compound_concentration_indicators = [""]; 
+
+
+%%% Combinations %%%
+combinations = 	0;
+combination_names = [];
+combination_concentration_names = [];
+combination_concentrations = 0;
+
+
+%%% Controls %%%
+num_controls = 1;
+control_replicates = [11];
+control_concentrations = [1];
+control_names = ["dmso"];
+
+control_concentration_names =  [|"100"|];  
+  
