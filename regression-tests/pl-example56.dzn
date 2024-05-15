@@ -1,8 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Produces 1 plate.
 %% Debugging issues with pl-example49.dzn
-%% 2024/May/14: It takes about >23m 42s
-%% This is a limit case for the force_spread_controls constraint
+%% 2024/May/14: It takes about 13m 42s
+%% This is a limit case (almost the max) for the force_spread_controls constraint
 %% It's solvable, but it's very slow/difficult.
 
 
@@ -49,7 +49,7 @@ combination_concentrations = 0;
 
 %%% Controls %%%
 num_controls = 1;
-control_replicates = [32];
+control_replicates = [31];
 control_concentrations = [1];
 control_names = ["dmso"];
 
