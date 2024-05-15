@@ -1,12 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Produces 1 plate.
 %% Debugging issues with pl-example49.dzn
-%% 2024/May/14: It takes about ? sec
+%% 2024/May/14: It takes about 13m 42s
+%% This is a limit case for the force_spread_controls constraint
+%% It's solvable, but it's very slow/difficult.
 
 
 %% Plate dimentions: 
-num_rows = 14; %% height
-num_cols = 16; %% width
+num_rows = 16; %% height
+num_cols = 24; %% width
 
 
 horizontal_cell_lines = 1;
@@ -47,7 +49,7 @@ combination_concentrations = 0;
 
 %%% Controls %%%
 num_controls = 1;
-control_replicates = [round((num_rows-2)*(num_cols-2)/9)];
+control_replicates = [32];
 control_concentrations = [1];
 control_names = ["dmso"];
 
