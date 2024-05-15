@@ -39,5 +39,22 @@ predicate my_implied_cost_ext(var int:cost, array[int] of var int: x) =
   forall(i in 2..L-2)(c_cost[i+2] - 1 <= c_cost[i-1]);
   
 
+function bool: force_spread_controls(int: numcols, int: numrows, int: total_controls, int: numplates) = 
+  % 96-well plate (This is a proven upperbound)
+  if (numcols = 12 /\ numrows = 8) \/ (numcols = 8 /\ numrows = 12) then (11*numplates >= total_controls) 
+  % 96-well plate with empty border (This is a proven upperbound)
+  elseif (numcols = 10 /\ numrows = 6) \/ (numcols = 6 /\ numrows = 10) then (7*numplates >= total_controls) 
+  % 384-well plate with empty border (I have not proven yet that 33 is unsat)
+  % 32 is solvable, but makes the model too slow. 
+  % TODO: Think about an intermediate constraint
+  elseif (numcols = 22 /\ numrows = 14) \/ (numcols = 14 /\ numrows = 22) then (31*numplates >= total_controls) 
+  % 384-well plate (I have not proven yet that 38 is unsat) 
+  elseif (numcols = 24 /\ numrows = 16) \/ (numcols = 16 /\ numrows = 24) then (37*numplates >= total_controls) 
+  % Some generic attempt that 
+  elseif numcols*numrows < 60 then (ceil(numcols*numrows/9)*numplates >= total_controls)
+  else false
+  endif;
 
 
+
+%force_spread_controls = if inner_plate_size <= 60 then (ceil(inner_plate_size/9)*numplates >= total_controls) else (floor(inner_plate_size/9)*numplates >= total_controls) endif;
