@@ -3,7 +3,7 @@
 %% 2022/Dec/20: It takes about ? sec
 
 
-%% Plate dimentions: (this is a 96-well plate)
+%% Plate dimentions: (this is a 384-well plate)
 num_rows = 16; %% height
 num_cols = 24; %% width
 
