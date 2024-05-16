@@ -13,7 +13,8 @@
 % limitations under the License.
 %
 %
-% Description:  A highly effective microplate layout designer
+% Description:  a constraint model to split a multi-plate experiment into
+%               individual microplates.
 %
 % Authors: Maria Andreina FRANCISCO RODRIGUEZ (maria.andreina.francisco@it.uu.se)
 % Version: 1.0
@@ -22,7 +23,6 @@
 
 include "globals.mzn";
 include "gecode.mzn";
-%include "../layout_predicates.mzn";
  
 
 %%%% Input Data  %%%%

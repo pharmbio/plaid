@@ -6,7 +6,7 @@
 %% 2021/Apr/22: It takes about 1m 29s (with interconnected_plates = false)
 %% 2021/Jul/02: It takes about 3s 341msec (with interconnected_plates = false)
 
-%% Plate dimentions: (this is a 96-well plate)
+%% Plate dimensions: (this is a 96-well plate)
 num_rows = 8; %% height
 num_cols = 12; %% width
 

@@ -51,6 +51,7 @@ array [1..compounds] of int: compound_concentrations;
 int: max_compound_concentrations = max(compound_concentrations++[0]);
 
 array[1..compounds] of string: compound_names;
+array[1..compounds,1..max_compound_concentrations] of string: compound_concentration_names;
 
 %% Combinations (Deprecated) %%
 int: combinations;
@@ -101,7 +102,6 @@ int: numcols = if inner_empty_edge then floor(num_cols/vertical_cell_lines)-2*si
 %% TODO: add latex indicators for controls 
 %array[1..compound_concentrations] of string: compound_concentration_names;
 
-array[1..compounds,1..max_compound_concentrations] of string: compound_concentration_names;
 
 %% FIX ME!! (Deprecated?)
 array[1..max_compound_concentrations] of string: compound_concentration_indicators;
@@ -145,24 +145,28 @@ int: inner_plate_size = numcols*numrows;
 
 
 %%%%% Data validation %%%%%
-constraint assert(total_wells > 0, "Invalid datafile: the plates cannot be completely empty.");
-constraint assert(inner_plate_size>0, "Invalid datafile: There are no wells on the plate!");
-constraint assert(min(compound_concentrations++[0]) <= inner_plate_size, "Invalid datafile: Number of concentrations does not fit in one plate. If you think this is a mistake, please contact the development team.");
+constraint assert(total_wells > 0, "Invalid data: the plates cannot be completely empty.");
+constraint assert(inner_plate_size>0, "Invalid data: There are no wells on the plate.");
+constraint assert(min(compound_concentrations++[0]) <= inner_plate_size, "Invalid data: Number of concentrations does not fit in one plate. If you think this is a mistake, please contact the development team.");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 %% Number of plates needed
 %% max is used to avoid division-by-zero errors
 int: numplates = max(ceil(total_wells/inner_plate_size),1);         
-              
-force_spread_controls = (ceil(inner_plate_size/9)*numplates >= total_controls) ;
+
+% TODO: temporal fix. This makes the problem too difficult for the borderline case in large plates.
+% Probably because it tries to prove if that optimal solution exists.
+%force_spread_controls = (ceil(inner_plate_size/9)*numplates >= total_controls);
+
+force_spread_controls = force_spread_controls(numcols, numrows, total_controls, numplates);
+
+
 %force_spread_concentrations = if replicates_on_same_plate \/ replicates <= numplates then (ceil(inner_plate_size/9) >= replicates*max_compound_concentrations) else (ceil(inner_plate_size/9) >= max_compound_concentrations) endif ;
 
 
 % TODO: There are many other cases here that could be considered, for example, individual compounds with fewer concentrations/replicates.
 force_spread_concentrations = if replicates_on_different_plates /\ replicates <= numplates then ((inner_plate_size div 5) >= max_compound_concentrations) else (ceil(inner_plate_size/5) >= replicates*max_compound_concentrations) endif ;
-
-%force_spread_controls = false;
 
 
 %% All types of experiments (excluding controls): compounds and combinations
@@ -1686,6 +1690,7 @@ constraint if force_spread_controls then forall(i in Plates, j in 3..numrows-2, 
             plates[i,j+2,k-2] <= experiments /\
             plates[i,j+2,k-1]  <= experiments /\
             plates[i,j+2,k]  <= experiments /\
+            plates[i,j+2,k+1]  <= experiments /\
             plates[i,j+2,k+2] <= experiments
             ) endif;
                       
@@ -1700,6 +1705,7 @@ constraint if force_spread_controls then forall(i in Plates, j = 2, k in 3..numc
             plates[i,j+2,k-2] <= experiments /\
             plates[i,j+2,k-1]  <= experiments /\
             plates[i,j+2,k]  <= experiments /\
+            plates[i,j+2,k+1]  <= experiments /\
             plates[i,j+2,k+2] <= experiments
             ) endif;
                       
@@ -1712,6 +1718,7 @@ constraint if force_spread_controls then forall(i in Plates, j = 1, k in 3..numc
             plates[i,j+2,k-2] <= experiments /\
             plates[i,j+2,k-1]  <= experiments /\
             plates[i,j+2,k]  <= experiments /\
+            plates[i,j+2,k+1]  <= experiments /\
             plates[i,j+2,k+2] <= experiments
             ) endif;
                         
@@ -1738,7 +1745,65 @@ constraint if force_spread_controls then forall(i in Plates, j = numrows, k in 3
             plates[i,j,k+2]  <= experiments
             ) endif;             
                     
-                                                                                                                                          
+
+%% Border cases for k: k=1
+constraint if force_spread_controls then forall(i in Plates, j in 3..numrows-2, k=1)(plates[i,j,1] > experiments -> 
+            plates[i,j-2,k]  <= experiments /\
+            plates[i,j-2,k+1]  <= experiments /\
+            plates[i,j-2,k+2] <= experiments /\
+            plates[i,j-1,k+2]  <= experiments /\
+            plates[i,j,k+2]  <= experiments /\
+            plates[i,j+1,k+2]  <= experiments /\
+            plates[i,j+2,k]  <= experiments /\
+            plates[i,j+2,k+1]  <= experiments /\
+            plates[i,j+2,k+2] <= experiments
+            ) endif;                                                                                                                                                                                                                                                                                    
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+%% Border cases for k                                                                                                                                          
+constraint if force_spread_controls then forall(i in Plates, j in 3..numrows-2, k = 2)(plates[i,j,k] > experiments -> 
+            plates[i,j-2,k-1]  <= experiments /\
+            plates[i,j-2,k]  <= experiments /\
+            plates[i,j-2,k+1]  <= experiments /\
+            plates[i,j-2,k+2] <= experiments /\
+            plates[i,j-1,k+2]  <= experiments /\
+            plates[i,j,k+2]  <= experiments /\
+            plates[i,j+1,k+2]  <= experiments /\
+            plates[i,j+2,k-1]  <= experiments /\
+            plates[i,j+2,k]  <= experiments /\
+            plates[i,j+2,k+1]  <= experiments /\
+            plates[i,j+2,k+2] <= experiments
+            ) endif;                                                                                                                                                                                                                                                                                    
+         
+%% Border cases for k                                                                                                                                          
+constraint if force_spread_controls then forall(i in Plates, j in 3..numrows-2, k = numcols-1)(plates[i,j,k] > experiments -> 
+            plates[i,j-2,k-2] <= experiments /\ 
+            plates[i,j-2,k-1]  <= experiments /\
+            plates[i,j-2,k]  <= experiments /\
+            plates[i,j-2,k+1]  <= experiments /\
+            plates[i,j-1,k-2]  <= experiments /\
+            plates[i,j,k-2]  <= experiments /\
+            plates[i,j+1,k-2]  <= experiments /\
+            plates[i,j+2,k-2] <= experiments /\
+            plates[i,j+2,k-1]  <= experiments /\
+            plates[i,j+2,k]  <= experiments /\
+            plates[i,j+2,k+1]  <= experiments
+            ) endif;                                                                                                                                                                                                                                                                                    
+            
+%% Border cases for k                                                                                                                                          
+constraint if force_spread_controls then forall(i in Plates, j in 3..numrows-2, k = numcols)(plates[i,j,k] > experiments -> 
+            plates[i,j-2,k-2] <= experiments /\ 
+            plates[i,j-2,k-1]  <= experiments /\
+            plates[i,j-2,k]  <= experiments /\
+            plates[i,j-1,k-2]  <= experiments /\
+            plates[i,j,k-2]  <= experiments /\
+            plates[i,j+1,k-2]  <= experiments /\
+            plates[i,j+2,k-2] <= experiments /\
+            plates[i,j+2,k-1]  <= experiments /\
+            plates[i,j+2,k]  <= experiments
+            ) endif;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+            
+                        
 %%%% Find a solution! %%%%
 
 array [Plates,1..experiments] of var {0} union Rows: experiment_plate_row;
