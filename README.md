@@ -63,6 +63,7 @@ highly customizable.
 * [Contact](#contact)
 * [Citation](#citation)
 * [Other Publications](#publications)
+* [Publications Using PLAID](#publications-using-plaid)
 * [References](#references)
 * [License](#license)
 
@@ -155,6 +156,34 @@ September 2020.
 [[PDF](https://modref.github.io/papers/ModRef2020_A%20Constraint%20Programming%20Approach%20to%20Microplate%20Layout%20Design.pdf)]
 [[Slides](https://modref.github.io/slides/ModRef2020_Slides_A%20Constraint%20Programming%20Approach%20to%20Microplate%20Layout%20Design.pdf)]
 [[Video](https://www.youtube.com/watch?v=naddH2TQIjE&ab_channel=CP2020)]
+
+
+<a name="publications-using-plaid"></a>
+## Publications Using PLAID
+
+* L. Ju, A. Hellander, O. Spjuth
+[Federated Learning for Predicting Compound Mechanism of Action Based on Image-data from Cell Painting](https://doi.org/10.1101/2024.02.09.579629)
+bioRxiv preprint, May 2024.
+
+* P. J. Harrison, A. Gupta, J. Rietdijk, H. Wieslander,
+J. Carreras-Puigvert, P. Georgiev, C. Wählby, O. Spjuth, I. M. Sintorn
+[Evaluating the utility of brightfield image data for mechanism of
+action prediction](https://doi.org/10.1371/journal.pcbi.1011323)
+PLOS Computational Biology, e1011323, July 2023.
+
+* G. Tian, P. J. Harrison, A. P. Sreenivasan, J. Carreras Puigvert, and O. Spjuth.
+[Combining molecular and cell painting image data for mechanism of action prediction](https://doi.org/10.1016/j.ailsci.2023.100060)
+Artificial Intelligence in the Life Sciences, Volume 3, 2023.
+
+* A. Gupta, P. J. Harrison, H. Wieslander, J. Rietdijk, J. Carreras Puigvert, P. Georgiev, C. Wählby, O. Spjuth, and I-M Sintorn.
+[Is brightfield all you need for mechanism of action prediction?](https://www.biorxiv.org/content/10.1101/2022.10.12.511869v1)
+bioRxiv preprint, October 2022.
+
+* J. Rietdijk, T. Aggarwal, P. Georgieva, M. Lapins, J. Carreras Puigvert, and O. Spjuth.
+[Morphological profiling of environmental chemicals enables efficient and untargeted exploration of combination effects](https://www.sciencedirect.com/science/article/pii/S0048969722021519)
+Science of The Total Environment, 832:155058, August 2022.
+
+
 
 
 <a name="references"></a>
