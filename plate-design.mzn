@@ -995,14 +995,27 @@ constraint forall(i in Plates)(count_eq(experiment_plate, i, sum(v in Vertical)(
 %%% Balancing controls between plates.
 %% Asumes controls can be balanced this way, that is, that the designer expects about the same number of controls on each plate and not a plate full of controls.
 
-array[int] of float: controls_per_plate = [control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1])/numplates | i in 1..num_controls*max_control_concentrations];
+% array[int] of float: controls_per_plate = [control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1])/numplates | i in 1..num_controls*max_control_concentrations];
 
-array[int] of int: min_controls_per_plate = [floor(controls_per_plate[i]) | i in 1..num_controls*max_control_concentrations];
+% array[int] of int: min_controls_per_plate = [floor(controls_per_plate[i]) | i in 1..num_controls*max_control_concentrations];
 
-array[int] of int: max_controls_per_plate = [ceil(controls_per_plate[i]) | i in 1..num_controls*max_control_concentrations];
+% array[int] of int: max_controls_per_plate = [ceil(controls_per_plate[i]) | i in 1..num_controls*max_control_concentrations];
 
-constraint forall(i in Plates)(global_cardinality_low_up([plates[i,j,k] | j in Rows, k in Columns], [experiments+d | d in 1..num_controls*max_control_concentrations], min_controls_per_plate, max_controls_per_plate));
+% constraint forall(i in Plates)(global_cardinality_low_up([plates[i,j,k] | j in Rows, k in Columns], [experiments+d | d in 1..num_controls*max_control_concentrations], min_controls_per_plate, max_controls_per_plate));
 
+
+%% V2
+array[Plates, 1..num_controls*max_control_concentrations] of var int: controls_per_plate;
+
+constraint forall(p in Plates, i in 1..num_controls*max_control_concentrations) (controls_per_plate[p,i] >= floor(control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1])/numplates));
+
+constraint forall(p in Plates, i in 1..num_controls*max_control_concentrations) (controls_per_plate[p,i] <= ceil(control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1])/numplates));
+
+constraint forall(i in Plates)(global_cardinality([plates[i,j,k] | j in Rows, k in Columns], [experiments+d | d in 1..num_controls*max_control_concentrations], controls_per_plate[i,..]));
+
+
+% Implied constraint
+constraint forall(i in 1..num_controls*max_control_concentrations) (sum(p in Plates)(controls_per_plate[p,i]) == control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1]));
 
 
 %% I need to work on these constraints, which seem to be quite ineficient. I believe I need to use variables for halves plates, maybe even for quarter plates.
@@ -1037,8 +1050,8 @@ constraint if even_columns then forall(i in Plates)(global_cardinality([plates[i
 constraint if even_columns then forall(i in Plates)(global_cardinality([plates[i,j,k] | j in (numrows div 2)+1..numrows, k in (numcols div 2)+1..numcols], [experiments+d | d in 1..num_controls*max_control_concentrations], [controls_quarter_plates[i,lower,right,d] | d in 1..num_controls*max_control_concentrations])) endif;
 
 
-constraint forall(i in Plates, v in Vertical, d in 1..num_controls*max_control_concentrations)(controls_ul_plates[i,v,d]<=ceil(max_controls_per_plate[d]/2));
-constraint forall(i in Plates, v in Vertical, d in 1..num_controls*max_control_concentrations)(controls_ul_plates[i,v,d]>=floor(min_controls_per_plate[d]/2));
+constraint forall(i in Plates, v in Vertical, d in 1..num_controls*max_control_concentrations)(controls_ul_plates[i,v,d]<=ceil(controls_per_plate[i,d]/2));
+constraint forall(i in Plates, v in Vertical, d in 1..num_controls*max_control_concentrations)(controls_ul_plates[i,v,d]>=floor(controls_per_plate[i,d]/2));
 
 constraint forall(i in Plates, d in 1..num_controls*max_control_concentrations)(abs(controls_ul_plates[i,upper,d] - controls_ul_plates[i,lower,d]) <= 1);
 
@@ -1067,7 +1080,7 @@ constraint if even_rows then forall(i in Plates, h in Horizontal, d in 1..num_co
 
 constraint if even_rows then forall(i in Plates, h in Horizontal, d in 1..num_controls*max_control_concentrations)(controls_quarter_plates[i,lower,h,d] <= ((controls_lr_plates[i,h,d]+1) div 2)) endif;
 
-constraint forall(i in Plates, d in 1..num_controls*max_control_concentrations)( sum(v in Vertical)(controls_ul_plates[i,v,d]) <= max_controls_per_plate[d]);
+constraint forall(i in Plates, d in 1..num_controls*max_control_concentrations)( sum(v in Vertical)(controls_ul_plates[i,v,d]) = controls_per_plate[i,d]);
 
 constraint forall(i in 1..num_controls*max_control_concentrations)(sum([controls_ul_plates[p,v,i] | v in Vertical, p in Plates]) == control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1]) );
 
@@ -1091,13 +1104,13 @@ constraint if even_columns then forall(i in Plates)(global_cardinality([plates[i
 constraint if even_columns then forall(i in Plates)(global_cardinality([plates[i,j,k] | j in Rows, k in floor(numcols/2)+1..numcols], [experiments+d | d in 1..num_controls*max_control_concentrations], [controls_lr_plates[i,right,d] | d in 1..num_controls*max_control_concentrations])) endif;
 
 
-constraint if even_columns then forall(i in Plates, h in Horizontal, d in 1..num_controls*max_control_concentrations)(controls_lr_plates[i,h,d]<=ceil(max_controls_per_plate[d]/2)) endif;
+constraint if even_columns then forall(i in Plates, h in Horizontal, d in 1..num_controls*max_control_concentrations)(controls_lr_plates[i,h,d]<=ceil(controls_per_plate[i,d]/2)) endif;
 
-constraint if even_columns then forall(i in Plates, h in Horizontal, d in 1..num_controls*max_control_concentrations)(controls_lr_plates[i,h,d]>= (min_controls_per_plate[d] div 2)) endif;
+constraint if even_columns then forall(i in Plates, h in Horizontal, d in 1..num_controls*max_control_concentrations)(controls_lr_plates[i,h,d]>= (controls_per_plate[i,d] div 2)) endif;
 
 constraint if even_columns then forall(i in Plates, d in 1..num_controls*max_control_concentrations)(abs(controls_lr_plates[i,left,d] - controls_lr_plates[i,right,d]) <= 1) endif;
 
-constraint forall(i in Plates, d in 1..num_controls*max_control_concentrations)(controls_lr_plates[i,left,d] + controls_lr_plates[i,right,d] <= max_controls_per_plate[d]);
+constraint forall(i in Plates, d in 1..num_controls*max_control_concentrations)(controls_lr_plates[i,left,d] + controls_lr_plates[i,right,d] = controls_per_plate[i,d]);
 
 constraint forall(i in 1..num_controls*max_control_concentrations)(sum([controls_lr_plates[p,h,i] | h in Horizontal, p in Plates]) == control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1]) );
 
@@ -1332,9 +1345,9 @@ constraint forall(i in Plates, j in Rows, c in 1..num_controls*max_control_conce
 
 constraint forall(i in Plates, j in Rows) (count_eq(plates[i,j,..],0,controls_row_plates[i,j,0]));
 
-constraint forall(i in Plates, j in Rows, c in 1..num_controls*max_control_concentrations) (controls_row_plates[i,j,c] <= ceil(max_controls_per_plate[c]/numrows));
+constraint forall(i in Plates, j in Rows, c in 1..num_controls*max_control_concentrations) (controls_row_plates[i,j,c] <= ceil(controls_per_plate[i,c]/numrows));
 
-constraint forall(i in Plates, j in Rows, c in 1..num_controls*max_control_concentrations) (controls_row_plates[i,j,c] >= (min_controls_per_plate[c] div numrows));
+constraint forall(i in Plates, j in Rows, c in 1..num_controls*max_control_concentrations) (controls_row_plates[i,j,c] >= (controls_per_plate[i,c] div numrows));
 
 constraint forall(i in Plates, j in Rows) (sum(controls_row_plates[i,j,..]) + experiments_in_plate_row[i,j] == numcols);
 
@@ -1347,9 +1360,9 @@ constraint forall(i in Plates, k in Columns, c in 1..num_controls*max_control_co
 
 constraint forall(i in Plates, k in Columns) (count_eq(plates[i,..,k],0,controls_column_plates[i,k,0]));
 
-constraint forall(i in Plates, k in Columns, c in 1..num_controls*max_control_concentrations) (controls_column_plates[i,k,c] <= ceil(max_controls_per_plate[c]/numcols));
+constraint forall(i in Plates, k in Columns, c in 1..num_controls*max_control_concentrations) (controls_column_plates[i,k,c] <= ceil(controls_per_plate[i,c]/numcols));
 
-constraint forall(i in Plates, k in Columns, c in 1..num_controls*max_control_concentrations) (controls_column_plates[i,k,c] >= (min_controls_per_plate[c] div numcols));
+constraint forall(i in Plates, k in Columns, c in 1..num_controls*max_control_concentrations) (controls_column_plates[i,k,c] >= (controls_per_plate[i,c] div numcols));
 
 constraint forall(i in Plates, k in Columns) (sum(controls_column_plates[i,k,..]) + experiments_in_plate_column[i,k] == numrows);
 
