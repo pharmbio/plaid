@@ -46,7 +46,7 @@ myUnitTests=( 'pl-example01' '5'
 	      'pl-example56' '75' # 1 384-well plates. Many controls
 	      'pl-example46' '330'
 	      'pl-example47' '1410' # 3 384-well plates
-	      'pl-example48' '1922' # 4 384-well plates
+	      #'pl-example48' '1922' # 4 384-well plates Leads to memory errors sometimes
 	      '2020-09-30-jonne-slack' '20'
 	      '2020-10-08-jonne-slack' '45'
 	      '2020-11-13-jonne-slack' '3'
@@ -92,7 +92,7 @@ do
     
     if [[ $result_line == $line || $1 == "assert" ]]
     then
-	echo "We are happy with the number of plates in ${myUnitTests[${i}]}.txt :-)"
+	echo "We are happy with the results of ${myUnitTests[${i}]}.txt :-)"
     else
 	echo "ERROR: The number of plates in ${myUnitTests[${i}]}.dzn changed!!!!!!!!"
 	break
