@@ -9,6 +9,7 @@
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![GitHub Repo stars](https://img.shields.io/github/stars/pharmbio/plaid?style=social)](https://github.com/pharmbio/plaid/stargazers)
+![with-coffee](https://img.shields.io/badge/made%20with-%E2%98%95%EF%B8%8F%20coffee-yellow.svg)
 
 **PLAID** is a flexible
 constraint-programming model for creating highly-effective microplate
@@ -110,7 +111,7 @@ This project is coordinated by
 [Maria Andreina Francisco Rodriguez](https://katalog.uu.se/profile?id=N11-1772)
 ([@andreina-francisco](https://github.com/andreina-francisco)) and
 [Ola Spjuth](https://katalog.uu.se/empinfo/?id=N2-878)
-([@olas](https://github.com/olas)) and it is part of the research work
+([@olas](https://github.com/olas)) and it is part of the joint research work
 at the
 [Pharmaceutical Bioinformatics Research Group](https://farmbio.uu.se/research/pharmaceutical-bioinformatics/),
 Department of Pharmaceutical Biosciences, 
