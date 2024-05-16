@@ -72,7 +72,7 @@ highly customizable.
 * Clone this repo OR download plate-design.mzn, layout_predicates.mzn, and empty-file.dzn.
 * Fill in the specific details of your experiment in a
 empty-file.dzn. Alternatively, you can download and modify any of the example .dzn
-files in /regression-tests. (TODO: add an example input file in JSON)
+files in /regression-tests or /JSON-examples.
 
 
 <a name="minizinc-ide"></a>
@@ -95,11 +95,13 @@ configuration editor...".
 
 <a name="command-line"></a>
 ### Using the command line
-TODO: add more info here
 
 ```bash
 $ minizinc --solver Gecode plate-design.mzn pl-example01.dzn
 ```
+
+For more details and options, read the [MiniZinc command line documentation](https://minizinc.org/doc-2.8.4/en/command_line.html).
+
 
 <a name="contact"></a>
 ## Contact
@@ -111,7 +113,10 @@ This project is coordinated by
 ([@olas](https://github.com/olas)) and it is part of the research work
 at the
 [Pharmaceutical Bioinformatics Research Group](https://farmbio.uu.se/research/pharmaceutical-bioinformatics/),
-Department of Pharmaceutical Biosciences, Uppsala University, Sweden. 
+Department of Pharmaceutical Biosciences, 
+and the [Optimisation Research Group](https://www2.it.uu.se/itwiki.php?page=research/group/optimisation&action=browse), 
+[Department of Information Technology](https://www.uu.se/en/department/information-technology), both at 
+[Uppsala University](https://www.uu.se/en/), Sweden. 
 
 
 Got ideas for improvement? We would love to hear about your suggestions!
