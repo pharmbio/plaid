@@ -23,22 +23,23 @@ model allows:
 
 * Choosing how many outermost rows and columns should be left empty in
 order to reduce errors due to the edge effect.
-* For each compound or combination thereof:
+* For each compound (or combination thereof):
   - all concentration levels of a given replica appear on the same
   plate.
   - each concentration level can be constrained to appear on a different row and column.
-* The replicated compounds and combinations can be constrained to appear on the same plate or a
+* The replicated compounds can be constrained to appear on the same plate or a
 different plate.
 * For each type of control and concentration, the difference in number
 between plates is at most 1.
 * Controls of the same kind are separated by at least 1 well in any
-direction.
+direction. Whenever possible (if the total number of controls falls below a given threshold),
+controls are separated by at least 2 wells in any direction.
 * Empty wells are balanced across the plate together with controls.
 
 
 Using **PLAID** does not require any programming knowledge.
-Users just need to write down the necessary information such as number
-of compounds, combinations, controls, etc in a simple text file and
+Users just need to write down the necessary information, such as the number
+of compounds, combinations, controls, etc, in a simple text file and
 click run!
 
 The output is a list in CSV format containing plate ID, well, content
@@ -48,7 +49,7 @@ layout using latex)
 
 We believe **PLAID** is the first attempt to use constraint
 programming to design microplate layouts. Due to the use of MiniZinc,<sup>[2](#RefMiniZinc)</sup>
-a high level constraint modelling language, **PLAID** is
+a high-level constraint modelling language, **PLAID** is
 highly customizable.
 
 
@@ -159,9 +160,9 @@ Workshop on Constraint Modelling and Reformulation, held at CP 2020,
 September 2020.
 
 <a name="RefMiniZinc">2</a>: Nethercote, N., Stuckey, P.J., Becket, R., Brand, S., Duck, G.J.,
-Tack, G.: MiniZinc:Towards a Standard CP Modelling Language. In:
-Bessière, C. (ed.) Principles andPractice of Constraint Programming –
-CP 2007. pp. 529–543. Lecture Notes inComputer Science, Springer,
+Tack, G.: MiniZinc: Towards a Standard CP Modelling Language. In:
+Bessière, C. (ed.) Principles and Practice of Constraint Programming –
+CP 2007. pp. 529–543. Lecture Notes in Computer Science, Springer,
 Berlin, Heidelberg (2007)
 
 
