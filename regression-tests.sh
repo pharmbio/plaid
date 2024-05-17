@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "\nHello, world! Let's check that our PLAID constraint model continues to behave as expected...\n"
-#Reorder by time!
+
 myUnitTests=( 'pl-example01' '5'
 	      'pl-example02' '1'
 	      'pl-example03' '1'
@@ -55,7 +55,7 @@ myUnitTests=( 'pl-example01' '5'
 	      'dose-response-20-3-2' '30'
 	      'dose-response-20-3-3' '30'
 	      'screening-8-8-1' '20'
-	      'pl-example20' '1000'
+	      'pl-example20' '1000-1500'
 	      #'pl-example34' '4685' #MiniZinc ERROR
 	      #'pl-example33' '-1'
 	      #'pl-example32' '-1'
@@ -79,7 +79,7 @@ do
 #    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn ${myUnitTests[${i}]}.dzn --cmdline-data "testing=true"  &> ${myUnitTests[${i}]}.txt
 
     # Random and multi-thread
-    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn regression-tests/${myUnitTests[${i}]}.dzn -p 10 -r $RANDOM --cmdline-data "testing=true"  &> regression-tests-results/${myUnitTests[${i}]}.txt
+    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn dzn-examples/${myUnitTests[${i}]}.dzn -p 10 -r $RANDOM --cmdline-data "testing=true"  &> regression-tests-results/${myUnitTests[${i}]}.txt
 
     echo "It took about $SECONDS sec."
     
