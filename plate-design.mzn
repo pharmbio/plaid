@@ -1964,7 +1964,9 @@ output [if debugging then "\nControls per plate per column:\n" else "" endif, if
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% CSV Ouput %%%
 
-array[int] of string: letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+array[int] of string: letters_capital = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+array[int] of string: letters_inline  = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", " q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+array[int] of string: letters = letters_capital ++ [letters_capital[i] ++ letters_inline[j] | i in 1..length(letters_capital), j in 1..length(letters_inline)];
          
 output ["plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL\n"];
 
