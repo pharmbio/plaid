@@ -94,8 +94,10 @@ int: num_cols;
 
 
 %% TODO: this could be problematic when there are multiple cell lines
-int: num_rows_line = if inner_empty_edge then floor(num_rows/horizontal_cell_lines)-2*size_empty_edge else floor((num_rows-2*size_empty_edge)/horizontal_cell_lines) endif;
-int: num_cols_line = if inner_empty_edge then floor(num_cols/vertical_cell_lines)-2*size_empty_edge else floor((num_cols-2*size_empty_edge)/vertical_cell_lines) endif;
+int: num_rows_line = floor(num_rows/horizontal_cell_lines) - floor(num_rows/horizontal_cell_lines) mod 2 - 2 * size_empty_edge * inner_empty_edge;
+int: num_cols_line = floor(num_cols/vertical_cell_lines) - floor(num_cols/vertical_cell_lines) mod 2 - 2 * size_empty_edge * inner_empty_edge; 
+%int: num_rows_line = if inner_empty_edge then floor(num_rows/horizontal_cell_lines)-2*size_empty_edge else floor((num_rows-2*size_empty_edge)/horizontal_cell_lines) endif;
+%int: num_cols_line = if inner_empty_edge then floor(num_cols/vertical_cell_lines)-2*size_empty_edge else floor((num_cols-2*size_empty_edge)/vertical_cell_lines) endif;
 %int: num_rows_line = floor(num_rows/horizontal_cell_lines)-2*size_empty_edge;
 %int: num_cols_line = floor(num_cols/vertical_cell_lines)-2*size_empty_edge;
 
