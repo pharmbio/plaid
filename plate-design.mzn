@@ -103,8 +103,8 @@ int: numcols = if inner_empty_edge then floor(num_cols/vertical_cell_lines)-2*si
 %array[1..compound_concentrations] of string: compound_concentration_names;
 
 
-%% FIX ME!! (Deprecated?)
-array[1..max_compound_concentrations] of string: compound_concentration_indicators;
+%% Deprecated
+array[int] of string: compound_concentration_indicators;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
