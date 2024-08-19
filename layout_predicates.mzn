@@ -2,8 +2,6 @@ include "globals.mzn";
 
 
 predicate sorted_except_0(array[int] of var int: x, int: num, int: min, int: max) = 
-  % Possibly only the regular constraint is needed
-  forall(i in 1..length(x)-1)(x[i]<=x[i+1] \/ x[i+1]==0) /\
   regular(x, concat(["(0* \(i)){\(min),\(max)} " | i in 1..num]++["0*"]))::domain;
   
   
