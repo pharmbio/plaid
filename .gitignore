@@ -4,3 +4,8 @@ simulations/*/.ipynb_checkpoints/*
 *.pyc
 regression-tests-results/*.txt
 utilities/.ipynb_checkpoints/plaid-to-idot-example-checkpoint.ipynb
+.DS_Store
+simulations/.DS_Store
+simulations/generated-plots/.DS_Store
+simulations/layouts/.DS_Store
+utilities/.DS_Store
