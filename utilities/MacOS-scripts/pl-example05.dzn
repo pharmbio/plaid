@@ -54,4 +54,4 @@ control_concentrations = [2 | i in 1..num_controls];
 
 control_names = ["pos","neg","blank","dmso"];
 
-control_concentration_names =  array2d(1..num_controls, 1..2,["cont\(ceil(i/1))-conc\((i mod 1) + 1)" | i in 1..num_controls*2]);    
+control_concentration_names =  array2d(1..num_controls, 1..2,["cont\(ceil(i/2))-conc\(((i+1)mod 2) + 1)" | i in 1..num_controls*2]);    
