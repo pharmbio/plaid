@@ -1432,12 +1432,13 @@ constraint forall(ctr in 1..num_controls*max_control_concentrations)( if spread_
             plates[i,j+1,k]  != plates[i,j,k] /\
             plates[i,j+1,k+1]!= plates[i,j,k]
             ) 
-    else forall(i in Plates, j in 2..num_rows_line-1, k in 2..num_cols_line-1)(plates[i,j,k] == experiments+ctr -> 
-            plates[i,j-1,k]  != plates[i,j,k] /\
-            plates[i,j,k-1]  != plates[i,j,k] /\
-            plates[i,j,k+1]  != plates[i,j,k] /\
-            plates[i,j+1,k]  != plates[i,j,k]
-            )
+            %% This might be leading to unsat when there are too many of the same control
+%    else forall(i in Plates, j in 2..num_rows_line-1, k in 2..num_cols_line-1)(plates[i,j,k] == experiments+ctr -> 
+ %           plates[i,j-1,k]  != plates[i,j,k] /\
+  %          plates[i,j,k-1]  != plates[i,j,k] /\
+   %         plates[i,j,k+1]  != plates[i,j,k] /\
+    %        plates[i,j+1,k]  != plates[i,j,k]
+     %       )
             endif );
 
 %% Upper row j=1
@@ -1449,11 +1450,12 @@ constraint forall(ctr in 1..num_controls*max_control_concentrations)( if spread_
             plates[i,2,k]  != plates[i,1,k] /\
             plates[i,2,k+1]!= plates[i,1,k]
             ) 
-    else forall(i in Plates, k in 2..num_cols_line-1)(plates[i,1,k] == experiments+ctr -> 
-            plates[i,1,k-1] != plates[i,1,k] /\
-            plates[i,1,k+1] != plates[i,1,k] /\
-            plates[i,2,k]   != plates[i,1,k]
-            )
+            %% This might be leading to unsat when there are too many of the same control
+%    else forall(i in Plates, k in 2..num_cols_line-1)(plates[i,1,k] == experiments+ctr -> 
+ %           plates[i,1,k-1] != plates[i,1,k] /\
+  %          plates[i,1,k+1] != plates[i,1,k] /\
+   %         plates[i,2,k]   != plates[i,1,k]
+    %        )
             endif );
 
 %% Lower row j = num_rows_line
@@ -1465,11 +1467,12 @@ constraint forall(ctr in 1..num_controls*max_control_concentrations)( if spread_
             plates[i,num_rows_line,k-1]  != plates[i,num_rows_line,k] /\
             plates[i,num_rows_line,k+1]  != plates[i,num_rows_line,k]
             ) 
-    else forall(i in Plates, k in 2..num_cols_line-1)(plates[i,num_rows_line,k] == experiments+ctr -> 
-            plates[i,num_rows_line-1,k]  != plates[i,num_rows_line,k] /\
-            plates[i,num_rows_line,k-1]  != plates[i,num_rows_line,k] /\
-            plates[i,num_rows_line,k+1]  != plates[i,num_rows_line,k]
-            )
+            %% This might be leading to unsat when there are too many of the same control
+%    else forall(i in Plates, k in 2..num_cols_line-1)(plates[i,num_rows_line,k] == experiments+ctr -> 
+ %           plates[i,num_rows_line-1,k]  != plates[i,num_rows_line,k] /\
+  %          plates[i,num_rows_line,k-1]  != plates[i,num_rows_line,k] /\
+   %         plates[i,num_rows_line,k+1]  != plates[i,num_rows_line,k]
+    %        )
             endif );         
             
 %% Left column k=1 
@@ -1481,11 +1484,12 @@ constraint forall(ctr in 1..num_controls*max_control_concentrations)( if spread_
             plates[i,j+1,1]  != plates[i,j,1] /\
             plates[i,j+1,2]!= plates[i,j,1]
             ) 
-    else forall(i in Plates, j in 2..num_rows_line-1)(plates[i,j,1] == experiments+ctr -> 
-            plates[i,j-1,1] != plates[i,j,1] /\
-            plates[i,j,2]   != plates[i,j,1] /\
-            plates[i,j+1,1] != plates[i,j,1]
-            )
+            %% This might be leading to unsat when there are too many of the same control
+ %   else forall(i in Plates, j in 2..num_rows_line-1)(plates[i,j,1] == experiments+ctr -> 
+  %          plates[i,j-1,1] != plates[i,j,1] /\
+   %         plates[i,j,2]   != plates[i,j,1] /\
+    %        plates[i,j+1,1] != plates[i,j,1]
+     %       )
             endif );                                                   
                                         
 %% Right column k=num_cols_line
@@ -1497,11 +1501,12 @@ constraint forall(ctr in 1..num_controls*max_control_concentrations)( if spread_
             plates[i,j+1,num_cols_line-1]!= plates[i,j,num_cols_line] /\
             plates[i,j+1,num_cols_line]  != plates[i,j,num_cols_line]
             ) 
-    else forall(i in Plates, j in 2..num_rows_line-1)(plates[i,j,num_cols_line] == experiments+ctr -> 
-            plates[i,j-1,num_cols_line]  != plates[i,j,num_cols_line] /\
-            plates[i,j,num_cols_line-1]  != plates[i,j,num_cols_line] /\
-            plates[i,j+1,num_cols_line]  != plates[i,j,num_cols_line]
-            )
+            %% This might be leading to unsat when there are too many of the same control
+%    else forall(i in Plates, j in 2..num_rows_line-1)(plates[i,j,num_cols_line] == experiments+ctr -> 
+ %           plates[i,j-1,num_cols_line]  != plates[i,j,num_cols_line] /\
+  %          plates[i,j,num_cols_line-1]  != plates[i,j,num_cols_line] /\
+   %         plates[i,j+1,num_cols_line]  != plates[i,j,num_cols_line]
+    %        )
             endif );                                                                                                            
                                                                     
 %% Upper left corner j=1 k=1
@@ -1511,10 +1516,11 @@ constraint forall(ctr in 1..num_controls*max_control_concentrations)( if spread_
             plates[i,2,1] != plates[i,1,1] /\
             plates[i,2,2] != plates[i,1,1]
             ) 
-    else forall(i in Plates)(plates[i,1,1] == experiments+ctr -> 
-            plates[i,1,2] != plates[i,1,1] /\
-            plates[i,2,1]   != plates[i,1,1]
-            )
+            %% This might be leading to unsat when there are too many of the same control
+%    else forall(i in Plates)(plates[i,1,1] == experiments+ctr -> 
+ %           plates[i,1,2] != plates[i,1,1] /\
+  %          plates[i,2,1]   != plates[i,1,1]
+   %         )
             endif );
 
                                                                                                             
@@ -1525,10 +1531,11 @@ constraint forall(ctr in 1..num_controls*max_control_concentrations)( if spread_
             plates[i,2,num_cols_line-1] != plates[i,1,num_cols_line] /\
             plates[i,2,num_cols_line]   != plates[i,1,num_cols_line]
             ) 
-    else forall(i in Plates)(plates[i,1,num_cols_line] == experiments+ctr -> 
-            plates[i,1,num_cols_line-1] != plates[i,1,num_cols_line] /\
-            plates[i,2,num_cols_line]   != plates[i,1,num_cols_line]
-            )
+            %% This might be leading to unsat when there are too many of the same control
+%    else forall(i in Plates)(plates[i,1,num_cols_line] == experiments+ctr -> 
+ %           plates[i,1,num_cols_line-1] != plates[i,1,num_cols_line] /\
+  %          plates[i,2,num_cols_line]   != plates[i,1,num_cols_line]
+   %         )
             endif );                                                                                                                                                                                                                                                                                                                                    
             
 
@@ -1539,10 +1546,11 @@ constraint forall(ctr in 1..num_controls*max_control_concentrations)( if spread_
             plates[i,num_rows_line-1,2]!= plates[i,num_rows_line,1] /\
             plates[i,num_rows_line,2]  != plates[i,num_rows_line,1]
             ) 
-    else forall(i in Plates)(plates[i,num_rows_line,1] == experiments+ctr -> 
-            plates[i,num_rows_line-1,1]  != plates[i,num_rows_line,1] /\
-            plates[i,num_rows_line,2]  != plates[i,num_rows_line,1]
-            )
+            %% This might be leading to unsat when there are too many of the same control
+%    else forall(i in Plates)(plates[i,num_rows_line,1] == experiments+ctr -> 
+ %           plates[i,num_rows_line-1,1]  != plates[i,num_rows_line,1] /\
+  %          plates[i,num_rows_line,2]  != plates[i,num_rows_line,1]
+   %         )
             endif );     
             
 %% Lower right corner j = num_rows_line k = num_cols_line
@@ -1552,10 +1560,11 @@ constraint forall(ctr in 1..num_controls*max_control_concentrations)( if spread_
             plates[i,num_rows_line-1,num_cols_line]  != plates[i,num_rows_line,num_cols_line] /\
             plates[i,num_rows_line,num_cols_line-1]  != plates[i,num_rows_line,num_cols_line]
             ) 
-    else forall(i in Plates)(plates[i,num_rows_line,num_cols_line] == experiments+ctr -> 
-            plates[i,num_rows_line-1,num_cols_line]  != plates[i,num_rows_line,num_cols_line] /\
-            plates[i,num_rows_line,num_cols_line-1]  != plates[i,num_rows_line,num_cols_line]
-            )
+            %% This might be leading to unsat when there are too many of the same control
+%    else forall(i in Plates)(plates[i,num_rows_line,num_cols_line] == experiments+ctr -> 
+ %           plates[i,num_rows_line-1,num_cols_line]  != plates[i,num_rows_line,num_cols_line] /\
+  %          plates[i,num_rows_line,num_cols_line-1]  != plates[i,num_rows_line,num_cols_line]
+   %         )
             endif );   
             
             
@@ -1619,40 +1628,40 @@ constraint if spread_controls then forall(i in Plates)(plates[i,num_rows_line,nu
 
 
 % j=1
-constraint forall(i in Plates, k in 2..num_cols_line-1)(plates[i,1,k] > experiments -> 
+constraint if spread_controls then forall(i in Plates, k in 2..num_cols_line-1)(plates[i,1,k] > experiments -> 
            plates[i,1,k-1]  != plates[i,1,k] /\
            plates[i,1,k+1]  != plates[i,1,k] /\
            plates[i,2,k-1]!= plates[i,1,k] /\
            plates[i,2,k]  != plates[i,1,k] /\
            plates[i,2,k+1]!= plates[i,1,k]
-           );
+           ) endif;
 
 % j = num_rows_line
-constraint forall(i in Plates, k in 2..num_cols_line-1)(plates[i,num_rows_line,k] > experiments -> 
+constraint if spread_controls then forall(i in Plates, k in 2..num_cols_line-1)(plates[i,num_rows_line,k] > experiments -> 
            plates[i,num_rows_line-1,k-1]!= plates[i,num_rows_line,k] /\ 
            plates[i,num_rows_line-1,k]  != plates[i,num_rows_line,k] /\
            plates[i,num_rows_line-1,k+1]!= plates[i,num_rows_line,k] /\
            plates[i,num_rows_line,k-1]  != plates[i,num_rows_line,k] /\
            plates[i,num_rows_line,k+1]  != plates[i,num_rows_line,k]
-           );
+           ) endif;
            
 % First column: k = 1           
-constraint forall(i in Plates, j in 2..num_rows_line-1)(plates[i,j,1] > experiments -> 
+constraint if spread_controls then forall(i in Plates, j in 2..num_rows_line-1)(plates[i,j,1] > experiments -> 
            plates[i,j-1,1]  != plates[i,j,1] /\
            plates[i,j-1,2]!= plates[i,j,1] /\
            plates[i,j,2]  != plates[i,j,1] /\
            plates[i,j+1,1]  != plates[i,j,1] /\
            plates[i,j+1,2]!= plates[i,j,1]
-           );
+           ) endif;
 
 % Last column: k = num_cols_line
-constraint forall(i in Plates, j in 2..num_rows_line-1)(plates[i,j,num_cols_line] > experiments -> 
+constraint if spread_controls then forall(i in Plates, j in 2..num_rows_line-1)(plates[i,j,num_cols_line] > experiments -> 
            plates[i,j-1,num_cols_line-1]!= plates[i,j,num_cols_line] /\ 
            plates[i,j-1,num_cols_line]  != plates[i,j,num_cols_line] /\
            plates[i,j,num_cols_line-1]  != plates[i,j,num_cols_line] /\
            plates[i,j+1,num_cols_line-1]!= plates[i,j,num_cols_line] /\
            plates[i,j+1,num_cols_line]  != plates[i,j,num_cols_line]
-           );            
+           ) endif;            
   
     
 %% All especial cases for the corners are now covered by the alldifferent_except_0 constraints
