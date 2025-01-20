@@ -430,6 +430,8 @@ array2d(1..num_plates_lines, 1..num_total_wells_line,
 % - we exclude compounds concentrations during application of the symmetry-breaking lex_chain constraint within its criteria set
 % - we apply an all_different constraint on the relevant concetration later
 % to account for this we need to collect flags to denote which compound concentrations on which plate will be subjected to this treatment
+% TODO: add an array - if the number of replicates of a concentration across all plates is less than the number of rows/columns
+%       then the all_different constraint isn't just applied per single plate but across all plates (a stronger constraint)
 array[1..num_plates_lines, 1..len_emptywells_controls_compounds] of bool:
       emptywells_controls_compounds_concentrations_on_different_rows =
        array2d(1..num_plates_lines, 1..len_emptywells_controls_compounds,
@@ -471,8 +473,6 @@ array[1..num_plates_lines, 1..len_emptywells_controls_compounds] of bool:
                 | p in 1..num_plates_lines, i in 1..len_emptywells_controls_compounds]);
 
 % Calculate flags for each critera set - use this set in the optimization criteria, use fake edges when calculating the criteria
-% TODO: add an array - if the number of replicates of a concentration across all plates is less than the number of rows/columns
-%       then the all_different constraint isn't just applied per single plate but across all plates (a stronger constraint)
 % TODO: See if it is possible to rewrite it later into a smarter criteria which counts "white" and "black" squares and tests is their number is equal
 array[1..num_plates_lines, 1..num_criteria_sets] of int: num_criteria_set_line =
                                     array2d(1..num_plates_lines, 1..num_criteria_sets,
@@ -485,8 +485,10 @@ array[1..num_plates_lines, 1..num_criteria_sets] of bool: use_min_dist_criteria 
                                             [if num_criteria_set_line[p,j] <= 1 then false
                                               % Do not apply if the set has too many wells
                                          elseif num_criteria_set_line[p,j] > num_wells_set_criteria then false
-                                           else (10 * num_total_wells_line div num_criteria_set_line[p,j]) >= num_threshold_min_dist_criteria
-                                          endif | p in 1..num_plates_lines, j in 1..num_criteria_sets]);
+                                           else (10 * num_total_wells_line div num_criteria_set_line[p,j])
+                                                >= num_threshold_min_dist_criteria
+                                          endif
+                                             | p in 1..num_plates_lines, j in 1..num_criteria_sets]);
 
 % - case 1: when the number of wells covers less than allotted amount of the plate, then       use fake edge wells
 % - case 2: when the number of wells covers more than allotted amount of the plate, then don't use fake edge wells
