@@ -84,6 +84,12 @@ int: num_corner_empty_wells = size_corner_empty_wells default 0;
 %% Deprecated
 array[int] of string: compound_concentration_indicators;
 
+%%% Testing %%%
+opt bool: testing = true;
+opt bool: print_all;% = true;
+bool: debugging = testing /\ print_all default false;
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Datafile validation %%%
@@ -438,6 +444,7 @@ array[1..num_plates_lines, 1..len_emptywells_controls_compounds] of bool:
                  % no matter the flags, empty wells and controls are exempt from the treatment
                [if emptywells_controls_compounds_categories[i] in ["ew","ctrs"]
               then false
+                % if the flags is false we use the default behaviour
             elseif not concentrations_on_different_rows
               then false
             elseif (sum(k in 1..num_total_wells_line where quadrant_wells_assignment[p,k] in [1,3] /\
@@ -457,7 +464,7 @@ array[1..num_plates_lines, 1..len_emptywells_controls_compounds] of bool:
                  % no matter the flags, empty wells and controls are exempt from the treatment
                [if emptywells_controls_compounds_categories[i] in ["ew","ctrs"]
               then false
-                % if both flags are false we use the default behaviour
+                % if the flags is false we use the default behaviour
             elseif not concentrations_on_different_columns
               then false
             elseif (sum(k in 1..num_total_wells_line where quadrant_wells_assignment[p,k] in [1,2] /\
@@ -471,6 +478,44 @@ array[1..num_plates_lines, 1..len_emptywells_controls_compounds] of bool:
               else true
              endif
                 | p in 1..num_plates_lines, i in 1..len_emptywells_controls_compounds]);
+array[1..len_emptywells_controls_compounds] of bool:
+      emptywells_controls_compounds_concentrations_on_different_rows_all_plates =
+                 % no matter the flags, empty wells and controls are exempt from the treatment
+               [if emptywells_controls_compounds_categories[i] in ["ew","ctrs"]
+              then false
+                % if the flags is false we use the default behaviour
+            elseif not concentrations_on_different_rows
+              then false
+            elseif (sum(p in 1..num_plates_lines, k in 1..num_total_wells_line where quadrant_wells_assignment[p,k] in [1,3] /\
+                                                           emptywells_controls_compounds_indices_ordered[p,k] = i)(1)
+                    > floor(num_rows_line / 2)) % quadrants I+III
+                   \/
+                   (sum(p in 1..num_plates_lines, k in 1..num_total_wells_line where quadrant_wells_assignment[p,k] in [2,4] /\
+                                                           emptywells_controls_compounds_indices_ordered[p,k] = i)(1)
+                    > ceil(num_rows_line / 2))  % quadrants II+IV
+              then false
+              else true
+             endif
+                | i in 1..len_emptywells_controls_compounds];
+array[1..len_emptywells_controls_compounds] of bool:
+      emptywells_controls_compounds_concentrations_on_different_columns_all_plates =
+                 % no matter the flags, empty wells and controls are exempt from the treatment
+               [if emptywells_controls_compounds_categories[i] in ["ew","ctrs"]
+              then false
+                % if the flags is false we use the default behaviour
+            elseif not concentrations_on_different_columns
+              then false
+            elseif (sum(p in 1..num_plates_lines, k in 1..num_total_wells_line where quadrant_wells_assignment[p,k] in [1,2] /\
+                                                           emptywells_controls_compounds_indices_ordered[p,k] = i)(1)
+                    > ceil(num_cols_line / 2))  % quadrants I+II
+                   \/
+                   (sum(p in 1..num_plates_lines, k in 1..num_total_wells_line where quadrant_wells_assignment[p,k] in [3,4] /\
+                                                           emptywells_controls_compounds_indices_ordered[p,k] = i)(1)
+                    > floor(num_cols_line / 2)) % quadrants III+IV
+              then false
+              else true
+             endif
+                | i in 1..len_emptywells_controls_compounds];
 
 % Calculate flags for each critera set - use this set in the optimization criteria, use fake edges when calculating the criteria
 % TODO: See if it is possible to rewrite it later into a smarter criteria which counts "white" and "black" squares and tests is their number is equal
@@ -641,7 +686,7 @@ constraint forall(p in 1..num_plates_lines, i in 1..4, j in 1..len_emptywells_co
                                               emptywells_controls_compounds_concentrations_on_different_columns[p,j])
                                        ])));
                                        
-% apply all_different constraints when concentrations_on_different_rows and/or concentrations_on_different_columns
+% apply all_different constraints when concentrations_on_different_rows and/or concentrations_on_different_columns within a plate
 constraint forall(p in 1..num_plates_lines, i in 1..len_emptywells_controls_compounds
                   where emptywells_controls_compounds_concentrations_on_different_rows[p,i])
                  (all_different([emptywells_controls_compounds_coordinates[p,j,1] | j in 1..num_total_wells_line
@@ -650,8 +695,17 @@ constraint forall(p in 1..num_plates_lines, i in 1..len_emptywells_controls_comp
                   where emptywells_controls_compounds_concentrations_on_different_columns[p,i])
                  (all_different([emptywells_controls_compounds_coordinates[p,j,2] | j in 1..num_total_wells_line
                                  where emptywells_controls_compounds_indices_ordered[p,j] = i]));
+% apply all_different constraints when concentrations_on_different_rows and/or concentrations_on_different_columns across all plates
+constraint forall(i in 1..len_emptywells_controls_compounds
+                  where emptywells_controls_compounds_concentrations_on_different_rows_all_plates[i])
+                 (all_different([emptywells_controls_compounds_coordinates[p,j,1] | p in 1..num_plates_lines, j in 1..num_total_wells_line
+                                 where emptywells_controls_compounds_indices_ordered[p,j] = i]));
+constraint forall(i in 1..len_emptywells_controls_compounds
+                  where emptywells_controls_compounds_concentrations_on_different_columns_all_plates[i])
+                 (all_different([emptywells_controls_compounds_coordinates[p,j,2] | p in 1..num_plates_lines, j in 1..num_total_wells_line
+                                 where emptywells_controls_compounds_indices_ordered[p,j] = i]));
 
-% making sure that we don't place two or more things in a same well
+% making sure that we don't place two or more things in a same well with a lex_alldifferent constraint substitution placed upon replicate coordinates
 constraint forall(p in 1..num_plates_lines, i in 1..num_total_wells_line)
                  (wells_line_lex_all_different_substitute[p,i] = 
                   (emptywells_controls_compounds_coordinates[p,i,1] - 1) * num_cols_line
@@ -659,7 +713,7 @@ constraint forall(p in 1..num_plates_lines, i in 1..num_total_wells_line)
 
 constraint forall(p in 1..num_plates_lines, q in 1..4)
            (all_different([wells_line_lex_all_different_substitute[p,i] | i in 1..num_total_wells_line where quadrant_wells_assignment[p,i] = q]));
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % CALCULATING THE OPTIMIZATION CRITERIA - distance matrix, minimum distances within sets
 array[1..num_plates_lines, 1..num_edges_wells, 1..num_edges_wells] of var 1..(num_rows_line + num_cols_line + 2): distances_edges_controls::no_output;
@@ -730,7 +784,7 @@ constraint forall(j in 1..len_min_dist_criteria)
 var 1..(min_dist_edges + 1): min_distance;
 %constraint min_distance = if len_min_dist_criteria > 0 then min(min_dist_criteria_vars) else 1 endif;
 constraint min_distance = if len_min_dist_criteria > 0 then min(distances_edges_controls_compounds_minimum) else 1 endif;
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 solve::seq_search(if num_total_wells_line >= 300 then % main search strategy
                   [int_search([min_distance], first_fail, indomain_median),
@@ -758,6 +812,25 @@ solve::seq_search(if num_total_wells_line >= 300 then  % an alternative search s
 %%% Debugging output %%%
 
 % TODO: add printing of debugging info (e.g. 'emptywells_controls_compounds_qtys_total', 'emptywells_controls_compounds_qtys', etc
+output [if debugging then "\([num_rows, num_cols, num_corner_empty_wells, horizontal_cell_lines, vertical_cell_lines])\n" else "" endif];
+output [if debugging then "\([num_rows_line, num_cols_line, num_total_wells_line, num_total_wells, num_plates_lines, num_empty_wells])\n" else "" endif];
+output [if debugging then "\([len_emptywells_controls_compounds])\n" else "" endif];
+output [if debugging then show(emptywells_controls_compounds_categories) else "" endif]; output [if debugging then "\n" else "" endif];
+output [if debugging then show2d(emptywells_controls_compounds_names_concentrations) else "" endif]; output [if debugging then "\n" else "" endif];
+
+output [if debugging then show([compounds_per_plate_min, compounds_per_plate_mod, emptywells_controls_num]) else "" endif]; output [if debugging then "\n" else "" endif];
+output [if debugging then show(compounds_on_plates_lines) else "" endif]; output [if debugging then "\n" else "" endif];
+output [if debugging then show(compounds_per_plates_lines_total) else "" endif]; output [if debugging then "\n" else "" endif];
+output [if debugging then show(available_wells_per_plates_lines_total) else "" endif]; output [if debugging then "\n" else "" endif];
+
+output [if debugging then show(emptywells_controls_compounds_qtys_total) else "" endif]; output [if debugging then "\n" else "" endif];
+output [if debugging then show2d(emptywells_controls_compounds_qtys) else "" endif]; output [if debugging then "\n" else "" endif];
+output [if debugging then show([sum(p in 1..num_plates_lines)(emptywells_controls_compounds_qtys[p,i])
+        | i in 1..len_emptywells_controls_compounds]) else "" endif]; output [if debugging then "\n" else "" endif];
+output [if debugging then show([num_total_wells_line] ++ [sum(i in 1..len_emptywells_controls_compounds)(emptywells_controls_compounds_qtys[p,i])
+              | p in 1..num_plates_lines]) else "" endif]; output [if debugging then "\n" else "" endif];
+output [if debugging then show2d(emptywells_controls_compounds_concentrations_on_different_rows) else "" endif]; output [if debugging then "\n" else "" endif];
+output [if debugging then show2d(emptywells_controls_compounds_concentrations_on_different_columns) else "" endif]; output [if debugging then "\n" else "" endif];
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
