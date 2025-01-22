@@ -85,10 +85,12 @@ int: num_corner_empty_wells = size_corner_empty_wells default 0;
 array[int] of string: compound_concentration_indicators;
 
 %%% Testing %%%
-opt bool: testing = true;
+opt bool: testing; % = true;
 opt bool: print_all = true;
 bool: debugging = testing /\ print_all default false;
-
+%bool: enforce = false;
+opt int: swap_search;
+opt bool: sorted_compounds;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -227,6 +229,18 @@ array[1..num_plates_lines, 1..len_emptywells_controls_compounds] of int: emptywe
                     % first column, i.e. emptywells_controls_compounds_first_non_zero, is calculated by substracting quantities from every other columns on the same row (i.e. plate)
                     % every control column j uses floor(nb_replicates[j] * plate_space[i] / sum(plate_space) for plates i = 1..num_plates_lines-1.
                     % and plate i = num_plates_lines is the remaining number of nb_replicates[j].
+                    %
+                    % NOTE: in certain circumstances it can fail and produce negative qualities. e,g,:
+                    % We have 5 plates with free spaces [2, 2, 2, 8, 8] (i.e. we have 22 free wells in total) and we need to place
+                    % 2 empty wells and 20 controls. The current version produces the following distribution:
+                    % [|  1,  1    % plate 1
+                    %  |  1,  1    % plate 2
+                    %  |  1,  1    % plate 3
+                    %  |  1,  7    % plate 4
+                    %  | -2, 10 |] % plate 5
+                    % there is no obvious way how to modify the current algorithm. The best course of action --
+                    % set this pre-calculation as a separate constraint problem, solve it and use the result as an imput file.
+                    % Likely as specialized Python script is required.
                     
                          % We calculate first column on the last plate:
                       if p = num_plates_lines /\ i = emptywells_controls_compounds_first_non_zero
@@ -300,7 +314,7 @@ array[1..num_plates_lines, 1..len_emptywells_controls_compounds] of int: emptywe
 
 constraint assert(forall(p in 1..num_plates_lines, i in 1..len_emptywells_controls_compounds)
                         (emptywells_controls_compounds_qtys[p,i] >= 0),
-                  "Model ERROR! Negative quantities of materials detected.\n\(show2d(emptywells_controls_compounds_names_concentrations))\n\(show(emptywells_controls_compounds_qtys_total))\n");
+                  "Model ERROR! Negative assigned quantities of materials detected:\n" ++ show2d(emptywells_controls_compounds_qtys) ++ "\n"  ++ show(emptywells_controls_compounds_qtys_total) ++ "\nRecommendations: choose a different strategy (set 'concentrations_on_different_columns = false' and, if needed, set 'concentrations_on_different_rows = true')");
 
 array[int] of int: emptywells_controls_compounds_indices                      = [i | i in 1..len_emptywells_controls_compounds];
 % emptywells_controls_compounds_indices - a short-hand index to make modeling easier
@@ -378,15 +392,25 @@ array[1..num_plates_lines, 1..num_criteria_sets] of set of int:
 
 
 array[1..num_plates_lines, 1..num_total_wells_line] of int: emptywells_controls_compounds_indices_ordered =
-                               array2d(1..num_plates_lines, 1..num_total_wells_line,
+                             % Perform a test for non-negative values
+                            if forall(p in 1..num_plates_lines, i in 1..len_emptywells_controls_compounds)
+                                     (emptywells_controls_compounds_qtys[p,i] >= 0)
+                             % If passed - calculate the matrix properly
+                          then array2d(1..num_plates_lines, 1..num_total_wells_line,
                                        [emptywells_controls_compounds_indices[i] | p in 1..num_plates_lines,
                                                                                    i in 1..len_emptywells_controls_compounds,
-                                                                                   j in 1..emptywells_controls_compounds_qtys[p,i]]);
+                                                                                   j in 1..emptywells_controls_compounds_qtys[p,i]])
+                             % If not passed, because of faulty pre-calculations, put dummy data and let an assert output the error
+                          else array2d(1..num_plates_lines, 1..num_total_wells_line,
+                                       [1 | p in 1..num_plates_lines, i in 1..num_total_wells_line])
+                         endif;
+
 % REMINDER: We assume that empty wells, controls and compounds are placed sequentially!
 array[1..num_plates_lines, 1..len_emptywells_controls_compounds] of int:
      emptywells_controls_compounds_criteria_sets_transformed =
                                array2d(1..num_plates_lines, 1..len_emptywells_controls_compounds,
-                                       [i | p in 1..num_plates_lines, i in 1..num_criteria_sets, j in emptywells_controls_compounds_criteria_sets[p,i]]);
+                                       [i | p in 1..num_plates_lines, i in 1..num_criteria_sets,
+                                            j in emptywells_controls_compounds_criteria_sets[p,i]]);
 array[1..num_plates_lines, 1..num_total_wells_line] of int: emptywells_controls_compounds_criteria_ordered = 
            array2d(1..num_plates_lines, 1..num_total_wells_line,
                    [emptywells_controls_compounds_criteria_sets_transformed[p,emptywells_controls_compounds_indices_ordered[p,i]]
@@ -422,15 +446,25 @@ array[1..num_plates_lines, 1..num_total_wells_line] of 1..num_total_wells_line: 
                                      | i in 1..quadrants_distribution[4 - ((2 + quadrant_shift_line[p]) mod 4)]])[j]
                                    | p in 1..num_plates_lines, j in 1..num_total_wells_line]);
 
+    % if there is only 1 row or 1 column then assign every well to quadrant 1
+bool: use_quadrant_distribution = (num_rows_line > 1) /\ (num_cols_line > 1);
+
 array[1..num_plates_lines, 1..num_total_wells_line] of 1..4: quadrant_wells_assignment =
 array2d(1..num_plates_lines, 1..num_total_wells_line,
-    [if has_element(i, [quadrant_link_indices[p,j] | j in 1..quadrants_sizes[1]]) 
+    [if not use_quadrant_distribution
+   then 1
+ elseif has_element(i, [quadrant_link_indices[p,j] | j in 1..quadrants_sizes[1]]) 
    then 1
  elseif has_element(i, [quadrant_link_indices[p,j] | j in quadrants_sizes[1]..sum(k in 1..2)(quadrants_sizes[k])]) 
    then 2
  elseif has_element(i, [quadrant_link_indices[p,j] | j in sum(k in 1..2)(quadrants_sizes[k])+1..sum(k in 1..3)(quadrants_sizes[k])]) 
    then 3
    else 4 endif | p in 1..num_plates_lines, i in 1..num_total_wells_line]);
+
+int: quadrant_1_rows = if use_quadrant_distribution then floor(num_rows_line / 2) else num_rows_line endif;
+int: quadrant_1_cols = if use_quadrant_distribution then ceil(num_cols_line / 2) else num_cols_line endif;
+                % if only 1 row/column per line no forced empty wells
+constraint assert(not use_quadrant_distribution -> (num_corner_empty_wells = 0), "Invalid data: no forced empty corners when there is only 1 row and/or 1 column.");
 
 % If concentrations_on_different_rows and/or concentrations_on_different_columns are true then:
 % - we exclude compounds concentrations during application of the symmetry-breaking lex_chain constraint within its criteria set
@@ -553,11 +587,11 @@ array[1..num_edges,1..2] of int: edges = array2d(1..num_edges,1..2,
                                                   1,                 num_cols_line + 1,
                                                   num_rows_line + 1, num_cols_line + 1 ]
                                                  ++
-                                                 [0,                          floor(num_cols_line div 2),
-                                                  floor(num_rows_line div 2), num_cols_line + 1,
-                                                  num_rows_line + 1,          ceil(num_cols_line div 2),
-                                                  ceil(num_rows_line div 2),  0 ]);
-int: min_dist_edges = (min([num_rows_line, num_cols_line]) div 2) - 1;
+                                                 [0,                        floor(num_cols_line / 2),
+                                                  floor(num_rows_line / 2), num_cols_line + 1,
+                                                  num_rows_line + 1,        ceil(num_cols_line / 2),
+                                                  ceil(num_rows_line / 2),  0 ]);
+int: min_dist_edges = (min([num_rows_line, num_cols_line]) div 2);
                                       
 % Calculate distance matrix edges and wells
 int: num_edges_wells = num_edges + num_total_wells_line;
@@ -627,9 +661,9 @@ array[1..num_plates_lines, 1..num_total_wells_line, 1..2] of var 1..max(num_rows
 array[1..num_plates_lines, 1..num_total_wells_line] of var 1..num_rows_line*num_cols_line: wells_line_lex_all_different_substitute::no_output;
 
 constraint forall(p in 1..num_plates_lines, i in 1..num_total_wells_line where quadrant_wells_assignment[p,i] = 1)
-                 (emptywells_controls_compounds_coordinates[p, i, 1] in 1..floor(num_rows_line / 2));
+                 (emptywells_controls_compounds_coordinates[p, i, 1] in 1..quadrant_1_rows);
 constraint forall(p in 1..num_plates_lines, i in 1..num_total_wells_line where quadrant_wells_assignment[p,i] = 1)
-                 (emptywells_controls_compounds_coordinates[p, i, 2] in 1..ceil(num_cols_line / 2));
+                 (emptywells_controls_compounds_coordinates[p, i, 2] in 1..quadrant_1_cols);
 constraint if num_corner_empty_wells = 0 then true
          else forall(p in 1..num_plates_lines, i in 1..num_total_wells_line where quadrant_wells_assignment[p,i] = 1)
                     (emptywells_controls_compounds_coordinates[p, i, 1] <= num_corner_empty_wells
@@ -767,21 +801,22 @@ constraint forall(p in 1..num_plates_lines, i in 1..num_criteria_sets where use_
                                             /\ (emptywells_controls_compounds_criteria_ordered[p,k - num_edges] = i)]
                   );
 
-array[1..len_min_dist_criteria] of var 1..(num_rows_line + num_cols_line - 1): distances_edges_controls_compounds_minimum;
+array[1..len_min_dist_criteria] of var 1..(min(min_dist_edges * 2 + 1, 1 + (num_rows_line + num_cols_line) div 2)):
+      distances_edges_controls_compounds_minimum;
 
 constraint forall(j in 1..len_min_dist_criteria)
                  (distances_edges_controls_compounds_minimum[j] = 
-                     min(slice_1d( min_dist_criteria_vars,
-                                 [ min_dist_criteria_counts_starts[distances_edges_controls_compounds_plates_match[j],
-                                                                   distances_edges_controls_compounds_sets_match[j]]
-                                   ..min_dist_criteria_counts_ends[distances_edges_controls_compounds_plates_match[j],
-                                                                   distances_edges_controls_compounds_sets_match[j]]],
-                                   1..min_dist_criteria_lengths[distances_edges_controls_compounds_plates_match[j],
-                                                                distances_edges_controls_compounds_sets_match[j]])
+                     min(slice_1d(min_dist_criteria_vars,
+                                 [min_dist_criteria_counts_starts[distances_edges_controls_compounds_plates_match[j],
+                                                                  distances_edges_controls_compounds_sets_match[j]]
+                                  ..min_dist_criteria_counts_ends[distances_edges_controls_compounds_plates_match[j],
+                                                                  distances_edges_controls_compounds_sets_match[j]]],
+                                  1..min_dist_criteria_lengths[distances_edges_controls_compounds_plates_match[j],
+                                                               distances_edges_controls_compounds_sets_match[j]])
                                   )
                  );
 
-var 1..(min_dist_edges + 1): min_distance;
+var 1..(min_dist_edges + 2): min_distance;
 %constraint min_distance = if len_min_dist_criteria > 0 then min(min_dist_criteria_vars) else 1 endif;
 constraint min_distance = if len_min_dist_criteria > 0 then min(distances_edges_controls_compounds_minimum) else 1 endif;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -805,6 +840,7 @@ solve/*::seq_search(if num_total_wells_line >= 300 then % main search strategy
                    ] else [] endif
                   )*/
       minimize - min_distance * 1000 - sum(distances_edges_controls_compounds_minimum);
+     %satisfy;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Debugging output %%%
@@ -954,6 +990,7 @@ output [if not debugging then "plate_\(p),"
  ++ emptywells_controls_compounds_names_concentrations[1,emptywells_controls_compounds_indices_ordered[p,k]]
  ++ "_"
  ++ emptywells_controls_compounds_names_concentrations[2,emptywells_controls_compounds_indices_ordered[p,k]]
- ++ "\n" else "" endif | p in 1..num_plates_lines, k in 1..num_total_wells_line, h in 1..horizontal_cell_lines, v in 1..vertical_cell_lines
+ ++ "\n" else "" endif | p in 1..num_plates_lines, k in 1..num_total_wells_line,
+                         h in 1..horizontal_cell_lines, v in 1..vertical_cell_lines
                          where fix(emptywells_controls_compounds_indices_ordered[p,k]) > 1];
-                                 % emptywells_controls_compounds_indices_ordered[p,k] = 1 are empty wells
+                             % fix(emptywells_controls_compounds_indices_ordered[p,k]) = 1]; % output only empty wells
