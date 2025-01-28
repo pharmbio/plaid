@@ -11,9 +11,9 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![GitHub Repo stars](https://img.shields.io/github/stars/pharmbio/plaid?style=social)](https://github.com/pharmbio/plaid/stargazers)
 
 **PLAID** is a flexible
-constraint-programming model for creating highly-effective microplate
+constraint-programming model for creating highly effective microplate
 layouts.
-**PLAID** was developed with the goal of helping
+**PLAID** was developed to help
 researchers plan well-designed experiments by creating robust
 microplate layouts<sup>[1](#RefModRef2020)</sup> and thus improving
 the quality of the data obtained from an experiment. A web version is available at [plaid.pharmb.io](https://plaid.pharmb.io/). 
