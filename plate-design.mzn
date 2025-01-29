@@ -913,8 +913,9 @@ constraint if not empty_corners then forall(i in Plates, k in Columns)(experimen
 constraint if empty_corners then forall(i in Plates, k in OuterColumns)(experiments_in_plate_column[i,k]>=(at_least_compounds div numcols) - 2) endif;
 constraint if empty_corners then forall(i in Plates, k in InnerColumns)(experiments_in_plate_column[i,k]>=(at_least_compounds div numcols) + (2 div (numcols-2))) endif;
 
+%% TODO FIX the case for numrows <= 2
+constraint if numrows > 2 then forall(i in Plates, j in Rows)(experiments_in_plate_row[i,j]<=ceil(at_most_compounds / numrows) + empty_corners*ceil(2/(numrows-2))) else forall(i in Plates, j in Rows)(experiments_in_plate_row[i,j]<=ceil(at_most_compounds / numrows) + 2*empty_corners) endif;
 
-constraint forall(i in Plates, j in Rows)(experiments_in_plate_row[i,j]<=ceil(at_most_compounds / numrows) + empty_corners*ceil(2/(numrows-2)));
 constraint if empty_corners then forall(i in Plates, j in OuterRows)(experiments_in_plate_row[i,j]<=ceil(at_most_compounds / numrows)) endif;
 
 constraint forall(i in Plates, k in Columns)(experiments_in_plate_column[i,k]<=ceil(at_most_compounds / numcols) + empty_corners*ceil(2/(numcols-2)));
@@ -1404,7 +1405,7 @@ constraint alldifferent_except(plates, {0} union experiments+1..experiments+num_
 %% Implied constraint
 constraint if (min(spread_control++[1])>0) then forall(i in Plates, j in 1..numrows-1, k in 1..numcols-1) (alldifferent_except_0([plates[i,j,k],plates[i,j+1,k],plates[i,j,k+1],plates[i,j+1,k+1]])):: domain endif;
 
-array [Plates,Rows,Columns] of var 0..1: controls_layout; 
+array [Plates,Rows,Columns] of var bool: controls_layout; 
 
 constraint forall(i in Plates, j in Rows, k in Columns)(controls_layout[i,j,k] == ((plates[i,j,k] > experiments)) );
 
