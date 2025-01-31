@@ -21,7 +21,7 @@
 %
 
 include "globals.mzn";
-%include "gecode.mzn";
+include "gecode.mzn";
  
 %%%%%%%%%%%%%%%%%%%%%
 %%%% Input Data  %%%%
@@ -206,6 +206,15 @@ constraint global_cardinality(plates, [ i | i in 0..experiments+num_controls*max
                               [emptywells]++
                               [compound_replicates[floor((i-1)/max_compound_concentrations)+1]*(((i-1) mod max_compound_concentrations)<compound_concentrations[floor((i-1)/max_compound_concentrations)+1]) | i in 1..experiments]++
                               [control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1]) | i in 1..num_controls*max_control_concentrations]);
+
+
+
+%% Keep the four corners of all plates empty when empty_corners = true
+%% This is used, for example, when a particular piece of equipment has issues with corner wells.
+constraint if empty_corners then forall(i in Plates)(plates[i,1,1] = 0) endif;
+constraint if empty_corners then forall(i in Plates)(plates[i,numrows,1] = 0) endif;
+constraint if empty_corners then forall(i in Plates)(plates[i,1,numcols] = 0) endif;
+constraint if empty_corners then forall(i in Plates)(plates[i,numrows,numcols] = 0) endif;
 
 
 
