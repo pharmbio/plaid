@@ -23,14 +23,14 @@ size_empty_edge = 1;
 
 
 %%% Compounds %%%
-compound_concentrations	 = [8| i in 1..2]; 
+compound_concentrations	 = [8, 4]; 
 
 compound_names = ["comp\(i)" | i in 1..2];
 
 compound_replicates	 = [2| i in 1..2]; 
 
 compound_concentration_names = [|"a0.3", "a1", "a3", "a5", "a10", "a15", "a30", "a100"
-|"b0.3", "b1", "b3", "b5", "b10", "b15", "b30", "b100"|];
+|"b0.3", "b1", "b3", "b5", "", "", "", ""|];
 
 
 
