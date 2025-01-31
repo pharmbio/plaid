@@ -44,8 +44,7 @@ click run!
 
 The output is a list in CSV format containing plate ID, well, content
 (compound, combination or control), concentration, and latex name,
-meant to be used as input for automatic tools. (TODO: visualize the
-layout using latex)
+meant to be used as input for automatic tools.
 
 We believe **PLAID** is the first attempt to use constraint
 programming to design microplate layouts. Due to the use of MiniZinc,<sup>[2](#RefMiniZinc)</sup>
