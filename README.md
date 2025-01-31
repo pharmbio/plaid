@@ -70,9 +70,9 @@ highly customizable.
 
 * Download and install [MiniZinc](https://www.minizinc.org/).
 * Clone this repo OR download plate-design.mzn, layout_predicates.mzn, and empty-file.dzn.
-* Fill in the specific details of your experiment in a
+* Fill in the specific details of your experiment in a copy of
 empty-file.dzn. Alternatively, you can download and modify any of the example .dzn
-files in /regression-tests. (TODO: add an example input file in JSON)
+files in /regression-tests or any of the .json files in /JSON-examples.
 
 
 <a name="minizinc-ide"></a>
