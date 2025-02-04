@@ -2,8 +2,10 @@
 
 echo "\nHello, world! Let's check that our PLAID constraint model v2 behaves as expected...\n"
 
-## FileName N.Plates Time
-myUnitTests=( 'pl-example-001' '1' '10'
+## FileName N.Plates Time (in seconds)
+myUnitTests=( 'pl-example-001' '1' '1'
+	      'pl-example-002' '1' '1'
+	      'pl-example-003' '1' '1' # Test empty corners
 	    )
 
 len=${#myUnitTests[@]}
@@ -19,10 +21,10 @@ do
     SECONDS=0
 
     # Deterministic solution
-#    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn ${myUnitTests[${i}]}.dzn --cmdline-data "testing=true"  &> ${myUnitTests[${i}]}.txt
+    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design-main.mzn plate-design-basic-output.mzn dzn-examples/${myUnitTests[${i}]}.dzn --cmdline-data "testing=true"  &> regression-tests-results/${myUnitTests[${i}]}.txt
 
     # Random and multi-thread
-    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design.mzn dzn-examples/${myUnitTests[${i}]}.dzn -p 10 -r $RANDOM --cmdline-data "testing=true"  &> regression-tests-results/${myUnitTests[${i}]}.txt
+#    /Applications/MiniZincIDE.app/Contents/Resources/minizinc --solver Gecode plate-design-main.mzn plate-design-basic-output.mzn dzn-examples/${myUnitTests[${i}]}.dzn -p 10 -r $RANDOM --cmdline-data "testing=true"  &> regression-tests-results/${myUnitTests[${i}]}.txt
 
     echo "It took about $SECONDS sec."
     
