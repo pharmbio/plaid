@@ -1,0 +1,54 @@
+%%% Small test %%%
+%% Produces 1 plate.
+%% It takes about 1m 26s
+
+%% Plate dimentions: 
+num_rows = 10; %% height
+num_cols = 12; %% width
+
+
+horizontal_cell_lines = 1;
+vertical_cell_lines = 1;
+
+%allow_empty_wells = false;
+
+size_empty_edge = 1;
+
+% New and used!
+concentrations_on_different_rows = true;
+concentrations_on_different_columns = true;
+
+% New and unused! (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
+replicates_on_different_plates = true;
+replicates_on_same_plate = false;
+
+
+%%% Compounds %%%
+%compounds = 4; %% number of drugs/compounds
+compound_concentrations	 = [4,4,4,4]; 
+compound_replicates	 = [2,2,2,2];
+
+compound_names = ["comp\(i)" | i in 1..4];
+compound_concentration_names = [|"0.3", "1", "3", "5"|"0.3", "1", "3", "5"|"0.3", "1", "3", "5"|"0.3", "1", "3", "5"|];
+
+
+%%% Controls %%%
+%num_controls = 4;
+control_replicates = [12,12,12,12];
+control_concentrations = [1,1,1,1];
+control_names = ["pos","neg","blank","dmso"];
+control_concentration_names =  array2d(1..4, 1..1,["cont\(i)-conc\(1)" | i in 1..4]);
+
+
+
+% start_plate = array3d(1..1, 1..10, 1..12, [
+% 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0, 
+% 0, 36, 28, 34, 36, 34, 36, 34, 30,  5, 22, 0, 
+% 0, 35,  2, 12, 15, 35, 33, 35, 18, 36, 34, 0, 
+% 0, -1, -1, -1, 33, -1, -1, -1, 11, 23, 33, 0, 
+% 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 
+% 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 
+% 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 
+% 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 
+% 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 
+% 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
