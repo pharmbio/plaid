@@ -87,13 +87,22 @@ array[1..num_controls] of string: control_names;
 
 int: total_controls = sum([control_concentrations[i]*control_replicates[i] | i in 1..num_controls]);
 
+opt bool: opt_equal_controls;
 
+bool: equal_controls  = opt_equal_controls \/ (numplates == 1) default false;
 
-%% Derived Data %%%
+%%%%%%%%%%%%%%%%%%%%%%
+%%%% DERIVED DATA %%%%
+%%%%%%%%%%%%%%%%%%%%%%
+
 bool: empty_corners = force_empty_corners default false;
 bool: spread_controls = (ceil(inner_plate_size/2)*numplates >= total_controls); %Makes the problem harder when there are many controls
 
+% Some implied constraints only work when the plates have an even number of columns
+bool: even_columns = ((numcols mod 2) == 0);
 
+% Some implied constraints only work when the plates have an even number of rows
+bool: even_rows = ((numrows mod 2) == 0);
 
 %% Which individual controls can be spread more than others?
 array[1..num_controls*max_control_concentrations] of bool: spread_control = [ ceil(inner_plate_size/4)*numplates >= (control_replicates[floor((i-1)/max_control_concentrations)+1]*(((i-1) mod max_control_concentrations)<control_concentrations[floor((i-1)/max_control_concentrations)+1])) | i in 1..num_controls*max_control_concentrations];
@@ -127,8 +136,6 @@ constraint assert(num_compounds==0 \/ min(compound_replicates) > 0,"Invalid data
 constraint assert(num_compounds==0 \/ min(compound_concentrations) > 0,"Invalid datafile: Number of concentrations should be larger than zero.");
 constraint assert((replicates_on_different_plates /\ replicates_on_same_plate) == false,"Invalid datafile: replicates cannot be both on the same plate and on different plates");
 constraint assert(not (num_controls == 1 /\ spread_control[1]==false),"Invalid datafile: There are too many controls of only one kind. This is not allowed at the moment. If you believe this is a mistake, please contact the developers.");
-constraint assert(numrows mod 2 == 0, "Invalid datafile: Currently we only support plate sizes that have an inner area with an even number of rows.");
-constraint assert(numcols mod 2 == 0, "Invalid datafile: Currently we only support plate sizes that have an inner area with an even number of columns." );
 constraint assert(total_wells > 0, "Invalid data: the plates cannot be completely empty.");
 constraint assert(inner_plate_size > 4*empty_corners, "Invalid data: There are no wells on the plate.");
 constraint assert(min(compound_concentrations++[0]) <= inner_plate_size, "Invalid data: Number of concentrations does not fit in one plate. If you think this is a mistake, please contact the development team.");
@@ -180,7 +187,7 @@ constraint assert((floor(sum(compound_replicates)/numplates)-1)*min(compound_con
 constraint assert(emptywells >= 0,"Model ERROR! Inner empty wells is negative. This should never happen!");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
+ 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -193,13 +200,24 @@ constraint assert(emptywells >= 0,"Model ERROR! Inner empty wells is negative. T
 
 array [Plates,Rows,Columns] of var 0..(experiments+num_controls*max_control_concentrations): plates; 
 
+array [Plates,Rows,Columns] of var bool: controls_layout; 
 
 
 
 
-%%%%%%%%%%%%%%%%%%%%%
-%%%% CONSTRAINTS %%%%
-%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% CHANELLING CONSTRAINTS %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+constraint forall(i in Plates, j in Rows, k in Columns)(controls_layout[i,j,k] == ((plates[i,j,k] > experiments)) );
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% MODEL CONSTRAINTS %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Place only the exact amount of compounds, controls, and empty wells.
 constraint global_cardinality(plates, [ i | i in 0..experiments+num_controls*max_control_concentrations],
@@ -211,10 +229,7 @@ constraint global_cardinality(plates, [ i | i in 0..experiments+num_controls*max
 
 %% Keep the four corners of all plates empty when empty_corners = true
 %% This is used, for example, when a particular piece of equipment has issues with corner wells.
-constraint if empty_corners then forall(i in Plates)(plates[i,1,1] = 0) endif;
-constraint if empty_corners then forall(i in Plates)(plates[i,numrows,1] = 0) endif;
-constraint if empty_corners then forall(i in Plates)(plates[i,1,numcols] = 0) endif;
-constraint if empty_corners then forall(i in Plates)(plates[i,numrows,numcols] = 0) endif;
+constraint if empty_corners then forall(i in Plates, j in {1,numrows}, k in {1,numcols})(plates[i,j,k] = 0) endif;
 
 
 

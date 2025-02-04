@@ -1,0 +1,1 @@
+solve::int_search(plates, random, indomain_random) satisfy; 
