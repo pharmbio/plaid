@@ -9,13 +9,13 @@ myUnitTests=( 'pl-example-001' '1' '1'
 	      'pl-example-004' '1' '1' # Test odd number of rows
 	      'pl-example-005' '1' '1' # Test odd number of controls
 	      'pl-example-013' '1' '1' # Test old examples with new input format
-	      'pl-example-014' '1' '1' # Test old examples
-	      'pl-example-015' '1' '1' # Test old examples
-	      'pl-example-017' '1' '1' # Test old examples
-	      'pl-example-018' '1' '1' # Test old examples
-	      'pl-example-019' '1' '1' # Test old examples
-	      'pl-example-021' '1' '1' # Test old examples
-	      'pl-example-042' '1' '1' # Test old examples
+	      'pl-example-014' '1' '1' # Test old examples with new input format
+	      'pl-example-015' '1' '1' # Test old examples with new input format
+	      'pl-example-017' '1' '1' # Test old examples with new input format
+	      'pl-example-018' '1' '1' # Test old examples with new input format
+	      'pl-example-019' '1' '1' # Test old examples with new input format
+	      'pl-example-021' '1' '1' # Test old examples with new input format
+	      'pl-example-042' '1' '1' # Test old examples with new input format
 	    )
 
 len=${#myUnitTests[@]}
