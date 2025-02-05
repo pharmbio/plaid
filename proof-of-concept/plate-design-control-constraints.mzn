@@ -40,22 +40,29 @@ constraint forall(i in Plates) (sum_controls_ul_plates[i,lower] == sum(controls_
 % The upper limit in the number of controls works for any plate. 
 % However, it might be weak for plates with an odd number of rows.
 constraint if even_rows then forall(v in Vertical) (sum(sum_controls_ul_plates[..,v]) <= ((total_controls + 1) div 2))
-           else forall(v in Vertical) (sum(sum_controls_ul_plates[..,v]) <= ((total_controls -sum(controls_layout[..,(numrows div 2) +1,..]) + 1) div 2)) endif;
+           else forall(v in Vertical) (sum(sum_controls_ul_plates[..,v]) <= ((total_controls - sum(controls_layout[..,(numrows div 2) +1,..]) + 1) div 2)) endif;
 
 
 
 % The lower limit in the number of controls per half must take into account if the plate has an odd number of rows.
 constraint if even_rows then forall(v in Vertical) (sum(sum_controls_ul_plates[..,v]) >= (total_controls div 2))
-           else forall(v in Vertical) (sum(sum_controls_ul_plates[..,v]) >= ( (total_controls-sum(controls_layout[..,(numrows div 2) +1,..])) div 2)) endif;
+           else forall(v in Vertical) (sum(sum_controls_ul_plates[..,v]) >= ( (total_controls - sum(controls_layout[..,(numrows div 2) +1,..])) div 2)) endif;
 
 
 % 50% of the total number of controls should be on the upper half of all plates and 50% at the bottom half of all plates
 % If the controls are the same on every plate, then we know the exact number of total controls per plate
-constraint if equal_controls then forall(i in Plates, v in Vertical) ( sum_controls_ul_plates[i,v] >= ((total_controls div numplates) div 2)) endif;
+constraint if equal_controls /\ even_rows then forall(i in Plates, v in Vertical) ( sum_controls_ul_plates[i,v] >= ((total_controls div numplates) div 2)) 
+           elseif equal_controls then forall(i in Plates, v in Vertical) ( sum_controls_ul_plates[i,v] >= (((total_controls div numplates) - sum(controls_layout[i,(numrows div 2) +1,..]) ) div 2)) 
+           else true
+           endif;
 
+%% The upper limit can still be half of the controls, but it is not a tight limit if there are many controls in the middle row.
 constraint if equal_controls then forall(i in Plates, v in Vertical) ( sum_controls_ul_plates[i,v] <= (((total_controls div numplates) + 1) div 2)) endif;
 
-constraint if equal_controls then forall(i in Plates) ( sum(sum_controls_ul_plates[i,..]) <= (total_controls div numplates) ) endif;
+constraint if equal_controls /\ even_rows then forall(i in Plates) ( sum(sum_controls_ul_plates[i,..]) == (total_controls div numplates) ) 
+           elseif equal_controls then forall(i in Plates) ( sum(sum_controls_ul_plates[i,..]) <= (total_controls div numplates) ) 
+           else true
+           endif;
 
 
 
