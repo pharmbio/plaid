@@ -1,0 +1,51 @@
+%%% Plate for the paper
+%% It produces 1 plate with 8 positive, 8 negative controls
+%%
+%% 2022/Apr/29: it takes about 16 sec 647msec
+
+num_rows = 16; %% height
+num_cols = 24; %% width
+
+vertical_cell_lines	 = 1;
+horizontal_cell_lines = 1;
+
+allow_empty_wells = false;
+size_empty_edge = 1;
+
+concentrations_on_different_rows = true;
+concentrations_on_different_columns = true;
+
+% (Restriction: replicates_on_different_plates /\ replicates_on_same_plate == false)
+replicates_on_different_plates = true;
+replicates_on_same_plate = false;
+
+%%% Compounds %%%
+compounds = 14*22-16; %% number of drugs/compounds
+compound_concentrations	 = [ 1 | i in 1..compounds];
+compound_replicates	 = [ 1 | i in 1..compounds];
+
+compound_names = ["\(i)"| i in 1..compounds];
+compound_concentration_names = array2d(1..compounds,1..1,[""| i in 1..compounds]);
+
+
+compound_concentration_indicators = [""];
+ 
+
+
+%%% Combinations (Deprecated) %%%
+combinations = 0;
+combination_concentrations = 0;
+combination_names = [];
+combination_concentration_names = [];
+
+
+%% Controls %%
+num_controls = 2;
+control_concentrations = [1,1];
+
+control_replicates = [8,8];
+control_concentration_names = [|"1"|"1"|];
+
+control_names = ["[Pos]","[DMSO]"];
+
+ 
