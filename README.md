@@ -89,7 +89,15 @@ Note that you need to scroll down inside the popup to be able to type
 in all the values.
 * Optional: you can change the random seed to obtain a different layout for the
 same input data under "MiniZinc/Solver Configuration/Show
-configuration editor...". 
+configuration editor...".
+
+<a name="guis"></a>
+### GUI
+
+There are two options for visualization and streamlining the workflow with a GUI:
+
+	1. The PLAID [webpage](https://plaid.pharmb.io/), which includes an interface for inputting the data and visualization of generated layouts
+ 	2. [GUI-for-MiniZinc-microplates-models](https://github.com/astra-uu-se/GUI-for-MiniZinc-microplates-models), a light-weight offline tool compatible with PLAID MiniZinc file, which supports visualizaton of generated layouts.
 
 
 <a name="command-line"></a>
