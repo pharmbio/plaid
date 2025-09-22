@@ -41,7 +41,8 @@ bool: force_spread_concentrations;
 int: horizontal_cell_lines;
 int: vertical_cell_lines;
 int: size_empty_edge;
-bool: inner_empty_edge = true;
+bool: inner_empty_edge_input;
+bool: inner_empty_edge = inner_empty_edge_input default true;
 
 %% Compounds %%
 int: compounds; %% number of drugs/compounds
