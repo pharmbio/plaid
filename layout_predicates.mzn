@@ -56,3 +56,7 @@ function bool: force_spread_controls(int: numcols, int: numrows, int: total_cont
 
 
 %force_spread_controls = if inner_plate_size <= 60 then (ceil(inner_plate_size/9)*numplates >= total_controls) else (floor(inner_plate_size/9)*numplates >= total_controls) endif;
+
+function var int: calculate_line_index(bool: edge_type, int: edge_size, int: line_size, var int: line, var int: coordinate) =
+         if edge_type then (line - 1) * (2 * edge_size + line_size) + edge_size + coordinate
+                      else (line - 1) *                  line_size  + edge_size + coordinate endif;
