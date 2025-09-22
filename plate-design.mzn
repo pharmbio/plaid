@@ -91,8 +91,8 @@ opt bool: sorted_compounds;
 %% Plate size / number of wells
 int: num_rows;
 int: num_cols;
-opt int: size_corner_empty_wells; # to make it compatible with more *.dzn files (since it can be an option in other models)
-int: num_corner_empty_wells = size_corner_empty_wells default 0; # currently unused
+opt int: size_corner_empty_wells; % to make it compatible with more *.dzn files (since it can be an option in other models)
+int: num_corner_empty_wells = size_corner_empty_wells default 0; % currently unused
 
 
 %% TODO: this could be problematic when there are multiple cell lines
