@@ -1981,7 +1981,7 @@ array[int] of string: letters = letters_capital ++ [letters_capital[i] ++ letter
 output ["plateID,well,cmpdname,CONCuM,cmpdnum,VOLuL\n"];
 
 %%% TODO: FIX ME!!!!!! Problem when there are vertical/horizontal cell lines!
-output [if fix(plates[i,j,k]) > 0 then "plate_\(i)," ++   letters[size_empty_edge+j+(num_rows_line+(1+inner_empty_edge)*size_empty_edge)*(h-1)] ++ if (size_empty_edge+k+((1+inner_empty_edge)*size_empty_edge+num_cols_line)*(v-1)) < 10 then "0" else "" endif ++ "\(size_empty_edge+k+((1+inner_empty_edge)*size_empty_edge+num_cols_line)*(v-1))," ++ 
+output [if fix(plates[i,j,k]) > 0 then "plate_\(i)," ++   letters[fix(calculate_line_index(inner_empty_edge, size_empty_edge, num_rows_line, h, j))] ++ if fix(calculate_line_index(inner_empty_edge, size_empty_edge, num_cols_line, v, k)) < 10 then "0" else "" endif ++ "\(fix(calculate_line_index(inner_empty_edge, size_empty_edge, num_cols_line, v, k)))," ++ 
 
 %%%% Compounds %%%%
 
