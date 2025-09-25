@@ -8,6 +8,7 @@
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+![with-coffee](https://img.shields.io/badge/made%20with-%E2%98%95%EF%B8%8F%20coffee-yellow.svg)
 [![GitHub Repo stars](https://img.shields.io/github/stars/pharmbio/plaid?style=social)](https://github.com/pharmbio/plaid/stargazers)
 
 **PLAID** is a flexible
