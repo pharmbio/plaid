@@ -98,7 +98,7 @@ configuration editor...".
 There are two options for visualization and streamlining the workflow with a GUI:
 
 1. The PLAID [webpage](https://plaid.pharmb.io/), which includes an interface for inputting the data and visualization of generated layouts
-2. [GUI-for-MiniZinc-microplates-models](https://github.com/astra-uu-se/GUI-for-MiniZinc-microplates-models), a light-weight offline tool compatible with PLAID MiniZinc file, which supports visualizaton of generated layouts.
+2. [MPLACE](https://github.com/astra-uu-se/MPLACE), a light-weight offline GUI, written in Python, compatible with PLAID MiniZinc file. MPLACE supports visualizaton of generated layouts.
 
 
 <a name="command-line"></a>
