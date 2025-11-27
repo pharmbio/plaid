@@ -57,6 +57,7 @@ highly customizable.
 ## Table of Contents
 * [Installation and Usage](#installation)
   - [Using the MiniZinc IDE](#minizinc-ide)
+  - [GUIs](#guis)
   - [Using the command line](#command-line)
 * [Contact](#contact)
 * [Citation](#citation)
@@ -93,7 +94,7 @@ same input data under "MiniZinc/Solver Configuration/Show
 configuration editor...".
 
 <a name="guis"></a>
-### GUI
+### GUIs
 
 There are two options for visualization and streamlining the workflow with a GUI:
 
