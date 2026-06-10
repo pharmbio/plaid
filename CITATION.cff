@@ -1,5 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite the associated paper below."
+title: "Designing Microplate Layouts Using Artificial Intelligence"
+type: article
 authors:
 - family-names: "Francisco Rodríguez"
   given-names: "María Andreína"
@@ -10,8 +12,10 @@ authors:
 - family-names: Spjuth
   given-names: Ola
   orcid: "https://orcid.org/0000-0002-8083-2864"
-title: "plaid"
-version: 1.0.0
+year: 2023
+journal: "Artificial Intelligence in the Life Sciences"
+volume: "3"
+doi: 10.1016/j.ailsci.2023.100073
+url: https://doi.org/10.1016/j.ailsci.2023.100073
 doi: 10.1016/j.ailsci.2023.100073
 date-released: 2023-12-01
-url: "https://github.com/pharmbio/plaid"
