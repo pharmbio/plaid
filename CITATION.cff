@@ -17,5 +17,22 @@ journal: "Artificial Intelligence in the Life Sciences"
 volume: "3"
 doi: 10.1016/j.ailsci.2023.100073
 url: https://doi.org/10.1016/j.ailsci.2023.100073
-doi: 10.1016/j.ailsci.2023.100073
 date-released: 2023-12-01
+
+preferred-citation:
+  type: article
+  title: "Designing Microplate Layouts Using Artificial Intelligence"
+  authors:
+  - family-names: "Francisco Rodríguez"
+    given-names: "María Andreína"
+    orcid: "https://orcid.org/0000-0001-8745-9858"
+  - family-names: "Carreras Puigvert"
+    given-names: Jordi
+    orcid: "https://orcid.org/0000-0002-7671-3707"
+  - family-names: Spjuth
+    given-names: Ola
+    orcid: "https://orcid.org/0000-0002-8083-2864"
+  journal: "Artificial Intelligence in the Life Sciences"
+  year: 2023
+  volume: "3"
+  doi: 10.1016/j.ailsci.2023.100073
